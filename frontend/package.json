@@ -10,9 +10,13 @@
     "@types/node": "^16.18.104",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^3.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -20,6 +24,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "lint": "eslint . --ext .ts",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -39,5 +44,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0"
   }
 }
