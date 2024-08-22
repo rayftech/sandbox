@@ -10,6 +10,11 @@
     "preview": "vite preview",
     "prepare": "husky"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "dependencies": {
     "@mui/material": "^5.16.7",
     "@reduxjs/toolkit": "^2.2.7",
