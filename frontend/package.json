@@ -10,8 +10,10 @@
     "preview": "vite preview",
     "prepare": "husky"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint --fix"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "dependencies": {
     "@mui/material": "^5.16.7",
