@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es2018",                        
+    "module": "commonjs",                      
+    "outDir": "./dist",                        /* Specify output directory for compiled files */
+    "rootDir": "./src",                        /* Specify the root directory of input files */
+    "strict": true,                            
+    "esModuleInterop": true,                   
+    "skipLibCheck": true,                      
+    "forceConsistentCasingInFileNames": true,  
+    "moduleResolution": "node",                /* Specify module resolution strategy */
+    "resolveJsonModule": true,                 /* Enable importing .json files */
+    "sourceMap": true,                         /* Generate source maps for debugging */
+    "declaration": true,                       /* Generate .d.ts files */
+    "noImplicitAny": true,                     /* Raise error on expressions with implied 'any' type */
+    "strictNullChecks": true,                  /* Enable strict null checks */
+    "strictFunctionTypes": true,               /* Enable strict checking of function types */
+    "noUnusedLocals": true,                    /* Report errors on unused locals */
+    "noUnusedParameters": true,                /* Report errors on unused parameters */
+    "noImplicitReturns": true,                 /* Report error when not all code paths return value */
+    "noFallthroughCasesInSwitch": true,        /* Report errors for fallthrough cases in switch */
+    "experimentalDecorators": true,            /* Enable experimental support for decorators */
+    "emitDecoratorMetadata": true,             /* Enable experimental support for emitting decorator metadata */
+    "baseUrl": ".",                            /* Base directory to resolve non-relative module names */
+    "paths": {
+      "@/*": ["src/*"]                         /* Path mapping for module imports */
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.test.ts", "dist"]
+}
