@@ -1,3 +1,4 @@
+// src/routes/index.ts
 import { Router } from 'express';
 // import userRoutes from './user.routes';
 import { logger } from '../config/logger';
@@ -6,7 +7,7 @@ import { logger } from '../config/logger';
 const router = Router();
 
 // Log all API requests
-router.use((req, res, next) => {
+router.use((req, _res, next) => {
   logger.debug(`API Request: [${req.method}] ${req.originalUrl}`);
   next();
 });
@@ -15,7 +16,7 @@ router.use((req, res, next) => {
 // router.use('/users', userRoutes);
 
 // API version and status endpoint
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
   res.json({
     status: 'success',
     message: 'API is running',

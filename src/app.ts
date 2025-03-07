@@ -1,9 +1,10 @@
+// src/app.ts
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { logger } from './config/logger';
-// import { errorHandler } from './middlewares/error.middleware';
+import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
 import routes from './routes';
 
 /**
@@ -64,16 +65,11 @@ export class App {
    * Setup error handling middleware
    */
   private setupErrorHandling(): void {
-    // Handle 404 errors - use underscore prefix to ignore unused parameter
-    this.app.use((req: Request, res: Response, _next: NextFunction) => {
-      res.status(404).json({
-        status: 'error',
-        message: `Cannot ${req.method} ${req.path}`
-      });
-    });
+    // Handle 404 errors
+    this.app.use(notFoundHandler);
     
-    // // Global error handler
-    // this.app.use(errorHandler);
+    // Global error handler
+    this.app.use(errorHandler);
   }
 }
 
