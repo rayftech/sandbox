@@ -1,4 +1,4 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -54,8 +54,8 @@ export class App {
   private setupRoutes(): void {
     this.app.use('/api', routes);
     
-    // Health check endpoint
-    this.app.get('/health', (req, res) => {
+    // Health check endpoint - use underscore prefix to ignore unused parameter
+    this.app.get('/health', (_req: Request, res: Response) => {
       res.status(200).json({ status: 'OK', uptime: process.uptime() });
     });
   }
@@ -64,8 +64,8 @@ export class App {
    * Setup error handling middleware
    */
   private setupErrorHandling(): void {
-    // Handle 404 errors
-    this.app.use((req, res, next) => {
+    // Handle 404 errors - use underscore prefix to ignore unused parameter
+    this.app.use((req: Request, res: Response, _next: NextFunction) => {
       res.status(404).json({
         status: 'error',
         message: `Cannot ${req.method} ${req.path}`
