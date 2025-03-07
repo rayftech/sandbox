@@ -13,3 +13,10 @@
 2025-03-07 17:18:57 [database] INFO: MongoDB version: 8.0.5 
 2025-03-07 17:18:57 [database] INFO: Connection successful to: test 
 2025-03-07 17:18:58 [database] WARN: MongoDB disconnected 
+2025-03-07 20:24:16 [database] INFO: Testing database connection... 
+2025-03-07 20:24:16 [database] INFO: Connected to MongoDB 
+2025-03-07 20:24:16 [database] INFO: Database connection established 
+2025-03-07 20:24:16 [database] INFO: ✅ Successfully connected to the database 
+2025-03-07 20:24:17 [database] INFO: MongoDB version: 8.0.5 
+2025-03-07 20:24:17 [database] INFO: Connection successful to: test 
+2025-03-07 20:24:18 [database] WARN: MongoDB disconnected 
