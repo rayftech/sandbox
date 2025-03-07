@@ -6,3 +6,10 @@
 2025-03-07 17:05:18 [database] ERROR: MongoDB connection error: MongoServerError: bad auth : authentication failed 
 2025-03-07 17:05:18 [database] INFO: Retrying connection in 20000ms (attempt 3/5) 
 2025-03-07 17:05:19 [database] INFO: Test completed 
+2025-03-07 17:18:57 [database] INFO: Testing database connection... 
+2025-03-07 17:18:57 [database] INFO: Connected to MongoDB 
+2025-03-07 17:18:57 [database] INFO: Database connection established 
+2025-03-07 17:18:57 [database] INFO: ✅ Successfully connected to the database 
+2025-03-07 17:18:57 [database] INFO: MongoDB version: 8.0.5 
+2025-03-07 17:18:57 [database] INFO: Connection successful to: test 
+2025-03-07 17:18:58 [database] WARN: MongoDB disconnected 
