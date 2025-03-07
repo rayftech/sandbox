@@ -167,3 +167,44 @@ class DatabaseConnection {
 
 // Export a singleton instance
 export const dbConnection = DatabaseConnection.getInstance();
+
+// This section allows the file to be run directly for testing
+// It will only execute when this file is run directly (not when imported)
+if (require.main === module) {
+  (async () => {
+    try {
+      logger.info('Testing database connection...');
+      await dbConnection.connect();
+      
+      if (dbConnection.isConnectedToDatabase()) {
+        logger.info('✅ Successfully connected to the database');
+        
+        // Check if connection and db are initialized
+        if (mongoose.connection && mongoose.connection.db) {
+          try {
+            // Get database information
+            const adminDb = mongoose.connection.db.admin();
+            const result = await adminDb.serverStatus();
+            logger.info(`MongoDB version: ${result.version}`);
+            logger.info(`Connection successful to: ${mongoose.connection.name}`);
+          } catch (error) {
+            logger.warn('Could not fetch server status (might lack admin privileges)');
+            logger.info(`Connection successful to: ${mongoose.connection.name || 'MongoDB'}`);
+          }
+        } else {
+          logger.info('Connection established but database handle not available yet');
+        }
+      }
+      
+      // Wait a bit to ensure logs are displayed before disconnecting
+      setTimeout(async () => {
+        await dbConnection.disconnect();
+        logger.info('Test completed');
+        process.exit(0);
+      }, 1000);
+    } catch (error) {
+      logger.error(`Test failed: ${error instanceof Error ? error.message : String(error)}`);
+      process.exit(1);
+    }
+  })();
+}

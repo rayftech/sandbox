@@ -1,0 +1,8 @@
+2025-03-07 17:05:17 [database] INFO: Testing database connection... 
+2025-03-07 17:05:18 [database] WARN: MongoDB disconnected 
+2025-03-07 17:05:18 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-07 17:05:18 [database] ERROR: Database connection failed: bad auth : authentication failed 
+2025-03-07 17:05:18 [database] INFO: Retrying connection in 10000ms (attempt 2/5) 
+2025-03-07 17:05:18 [database] ERROR: MongoDB connection error: MongoServerError: bad auth : authentication failed 
+2025-03-07 17:05:18 [database] INFO: Retrying connection in 20000ms (attempt 3/5) 
+2025-03-07 17:05:19 [database] INFO: Test completed 
