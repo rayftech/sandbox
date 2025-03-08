@@ -20,3 +20,10 @@
 2025-03-07 20:24:17 [database] INFO: MongoDB version: 8.0.5 
 2025-03-07 20:24:17 [database] INFO: Connection successful to: test 
 2025-03-07 20:24:18 [database] WARN: MongoDB disconnected 
+2025-03-07 20:50:16 [database] INFO: Connected to MongoDB 
+2025-03-07 20:50:16 [Server] INFO: Server running on port 5050 
+2025-03-07 20:50:16 [database] INFO: Database connection established 
+2025-03-07 20:55:09 [app] DEBUG: API Request: [GET] /api 
+2025-03-07 20:55:09 [app] INFO: [0mGET /api [32m200[0m 5.974 ms - 104[0m 
+2025-03-07 20:55:09 [ErrorMiddleware] WARN: 404 - Cannot find /favicon.ico on this server - /favicon.ico - GET 
+2025-03-07 20:55:09 [app] INFO: [0mGET /favicon.ico [33m404[0m 10.462 ms - 1267[0m 

@@ -31,7 +31,7 @@ export const errorHandler = (
   req: Request,
   res: Response,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  next: NextFunction
+  _next: NextFunction
 ) => {
   // Default values
   let statusCode = 500;
@@ -83,7 +83,7 @@ export const errorHandler = (
 /**
  * Middleware to handle 404 not found errors
  */
-export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
+export const notFoundHandler = (req: Request, _res: Response, next: NextFunction) => {
   const err = new ApiError(404, `Cannot find ${req.originalUrl} on this server`);
   next(err);
 };
