@@ -1,5 +1,5 @@
 // src/models/user.model.ts
-import mongoose, { Document, Schema, HydratedDocument } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
 import { createLogger } from '../config/logger';
 
 const logger = createLogger('UserModel');
@@ -34,21 +34,36 @@ export interface IUserAttributes extends IAmplifyUserData {
     allowFriendRequests: boolean;
     emailNotifications: boolean;
   };
+  // Analytics fields for snowflake schema
+  totalCoursesCreated?: number;
+  totalProjectsCreated?: number;
+  totalPartnershipsInitiated?: number;
+  totalPartnershipsReceived?: number;
+  successRate?: number;
 }
 
 /**
- * Interface that extends Document for User model
+ * Interface for User document with methods
  */
-export interface IUser extends Document, IUserAttributes {
+interface IUserDocument extends Document, IUserAttributes {
   // Common fields added by Mongoose
   createdAt: Date;
   updatedAt: Date;
+  
+  // Define any methods here
 }
 
 /**
- * User Schema for MongoDB
+ * Interface for User model with static methods
  */
-const UserSchema = new Schema<IUser>(
+interface IUserModel extends Model<IUserDocument> {
+  // Add any static methods here if needed
+}
+
+/**
+ * User Schema for MongoDB (incorporating both social features and snowflake schema design)
+ */
+const UserSchema = new Schema<IUserDocument>(
   {
     // Core fields from Amplify
     userId: {
@@ -56,6 +71,7 @@ const UserSchema = new Schema<IUser>(
       required: true,
       unique: true,
       index: true,
+      comment: 'Amplify userId as primary identifier'
     },
     email: {
       type: String,
@@ -84,6 +100,7 @@ const UserSchema = new Schema<IUser>(
     isAdmin: {
       type: Boolean,
       default: false,
+      index: true,
     },
     
     // Social features
@@ -133,6 +150,29 @@ const UserSchema = new Schema<IUser>(
         default: true,
       },
     },
+    
+    // Analytics aggregation fields (for snowflake schema)
+    totalCoursesCreated: {
+      type: Number,
+      default: 0,
+    },
+    totalProjectsCreated: {
+      type: Number,
+      default: 0,
+    },
+    totalPartnershipsInitiated: {
+      type: Number,
+      default: 0,
+    },
+    totalPartnershipsReceived: {
+      type: Number,
+      default: 0,
+    },
+    successRate: {
+      type: Number,
+      min: 0,
+      max: 100,
+    }
   },
   {
     timestamps: true, // Adds createdAt and updatedAt automatically
@@ -147,10 +187,18 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-// Indexes for better query performance
+// Compound indexes for better query performance
+UserSchema.index({ userType: 1, isAdmin: 1 });
+UserSchema.index({ lastName: 1, firstName: 1 });
 UserSchema.index({ 'friendRequests.accepted': 1 });
 UserSchema.index({ 'friendRequests.sent': 1 });
 UserSchema.index({ 'friendRequests.received': 1 });
+
+// Create and export the model with proper type information
+export const User = mongoose.model<IUserDocument, IUserModel>('User', UserSchema);
+
+// Re-export the interface for use in other files
+export type IUser = IUserDocument;
 
 /**
  * User service class for managing user operations
@@ -162,7 +210,7 @@ export class UserService {
    * @param userData The user data received from Amplify
    * @returns The saved user document
    */
-  static async createOrUpdateUser(userData: IAmplifyUserData): Promise<IUser> {
+  static async createOrUpdateUser(userData: IAmplifyUserData): Promise<IUserDocument> {
     try {
       // Try to find the user by userId
       let user = await User.findOne({ userId: userData.userId });
@@ -212,7 +260,7 @@ export class UserService {
    * @param targetUserId The userId of the user to be followed
    * @returns The updated user document
    */
-  static async followUser(userId: string, targetUserId: string): Promise<IUser> {
+  static async followUser(userId: string, targetUserId: string): Promise<IUserDocument> {
     try {
       // Validate that target user exists
       const targetUser = await User.findOne({ userId: targetUserId });
@@ -251,7 +299,7 @@ export class UserService {
    * @param targetUserId The userId of the user to be unfollowed
    * @returns The updated user document
    */
-  static async unfollowUser(userId: string, targetUserId: string): Promise<IUser> {
+  static async unfollowUser(userId: string, targetUserId: string): Promise<IUserDocument> {
     try {
       // Update the follower's following list
       const user = await User.findOneAndUpdate(
@@ -284,7 +332,7 @@ export class UserService {
    * @param targetUserId The userId of the user receiving the request
    * @returns The updated user document
    */
-  static async sendFriendRequest(userId: string, targetUserId: string): Promise<IUser> {
+  static async sendFriendRequest(userId: string, targetUserId: string): Promise<IUserDocument> {
     try {
       // Check if users are already friends
       const user = await User.findOne({ 
@@ -351,7 +399,7 @@ export class UserService {
    * @param requesterUserId The userId of the user who sent the request
    * @returns The updated user document
    */
-  static async acceptFriendRequest(userId: string, requesterUserId: string): Promise<IUser> {
+  static async acceptFriendRequest(userId: string, requesterUserId: string): Promise<IUserDocument> {
     try {
       const session = await mongoose.startSession();
       session.startTransaction();
@@ -426,7 +474,7 @@ export class UserService {
    * @param requesterUserId The userId of the user who sent the request
    * @returns The updated user document
    */
-  static async rejectFriendRequest(userId: string, requesterUserId: string): Promise<IUser> {
+  static async rejectFriendRequest(userId: string, requesterUserId: string): Promise<IUserDocument> {
     try {
       const session = await mongoose.startSession();
       session.startTransaction();
@@ -471,7 +519,7 @@ export class UserService {
    * @param friendUserId The userId of the friend to be removed
    * @returns The updated user document
    */
-  static async removeFriend(userId: string, friendUserId: string): Promise<IUser> {
+  static async removeFriend(userId: string, friendUserId: string): Promise<IUserDocument> {
     try {
       const session = await mongoose.startSession();
       session.startTransaction();
@@ -515,7 +563,7 @@ export class UserService {
    * @param userId The userId of the user
    * @returns Array of friend user objects
    */
-  static async getFriends(userId: string): Promise<IUser[]> {
+  static async getFriends(userId: string): Promise<IUserDocument[]> {
     try {
       const user = await User.findOne({ userId });
       
@@ -542,8 +590,8 @@ export class UserService {
    */
   static async updateProfileSettings(
     userId: string, 
-    settings: Partial<IUser['profileSettings']>
-  ): Promise<IUser> {
+    settings: Partial<IUserDocument['profileSettings']>
+  ): Promise<IUserDocument> {
     try {
       const updateData: Record<string, any> = {};
       
@@ -569,7 +617,115 @@ export class UserService {
       throw error;
     }
   }
-}
 
-// Create and export the model with proper type
-export const User = mongoose.model<IUser>('User', UserSchema);
+  /**
+   * Update user analytics metrics
+   * @param userId The userId of the user
+   * @param metrics The metrics to update
+   * @returns The updated user document
+   */
+  static async updateAnalyticsMetrics(
+    userId: string,
+    metrics: Partial<Pick<IUserDocument, 'totalCoursesCreated' | 'totalProjectsCreated' | 'totalPartnershipsInitiated' | 'totalPartnershipsReceived' | 'successRate'>>
+  ): Promise<IUserDocument> {
+    try {
+      const user = await User.findOneAndUpdate(
+        { userId },
+        { $set: metrics },
+        { new: true }
+      );
+      
+      if (!user) {
+        throw new Error(`User ${userId} not found`);
+      }
+      
+      logger.info(`Updated analytics metrics for user ${userId}`);
+      return user;
+    } catch (error) {
+      logger.error(`Error updating analytics metrics: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Increment analytics metrics for a user
+   * @param userId The userId of the user
+   * @param field The field to increment
+   * @param amount The amount to increment by (default: 1)
+   * @returns The updated user document
+   */
+  static async incrementMetric(
+    userId: string,
+    field: 'totalCoursesCreated' | 'totalProjectsCreated' | 'totalPartnershipsInitiated' | 'totalPartnershipsReceived',
+    amount: number = 1
+  ): Promise<IUserDocument> {
+    try {
+      const updateQuery: Record<string, any> = {};
+      updateQuery[field] = amount;
+      
+      const user = await User.findOneAndUpdate(
+        { userId },
+        { $inc: updateQuery },
+        { new: true }
+      );
+      
+      if (!user) {
+        throw new Error(`User ${userId} not found`);
+      }
+      
+      logger.info(`Incremented ${field} by ${amount} for user ${userId}`);
+      return user;
+    } catch (error) {
+      logger.error(`Error incrementing metric: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Calculate and update success rate for a user based on partnership data
+   * @param userId The userId of the user
+   * @returns The updated user document with recalculated success rate
+   */
+  static async recalculateSuccessRate(userId: string): Promise<IUserDocument> {
+    try {
+      const user = await User.findOne({ userId });
+      
+      if (!user) {
+        throw new Error(`User ${userId} not found`);
+      }
+      
+      // Calculate success rate as: (approved partnerships / total partnerships) * 100
+      const total = user.totalPartnershipsInitiated || 0;
+      
+      // Get the count of approved partnerships
+      // This would typically come from querying the Partnership collection
+      // For this example, we'll assume we have a method to get this count
+      const approvedCount = await UserService.getApprovedPartnershipsCount(userId);
+      
+      const successRate = total > 0 ? (approvedCount / total) * 100 : 0;
+      
+      // Update the user with the calculated success rate
+      return await User.findOneAndUpdate(
+        { userId },
+        { $set: { successRate: Math.round(successRate * 10) / 10 } }, // Round to 1 decimal place
+        { new: true }
+      ) as IUserDocument;
+    } catch (error) {
+      logger.error(`Error recalculating success rate: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Helper method to get count of approved partnerships
+   * @param userId The userId of the user
+   * @returns The count of approved partnerships
+   */
+  private static async getApprovedPartnershipsCount(userId: string): Promise<number> {
+    // This would be implemented to query the Partnership collection
+    // For now, we'll return a placeholder value
+    // In a real implementation, this would query the Partnership collection
+    logger.info(`Getting approved partnerships count for user ${userId}`);
+    return 0; // Placeholder implementation
+  }
+}

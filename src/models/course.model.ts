@@ -1,5 +1,5 @@
 // src/models/course.model.ts
-import mongoose, { Document, Model, Schema, HydratedDocument } from 'mongoose';
+import mongoose, { Document, Schema, Model } from 'mongoose';
 import { createLogger } from '../config/logger';
 
 const logger = createLogger('CourseModel');
@@ -15,10 +15,10 @@ export enum CourseLevel {
 }
 
 /**
- * Interface representing a Course document in MongoDB
+ * Interface for Course methods
  */
-export interface ICourse extends Document {
-  creator: mongoose.Types.ObjectId;
+interface ICourseDocument extends Document {
+  creatorUserId: string;
   name: string;
   code: string;
   level: CourseLevel;
@@ -30,20 +30,32 @@ export interface ICourse extends Document {
   startDate: Date;
   endDate: Date;
   isActive: boolean;
+  academicYear?: string;
+  semester?: string;
   createdAt: Date;
   updatedAt: Date;
+  
+  // Add method definition to interface
+  setAcademicYearAndSemester(): void;
 }
 
 /**
- * Course Schema for MongoDB
+ * Interface for Course model
  */
-const CourseSchema = new Schema<ICourse>(
+interface ICourseModel extends Model<ICourseDocument> {
+  // Add any static methods here if needed
+}
+
+/**
+ * Course Schema for MongoDB (Snowflake Schema Design)
+ */
+const CourseSchema = new Schema<ICourseDocument>(
   {
-    creator: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+    creatorUserId: {
+      type: String,
       required: true,
       index: true,
+      comment: 'Amplify userId of the creator'
     },
     name: {
       type: String,
@@ -59,6 +71,7 @@ const CourseSchema = new Schema<ICourse>(
       type: String,
       enum: Object.values(CourseLevel),
       required: true,
+      index: true,
     },
     expectedEnrollment: {
       type: Number,
@@ -85,14 +98,26 @@ const CourseSchema = new Schema<ICourse>(
     startDate: {
       type: Date,
       required: true,
+      index: true,
     },
     endDate: {
       type: Date,
       required: true,
+      index: true,
     },
     isActive: {
       type: Boolean,
       default: true,
+      index: true,
+    },
+    // Derived time dimension fields to support analytical queries
+    academicYear: {
+      type: String,
+      index: true,
+    },
+    semester: {
+      type: String,
+      index: true,
     }
   },
   {
@@ -108,24 +133,56 @@ const CourseSchema = new Schema<ICourse>(
   }
 );
 
-// Validation middleware with proper type handling
-CourseSchema.pre('save', function(next) {
-  // Use type assertion with unknown first to avoid TypeScript error
-  // This is safe because 'this' in Mongoose hooks is the document being saved
-  const course = this as unknown as HydratedDocument<ICourse>;
-
-  if (course.endDate <= course.startDate) {
-    const error = new Error('End date must be after start date');
-    logger.warn(`Course validation failed: End date must be after start date for course ${course.name}`);
-    return next(error);
+// Add method to calculate academic year and semester
+CourseSchema.methods.setAcademicYearAndSemester = function(this: ICourseDocument) {
+  const startDate = this.startDate;
+  
+  // Calculate academic year (e.g., "2024-2025")
+  const startYear = startDate.getFullYear();
+  const month = startDate.getMonth(); // 0-11
+  
+  // For academic year, typically if start month is after August, 
+  // the academic year is startYear/startYear+1
+  this.academicYear = month >= 8 
+    ? `${startYear}-${startYear + 1}`
+    : `${startYear - 1}-${startYear}`;
+  
+  // Calculate semester
+  if (month >= 8 && month <= 11) {
+    this.semester = 'Fall';
+  } else if (month >= 0 && month <= 4) {
+    this.semester = 'Spring';
+  } else {
+    this.semester = 'Summer';
   }
-  next();
+};
+
+// Validation middleware with proper type handling
+CourseSchema.pre('save', function(this: ICourseDocument, next) {
+  try {
+    // Basic validation
+    if (this.endDate <= this.startDate) {
+      const error = new Error('End date must be after start date');
+      logger.warn(`Course validation failed: End date must be after start date for course ${this.name}`);
+      return next(error);
+    }
+
+    // Calculate and set derived time dimension fields
+    this.setAcademicYearAndSemester();
+    
+    next();
+  } catch (error) {
+    next(error instanceof Error ? error : new Error(String(error)));
+  }
 });
 
-// Indexes for better query performance
-CourseSchema.index({ creator: 1 });
-CourseSchema.index({ level: 1 });
-CourseSchema.index({ startDate: 1, endDate: 1 });
+// Compound indexes for analytical queries
+CourseSchema.index({ creatorUserId: 1, level: 1 });
+CourseSchema.index({ academicYear: 1, semester: 1 });
+CourseSchema.index({ startDate: 1, endDate: 1, isActive: 1 });
 
-// Create and export the model
-export const Course = mongoose.model<ICourse>('Course', CourseSchema);
+// Create and export the model with proper type
+export const Course = mongoose.model<ICourseDocument, ICourseModel>('Course', CourseSchema);
+
+// Export the interface for use in other files
+export type ICourse = ICourseDocument;
