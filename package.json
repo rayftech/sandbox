@@ -28,6 +28,15 @@
     "dev:debug": "nodemon --exec node --inspect -r ts-node/register -r dotenv/config index.ts",
     "lint": "eslint 'src/**/*.ts'",
     "test": "jest",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:dev:build": "docker compose -f docker-compose.dev.yml build",
+    "docker:dev:up": "docker compose -f docker-compose.dev.yml up",
+    "docker:dev:down": "docker compose -f docker-compose.dev.yml down",
+    "docker:dev:logs": "docker compose -f docker-compose.dev.yml logs -f",
+    "docker:prune": "docker system prune -af"
   }
 }

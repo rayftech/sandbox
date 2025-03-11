@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: sandbox-backend-dev
+    ports:
+      - "5050:5050"
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./logs:/app/logs
+      - node_modules:/app/node_modules
+    command: yarn dev
+    restart: unless-stopped
+
+volumes:
+  node_modules:
