@@ -1,8 +1,11 @@
+// src/server.ts
 import http from 'http';
 import dotenv from 'dotenv';
 import app from './app';
 import { createLogger } from './config/logger';
 import { dbConnection } from './config/database';
+import { UserConsumerService } from './services/user.consumer.service';
+import { EventPublisher } from './services/event.publisher';
 
 // Load environment variables
 dotenv.config();
@@ -14,6 +17,23 @@ const PORT = process.env.PORT || 5050;
 
 // Create HTTP server
 const server = http.createServer(app);
+
+/**
+ * Initialize message services
+ */
+async function initializeMessageServices() {
+  try {
+    // Initialize event publisher
+    await EventPublisher.getInstance().initialize();
+    logger.info('Event publisher initialized');
+    
+    // Initialize user consumer
+    await UserConsumerService.getInstance().initialize();
+    logger.info('User consumer service initialized');
+  } catch (error) {
+    logger.error(`Failed to initialize message services: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
 
 /**
  * Graceful server shutdown
@@ -51,6 +71,9 @@ async function startServer() {
   try {
     // Connect to database
     await dbConnection.connect();
+    
+    // Initialize message services
+    await initializeMessageServices();
     
     // Start HTTP server
     server.listen(PORT, () => {

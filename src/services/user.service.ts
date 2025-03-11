@@ -85,4 +85,77 @@ export class UserService {
       throw error;
     }
   }
+
+  /**
+ * Update user profile settings
+ * @param userId The userId of the user
+ * @param profileSettings The profile settings to update
+ * @returns The updated user document or null if not found
+ */
+static async updateProfileSettings(userId: string, profileSettings: any): Promise<IUser | null> {
+  try {
+    const updateData: any = {};
+    
+    // Validate visibility setting
+    if (profileSettings.visibility) {
+      if (!['public', 'private', 'friends-only'].includes(profileSettings.visibility)) {
+        throw new Error('Invalid visibility setting. Must be "public", "private", or "friends-only"');
+      }
+      updateData['profileSettings.visibility'] = profileSettings.visibility;
+    }
+    
+    // Validate boolean settings
+    if (typeof profileSettings.allowFriendRequests === 'boolean') {
+      updateData['profileSettings.allowFriendRequests'] = profileSettings.allowFriendRequests;
+    }
+    
+    if (typeof profileSettings.emailNotifications === 'boolean') {
+      updateData['profileSettings.emailNotifications'] = profileSettings.emailNotifications;
+    }
+    
+    // Update user
+    const user = await User.findOneAndUpdate(
+      { userId },
+      { $set: updateData },
+      { new: true }
+    );
+    
+    if (user) {
+      logger.info(`Updated profile settings for user ${userId}`);
+    } else {
+      logger.warn(`Attempted to update profile settings for non-existent user ${userId}`);
+    }
+    
+    return user;
+  } catch (error) {
+    logger.error(`Error updating profile settings: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
+
+/**
+ * Update user's last login timestamp
+ * @param userId The userId of the user
+ * @returns The updated user document or null if not found
+ */
+static async updateLastLogin(userId: string): Promise<IUser | null> {
+  try {
+    const user = await User.findOneAndUpdate(
+      { userId },
+      { $set: { lastLogin: new Date() } },
+      { new: true }
+    );
+    
+    if (user) {
+      logger.info(`Updated last login for user ${userId}`);
+    } else {
+      logger.warn(`Attempted to update last login for non-existent user ${userId}`);
+    }
+    
+    return user;
+  } catch (error) {
+    logger.error(`Error updating last login: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
 }

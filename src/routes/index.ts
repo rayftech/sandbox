@@ -1,7 +1,9 @@
 // src/routes/index.ts
 import { Router } from 'express';
-// import userRoutes from './user.routes';
 import { logger } from '../config/logger';
+import authRoutes from './auth.routes';
+import userRoutes from './user.routes';
+// Import other routes as needed
 
 // Create main router
 const router = Router();
@@ -12,8 +14,9 @@ router.use((req, _res, next) => {
   next();
 });
 
-// // Register route modules
-// router.use('/users', userRoutes);
+// Register route modules
+router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
 
 // API version and status endpoint
 router.get('/', (_req, res) => {
