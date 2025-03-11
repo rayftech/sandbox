@@ -1,1 +1,7 @@
 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:40 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 

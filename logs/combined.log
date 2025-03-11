@@ -27,3 +27,64 @@
 2025-03-07 20:55:09 [app] INFO: [0mGET /api [32m200[0m 5.974 ms - 104[0m 
 2025-03-07 20:55:09 [ErrorMiddleware] WARN: 404 - Cannot find /favicon.ico on this server - /favicon.ico - GET 
 2025-03-07 20:55:09 [app] INFO: [0mGET /favicon.ico [33m404[0m 10.462 ms - 1267[0m 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Connecting to RabbitMQ at rabbitmq:5672 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Starting RabbitMQ connection test... 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Connecting to RabbitMQ... 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Connected to RabbitMQ successfully! ✅ 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Scheduling reconnection attempt 1 in 6 seconds 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Connecting to RabbitMQ at rabbitmq:5672 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Asserting test queue: test_queue 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Test queue created successfully! ✅ 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Scheduling reconnection attempt 2 in 9 seconds 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Connecting to RabbitMQ at rabbitmq:5672 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Setting up message consumer... 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Consumer setup successful! ✅ 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Scheduling reconnection attempt 3 in 14 seconds 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Connecting to RabbitMQ at rabbitmq:5672 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Sending test messages... 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Message 1 sent: failed ❌ 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Scheduling reconnection attempt 4 in 17 seconds 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Connecting to RabbitMQ at rabbitmq:5672 
+2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:39 [RabbitMQTest] INFO: Message 2 sent: failed ❌ 
+2025-03-11 15:01:39 [RabbitMQService] INFO: Scheduling reconnection attempt 5 in 26 seconds 
+2025-03-11 15:01:40 [RabbitMQService] INFO: Connecting to RabbitMQ at rabbitmq:5672 
+2025-03-11 15:01:40 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-11 15:01:40 [RabbitMQTest] INFO: Message 3 sent: failed ❌ 
+2025-03-11 15:01:40 [RabbitMQService] INFO: Scheduling reconnection attempt 6 in 40 seconds 
+2025-03-11 15:01:40 [RabbitMQTest] INFO: Waiting for message processing... 
+2025-03-11 15:01:42 [RabbitMQTest] INFO: Closing RabbitMQ connection... 
+2025-03-11 15:01:42 [RabbitMQService] INFO: RabbitMQ connection closed gracefully 
+2025-03-11 15:03:38 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Starting RabbitMQ connection test... 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Connecting to RabbitMQ... 
+2025-03-11 15:03:38 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Connected to RabbitMQ successfully! ✅ 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Asserting test queue: test_queue 
+2025-03-11 15:03:38 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Test queue created successfully! ✅ 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Setting up message consumer... 
+2025-03-11 15:03:38 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-11 15:03:38 [RabbitMQService] INFO: Consumer registered for queue 'test_queue' with tag 'amq.ctag-3q5MN106PhZaT3aiwJ_wIQ' 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Consumer setup successful! ✅ 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Sending test messages... 
+2025-03-11 15:03:38 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Message 1 sent: success ✅ 
+2025-03-11 15:03:38 [RabbitMQService] DEBUG: Message sent to queue 'test_queue' successfully 
+2025-03-11 15:03:38 [RabbitMQTest] INFO: Received message: {"id":1,"text":"Test message 1","timestamp":"2025-03-11T04:03:38.982Z"} 
+2025-03-11 15:03:39 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-11 15:03:39 [RabbitMQTest] INFO: Message 2 sent: success ✅ 
+2025-03-11 15:03:39 [RabbitMQService] DEBUG: Message sent to queue 'test_queue' successfully 
+2025-03-11 15:03:39 [RabbitMQTest] INFO: Received message: {"id":2,"text":"Test message 2","timestamp":"2025-03-11T04:03:39.486Z"} 
+2025-03-11 15:03:39 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-11 15:03:39 [RabbitMQTest] INFO: Message 3 sent: success ✅ 
+2025-03-11 15:03:39 [RabbitMQService] DEBUG: Message sent to queue 'test_queue' successfully 
+2025-03-11 15:03:39 [RabbitMQTest] INFO: Received message: {"id":3,"text":"Test message 3","timestamp":"2025-03-11T04:03:39.992Z"} 
+2025-03-11 15:03:40 [RabbitMQTest] INFO: Waiting for message processing... 
+2025-03-11 15:03:42 [RabbitMQTest] INFO: Closing RabbitMQ connection... 
+2025-03-11 15:03:42 [RabbitMQService] WARN: RabbitMQ channel closed 
+2025-03-11 15:03:42 [RabbitMQTest] INFO: RabbitMQ connection closed successfully! ✅ 

@@ -1,0 +1,17 @@
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install development dependencies including TypeScript
+COPY package.json yarn.lock ./
+RUN yarn install
+
+# Copy tsconfig and source code
+COPY tsconfig.json ./
+
+# Expose the application port
+EXPOSE 5050
+
+# Command to run development server with hot-reloading
+CMD ["yarn", "dev"]
