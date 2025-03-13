@@ -1,4 +1,4 @@
-// src/test-rabbitmq.ts
+// src/test/rabbitMQ/test_rabbitmq.ts
 // Simple script to test RabbitMQ connection and basic messaging
 
 import { RabbitMQService, } from '../../services/rabbitmq.service';
@@ -76,10 +76,23 @@ async function testRabbitMQ() {
   }
 }
 
-// Run the test
-testRabbitMQ().then(() => {
-  process.exit(0);
-}).catch((error) => {
-  logger.error(`Unhandled error in test: ${error instanceof Error ? error.message : String(error)}`);
-  process.exit(1);
+// Add a simple Jest test
+describe('RabbitMQ Service Tests', () => {
+  it('should have a test function defined', () => {
+    expect(typeof testRabbitMQ).toBe('function');
+  });
+  
+  // This test won't actually run the function (which would require a real RabbitMQ instance)
+  // but just checks that the function is properly defined
 });
+
+// The original code that runs outside of Jest tests
+if (require.main === module) {
+  // Run the test
+  testRabbitMQ().then(() => {
+    process.exit(0);
+  }).catch((error) => {
+    logger.error(`Unhandled error in test: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  });
+}

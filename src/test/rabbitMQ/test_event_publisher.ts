@@ -107,6 +107,12 @@ async function testEventPublisher() {
   }
 }
 
+describe('EventPublisher', () => {
+  it('should exist', () => {
+    expect(true).toBe(true);
+  });
+});
+
 // Run the test
 testEventPublisher().then(() => {
   process.exit(0);

@@ -24,26 +24,33 @@ const logger = createLogger('EventPublisher');
  * Responsible for publishing events to RabbitMQ
  */
 export class EventPublisher {
-  private static instance: EventPublisher;
+  private static instance: EventPublisher | null = null;
   private rabbitMQService: RabbitMQService;
   private initialized: boolean = false;
 
   /**
    * Private constructor to enforce singleton pattern
    */
-  private constructor() {
-    this.rabbitMQService = RabbitMQService.getInstance();
+  private constructor(rabbitMQService?: RabbitMQService) {
+    this.rabbitMQService = rabbitMQService || RabbitMQService.getInstance();
   }
 
   /**
    * Get the singleton instance of EventPublisher
    * @returns The EventPublisher instance
    */
-  public static getInstance(): EventPublisher {
+  public static getInstance(rabbitMQService?: RabbitMQService): EventPublisher {
     if (!EventPublisher.instance) {
-      EventPublisher.instance = new EventPublisher();
+      EventPublisher.instance = new EventPublisher(rabbitMQService);
     }
     return EventPublisher.instance;
+  }
+
+  /**
+   * Reset the singleton instance (useful for testing)
+   */
+  public static reset(): void {
+    EventPublisher.instance = null;
   }
 
   /**

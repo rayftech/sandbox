@@ -1,5 +1,5 @@
 // src/services/user.service.ts
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 import { User, IUser } from '../models/user.model';
 import { createLogger } from '../config/logger';
 

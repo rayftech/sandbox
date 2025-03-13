@@ -20,7 +20,11 @@ export class AuthMiddleware {
    * Middleware to verify if request contains valid user data
    * This assumes the request has a userId in headers, params, or body
    */
-  public static authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
+  public static authenticateUser = async (
+    req: Request, 
+    _res: Response, // Use underscore prefix to indicate intentionally unused
+    next: NextFunction
+  ) => {
     try {
       // Extract userId from request (check headers, params, and body)
       const userId = 
@@ -54,7 +58,11 @@ export class AuthMiddleware {
    * Middleware to verify if user is an admin
    * Must be used after authenticateUser middleware
    */
-  public static requireAdmin = (req: Request, res: Response, next: NextFunction) => {
+  public static requireAdmin = (
+    req: Request, 
+    _res: Response, // Use underscore prefix to indicate intentionally unused
+    next: NextFunction
+  ) => {
     if (!req.user) {
       return next(new ApiError(401, 'Authentication required'));
     }
@@ -72,7 +80,11 @@ export class AuthMiddleware {
    * Must be used after authenticateUser middleware
    */
   public static requireUserType = (allowedTypes: string[]) => {
-    return (req: Request, res: Response, next: NextFunction) => {
+    return (
+      req: Request, 
+      _res: Response, // Use underscore prefix to indicate intentionally unused
+      next: NextFunction
+    ) => {
       if (!req.user) {
         return next(new ApiError(401, 'Authentication required'));
       }

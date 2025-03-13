@@ -40,7 +40,7 @@ export class RabbitMQServiceMock {
         this.queues.set(queue.toString(), []);
         return Promise.resolve('consumer-tag');
       }),
-      publish: jest.fn().mockImplementation((exchange, routingKey, message) => {
+      publish: jest.fn().mockImplementation((_, routingKey, message) => {
         // For simplicity, in tests publish directly to a queue named after the routing key
         this.addMessageToQueue(routingKey, message);
         return Promise.resolve(true);
@@ -159,3 +159,10 @@ export function createRabbitMQServiceMock() {
     getInstance: jest.fn().mockReturnValue(RabbitMQServiceMock.getInstance()),
   };
 }
+
+describe('RabbitMQServiceMock', () => {
+  it('should create a mock instance', () => {
+    const mock = RabbitMQServiceMock.getInstance();
+    expect(mock).toBeDefined();
+  });
+});

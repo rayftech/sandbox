@@ -1,4 +1,3 @@
-// src/models/user.model.ts
 import mongoose, { Document, Schema, Model } from 'mongoose';
 import { createLogger } from '../config/logger';
 
@@ -51,6 +50,7 @@ interface IUserDocument extends Document, IUserAttributes {
   updatedAt: Date;
   
   // Define any methods here
+  logUserCreation(): void;
 }
 
 /**
@@ -58,6 +58,7 @@ interface IUserDocument extends Document, IUserAttributes {
  */
 interface IUserModel extends Model<IUserDocument> {
   // Add any static methods here if needed
+  logModelInitialization(): void;
 }
 
 /**
@@ -126,7 +127,6 @@ const UserSchema = new Schema<IUserDocument>(
       accepted: [{
         type: String,
         ref: 'User',
-        index: true,
       }],
     },
     
@@ -177,7 +177,7 @@ const UserSchema = new Schema<IUserDocument>(
   {
     timestamps: true, // Adds createdAt and updatedAt automatically
     toJSON: {
-      transform: (doc, ret) => {
+      transform: (_doc, ret) => {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
@@ -187,6 +187,16 @@ const UserSchema = new Schema<IUserDocument>(
   }
 );
 
+// Instance method to log user creation
+UserSchema.methods.logUserCreation = function() {
+  logger.info(`New user created: ${this.userId} (${this.email})`);
+};
+
+// Static method to log model initialization
+UserSchema.statics.logModelInitialization = function() {
+  logger.info('User model initialized');
+};
+
 // Compound indexes for better query performance
 UserSchema.index({ userType: 1, isAdmin: 1 });
 UserSchema.index({ lastName: 1, firstName: 1 });
@@ -194,8 +204,14 @@ UserSchema.index({ 'friendRequests.accepted': 1 });
 UserSchema.index({ 'friendRequests.sent': 1 });
 UserSchema.index({ 'friendRequests.received': 1 });
 
+// Log model initialization
+logger.info('Configuring User model');
+
 // Create and export the model with proper type information
 export const User = mongoose.model<IUserDocument, IUserModel>('User', UserSchema);
+
+// Call static method to log initialization
+User.logModelInitialization();
 
 // Re-export the interface for use in other files
 export type IUser = IUserDocument;

@@ -40,15 +40,15 @@
     "dev": "nodemon --exec ts-node -r dotenv/config index.ts",
     "dev:debug": "nodemon --exec node --inspect -r ts-node/register -r dotenv/config index.ts",
     "lint": "eslint 'src/**/*.ts'",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:user-sync": "jest src/test/userSync/test_user_sync.ts",
-    "test:auth-middleware": "jest src/test/userSync/test_auth_middleware.ts",
-    "test:userSync": "jest src/test/userSync",
+    "test": "jest --config=jest.config.js --runInBand",
+    "test:watch": "jest --config=jest.config.js --watch --runInBand",
+    "test:coverage": "jest --config=jest.config.js --coverage --runInBand",
+    "test:user-sync": "jest --config=jest.config.js src/test/userSync/test_user_sync.ts --runInBand",
+    "test:auth-middleware": "jest --config=jest.config.js src/test/userSync/test_auth_middleware.ts --runInBand",
+    "test:userSync": "jest --config=jest.config.js src/test/userSync --runInBand",
     "test:rabbitmq": "ts-node -r dotenv/config src/test/rabbitMQ/test_rabbitmq.ts",
     "test:events": "ts-node -r dotenv/config src/test/rabbitMQ/test_event_publisher.ts",
-    "test:debug": "NODE_ENV=test jest --detectOpenHandles --runInBand --verbose",
+    "test:debug": "NODE_ENV=test jest --config=jest.config.js --verbose --runInBand",
     "clean": "rimraf dist",
     "docker:build": "docker compose build",
     "docker:up": "docker compose up",
@@ -59,21 +59,5 @@
     "docker:dev:down": "docker compose -f docker-compose.dev.yml down",
     "docker:dev:logs": "docker compose -f docker-compose.dev.yml logs -f",
     "docker:prune": "docker system prune -af"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "roots": ["<rootDir>/src"],
-    "testMatch": [
-      "**/__tests__/**/*.ts",
-      "**/*.test.ts",
-      "**/test_*.ts"
-    ],
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "setupFilesAfterEnv": ["<rootDir>/src/test/setup.ts"],
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
-    "verbose": true
   }
 }
