@@ -1,6 +1,7 @@
 // src/models/course.model.ts
 import mongoose, { Document, Schema, Model } from 'mongoose';
 import { createLogger } from '../config/logger';
+import { ItemLifecycleStatus, determineItemStatus } from './status.enum';
 
 const logger = createLogger('CourseModel');
 
@@ -30,6 +31,7 @@ interface ICourseDocument extends Document {
   startDate: Date;
   endDate: Date;
   isActive: boolean;
+  status: ItemLifecycleStatus;
   academicYear?: string;
   semester?: string;
   createdAt: Date;
@@ -110,6 +112,12 @@ const CourseSchema = new Schema<ICourseDocument>(
       default: true,
       index: true,
     },
+    status:{
+      type: String,
+      enum: Object.values(ItemLifecycleStatus),
+      default: ItemLifecycleStatus.UPCOMING,
+      index:true
+    },
     // Derived time dimension fields to support analytical queries
     academicYear: {
       type: String,
@@ -123,7 +131,7 @@ const CourseSchema = new Schema<ICourseDocument>(
   {
     timestamps: true,
     toJSON: {
-      transform: (doc, ret) => {
+      transform: (_doc, ret) => {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
@@ -133,7 +141,7 @@ const CourseSchema = new Schema<ICourseDocument>(
   }
 );
 
-// Add method to calculate academic year and semester
+// calculate academic year and semester
 CourseSchema.methods.setAcademicYearAndSemester = function(this: ICourseDocument) {
   const startDate = this.startDate;
   
@@ -155,6 +163,12 @@ CourseSchema.methods.setAcademicYearAndSemester = function(this: ICourseDocument
   } else {
     this.semester = 'Summer';
   }
+};
+
+// 
+CourseSchema.methods.updateStatus = function(this: ICourseDocument) {
+  const isCompleted = !this.isActive && new Date() > this.endDate;
+  this.status = determineItemStatus(this.startDate, this.endDate, isCompleted);
 };
 
 // Validation middleware with proper type handling

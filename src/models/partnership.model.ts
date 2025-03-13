@@ -1,6 +1,7 @@
 // src/models/partnership.model.ts
 import mongoose, { Document, Schema, Model, CallbackError } from 'mongoose';
 import { createLogger } from '../config/logger';
+// import { ItemLifecycleStatus, determineItemStatus } from './status.enum';
 
 const logger = createLogger('PartnershipModel');
 

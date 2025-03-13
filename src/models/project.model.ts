@@ -2,6 +2,8 @@
 import mongoose, { Document, Schema, Model } from 'mongoose';
 import { CourseLevel } from './course.model';
 import { createLogger } from '../config/logger';
+import { ItemLifecycleStatus, determineItemStatus } from './status.enum';
+
 
 const logger = createLogger('ProjectModel');
 
@@ -21,6 +23,7 @@ interface IProjectDocument extends Document {
   startDate: Date;
   endDate: Date;
   isActive: boolean;
+  status: ItemLifecycleStatus;
   year?: number;
   quarter?: number;
   fiscalYear?: string;
@@ -103,6 +106,12 @@ const ProjectSchema = new Schema<IProjectDocument>(
       default: true,
       index: true,
     },
+    status:{
+      type: String,
+      enum: Object.values(ItemLifecycleStatus),
+      default: ItemLifecycleStatus.UPCOMING,
+      index: true,
+    },
     // Derived time dimension fields to support analytical queries
     year: {
       type: Number,
@@ -150,6 +159,20 @@ ProjectSchema.methods.setTimeAnalyticsDimensions = function(this: IProjectDocume
   const fiscalYearEnd = fiscalYearStart + 1;
   this.fiscalYear = `FY${fiscalYearEnd}`;
 };
+
+// Add method to update status based on dates and return if it changed
+ProjectSchema.methods.updateStatus = function(this: IProjectDocument): boolean {
+  const isCompleted = !this.isActive && new Date() > this.endDate;
+  const newStatus = determineItemStatus(this.startDate, this.endDate, isCompleted);
+  
+  if (this.status !== newStatus) {
+    this.status = newStatus;
+    return true; 
+  }
+  
+  return false;
+};
+
 
 // Validation middleware with proper type handling
 ProjectSchema.pre('save', function(this: IProjectDocument, next) {
