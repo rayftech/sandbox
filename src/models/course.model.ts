@@ -32,6 +32,7 @@ interface ICourseDocument extends Document {
   endDate: Date;
   isActive: boolean;
   status: ItemLifecycleStatus;
+  country:string;
   academicYear?: string;
   semester?: string;
   createdAt: Date;
@@ -118,6 +119,11 @@ const CourseSchema = new Schema<ICourseDocument>(
       default: ItemLifecycleStatus.UPCOMING,
       index:true
     },
+    country: {
+      type: String,
+      trim: true,
+      index: true,
+    },
     // Derived time dimension fields to support analytical queries
     academicYear: {
       type: String,
@@ -194,7 +200,6 @@ CourseSchema.pre('save', function(this: ICourseDocument, next) {
 CourseSchema.index({ creatorUserId: 1, level: 1 });
 CourseSchema.index({ academicYear: 1, semester: 1 });
 CourseSchema.index({ startDate: 1, endDate: 1, isActive: 1 });
-
 // Create and export the model with proper type
 export const Course = mongoose.model<ICourseDocument, ICourseModel>('Course', CourseSchema);
 

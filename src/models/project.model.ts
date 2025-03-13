@@ -24,6 +24,7 @@ interface IProjectDocument extends Document {
   endDate: Date;
   isActive: boolean;
   status: ItemLifecycleStatus;
+  country: string;
   year?: number;
   quarter?: number;
   fiscalYear?: string;
@@ -112,6 +113,11 @@ const ProjectSchema = new Schema<IProjectDocument>(
       default: ItemLifecycleStatus.UPCOMING,
       index: true,
     },
+    country:{
+      type: String,
+      trim: true,
+      index: true,
+    },
     // Derived time dimension fields to support analytical queries
     year: {
       type: Number,
@@ -198,6 +204,7 @@ ProjectSchema.index({ creatorUserId: 1, studentLevel: 1 });
 ProjectSchema.index({ year: 1, quarter: 1 });
 ProjectSchema.index({ fiscalYear: 1, isActive: 1 });
 ProjectSchema.index({ startDate: 1, endDate: 1 });
+ProjectSchema.index({ country: 1, studentLevel: 1 }); 
 
 // Create and export the model with proper type information
 export const Project = mongoose.model<IProjectDocument, IProjectModel>('Project', ProjectSchema);

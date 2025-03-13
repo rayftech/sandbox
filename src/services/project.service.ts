@@ -19,7 +19,8 @@ export interface IProjectCreationData {
   potentialSolution?: string;
   additionalInformation?: string;
   targetAcademicPartnership?: string;
-  studentLevel: CourseLevel;
+  studentLevel?: CourseLevel;
+  country?:string;
   startDate: Date;
   endDate: Date;
 }
@@ -36,6 +37,7 @@ export interface IProjectUpdateData {
   additionalInformation?: string;
   targetAcademicPartnership?: string;
   studentLevel?: CourseLevel;
+  country?:string;
   startDate?: Date;
   endDate?: Date;
   isActive?: boolean;
@@ -67,6 +69,7 @@ export class ProjectService {
         throw new Error(`Creator with userId ${projectData.creator} not found`);
       }
 
+
       // Create new project
       const project = new Project({
         creator: user._id, // Use the MongoDB _id, not the userId
@@ -78,10 +81,14 @@ export class ProjectService {
         additionalInformation: projectData.additionalInformation,
         targetAcademicPartnership: projectData.targetAcademicPartnership,
         studentLevel: projectData.studentLevel,
+        country: projectData.country,
         startDate: projectData.startDate,
         endDate: projectData.endDate,
         isActive: true
       });
+
+      // Set time analytics dimensions
+      project.setTimeAnalyticsDimensions();
 
       // Save the project
       const savedProject = await project.save({ session });
@@ -94,7 +101,7 @@ export class ProjectService {
       );
       
       await session.commitTransaction();
-      logger.info(`New project created: ${savedProject._id} by user ${projectData.creator}`);
+      logger.info(`New project created: ${savedProject._id} by user ${projectData.creator} from ${projectData.country || 'missing country input'}`);
       
       return savedProject;
     } catch (error) {
@@ -176,7 +183,7 @@ export class ProjectService {
   ): Promise<IProject> {
     try {
       // Get the project to update
-      const project = await Project.findById(projectId).lean();
+      const project = await Project.findById(projectId);
       
       if (!project) {
         throw new Error(`Project with ID ${projectId} not found`);
@@ -189,15 +196,7 @@ export class ProjectService {
       }
 
       // Verify the user has permission to update this project
-      // Use type assertion to safely access creator field
-      const creatorId = (project as any).creator;
-      const creatorUser = await User.findById(creatorId);
-      
-      if (!creatorUser) {
-        throw new Error('Project creator not found');
-      }
-
-      if (creatorUser.userId !== userId && !user.isAdmin) {
+      if (project.creatorUserId !== userId && !user.isAdmin) {
         throw new Error('Permission denied: Only project creator or admin can update this project');
       }
 
@@ -209,12 +208,12 @@ export class ProjectService {
       
       // If only one date is provided, check against existing date
       if (updateData.startDate && !updateData.endDate && 
-          updateData.startDate >= (project as any).endDate) {
+          updateData.startDate >= project.endDate) {
         throw new Error('Start date must be before existing end date');
       }
       
       if (!updateData.startDate && updateData.endDate && 
-          updateData.endDate <= (project as any).startDate) {
+          updateData.endDate <= project.startDate) {
         throw new Error('End date must be after existing start date');
       }
 
@@ -229,7 +228,13 @@ export class ProjectService {
         throw new Error(`Failed to update project with ID ${projectId}`);
       }
 
-      logger.info(`Project ${projectId} updated by user ${userId}`);
+      // If dates were updated, recalculate time analytics dimensions
+      if (updateData.startDate || updateData.endDate) {
+        updatedProject.setTimeAnalyticsDimensions();
+        await updatedProject.save();
+      }
+
+      logger.info(`Project ${projectId} updated by user ${userId}${updateData.country ? `, country set to: ${updateData.country}` : ''}`);
       return updatedProject;
     } catch (error) {
       logger.error(`Error updating project: ${error instanceof Error ? error.message : String(error)}`);
@@ -357,6 +362,7 @@ export class ProjectService {
     }
   }
 
+
   /**
    * Check if a project has any active partnerships
    * @param projectId The MongoDB ID of the project
@@ -368,6 +374,23 @@ export class ProjectService {
     logger.info(`Checking if project ${projectId} has active partnerships`);
     return false; // Placeholder implementation
   }
+
+  /**
+   * Get projects by country
+   * @param country The country to filter by
+   * @returns Array of matching project documents
+   */
+    static async getProjectsByCountry(country: string): Promise<IProject[]> {
+      try {
+        return await Project.find({ country })
+          .sort({ createdAt: -1 });
+      } catch (error) {
+        logger.error(`Error getting projects by country: ${error instanceof Error ? error.message : String(error)}`);
+        throw error;
+      }
+    }
+
+
 
   /**
    * Get projects with pagination

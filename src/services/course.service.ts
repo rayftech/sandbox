@@ -19,6 +19,7 @@ export interface ICourseCreationData {
   assessmentRedesign?: string;
   targetIndustryPartnership?: string;
   preferredPartnerRepresentative?: string;
+  country?: string;
   startDate: Date;
   endDate: Date;
 }
@@ -35,6 +36,7 @@ export interface ICourseUpdateData {
   assessmentRedesign?: string;
   targetIndustryPartnership?: string;
   preferredPartnerRepresentative?: string;
+  country?: string;
   startDate?: Date;
   endDate?: Date;
   isActive?: boolean;
@@ -79,6 +81,7 @@ export class CourseService {
         preferredPartnerRepresentative: courseData.preferredPartnerRepresentative,
         startDate: courseData.startDate,
         endDate: courseData.endDate,
+        country: courseData.country,
         isActive: true
       });
 
@@ -97,7 +100,7 @@ export class CourseService {
       );
       
       await session.commitTransaction();
-      logger.info(`New course created: ${savedCourse._id} by user ${courseData.creatorUserId}`);
+      logger.info(`New course created: ${savedCourse._id} by user ${courseData.creatorUserId} from ${courseData.country || 'missing country input'}`);
       
       return savedCourse;
     } catch (error) {
@@ -233,7 +236,7 @@ export class CourseService {
       // Save the updated course
       const updatedCourse = await course.save();
 
-      logger.info(`Course ${courseId} updated by user ${userId}`);
+      logger.info(`Course ${courseId} updated by user ${userId}${updateData.country ? `, country set to: ${updateData.country}` : ''}`);
       return updatedCourse;
     } catch (error) {
       logger.error(`Error updating course: ${error instanceof Error ? error.message : String(error)}`);
@@ -380,6 +383,46 @@ export class CourseService {
       return false;
     }
   }
+
+    /**
+   * Get courses by country
+   * @param country The country to filter by
+   * @returns Array of matching course documents
+   */
+    static async getCoursesByCountry(country: string): Promise<ICourse[]> {
+      try {
+        return await Course.find({ country })
+          .sort({ createdAt: -1 });
+      } catch (error) {
+        logger.error(`Error getting courses by country: ${error instanceof Error ? error.message : String(error)}`);
+        throw error;
+      }
+    }
+
+      /**
+   * Get course statistics by country
+   * @returns Array of statistical groupings by country
+   */
+    static async getCourseStatsByCountry(): Promise<any[]> {
+      try {
+        return await Course.aggregate([
+          {
+            $group: {
+              _id: { country: '$country' },
+              count: { $sum: 1 },
+              avgEnrollment: { $avg: '$expectedEnrollment' },
+              countries: { $addToSet: '$country' }
+            }
+          },
+          {
+            $sort: { count: -1 }
+          }
+        ]);
+      } catch (error) {
+        logger.error(`Error getting course statistics by country: ${error instanceof Error ? error.message : String(error)}`);
+        throw error;
+      }
+    }
 
   /**
    * Get courses with pagination
