@@ -9,6 +9,16 @@ export class RabbitMQServiceMock {
   private connected: boolean = false;
   private queues: Map<string, any[]> = new Map();
   private consumers: Map<string, MessageHandler> = new Map();
+  
+  // Add properties to match the structure of RabbitMQService
+  public connection: any = null;
+  public channel: any = null;
+  public connecting: boolean = false;
+  public reconnectTimeout: NodeJS.Timeout | null = null;
+  public connectionAttempts: number = 0;
+  private readonly MAX_RECONNECT_ATTEMPTS = 10;
+  private readonly RECONNECT_INTERVAL = 5000;
+  
   private mockCallbacks: {
     connect: jest.Mock;
     assertQueue: jest.Mock;
@@ -102,20 +112,27 @@ export class RabbitMQServiceMock {
     }
   }
 
+  /**
+   * Reset the singleton instance (useful for testing)
+   */
+  public static reset(): void {
+    RabbitMQServiceMock.instance = undefined as any;
+  }
+
   // Mock implementations of RabbitMQService methods
   public connect(): Promise<any> {
     this.connected = true;
     return this.mockCallbacks.connect();
   }
 
-  public assertQueue(queue: string): Promise<any> {
+  public assertQueue(queue: string, options?: any): Promise<any> {
     if (!this.queues.has(queue)) {
       this.queues.set(queue, []);
     }
     return this.mockCallbacks.assertQueue(queue);
   }
 
-  public assertExchange(exchange: string, type: string): Promise<boolean> {
+  public assertExchange(exchange: string, type: string, options?: any): Promise<boolean> {
     return this.mockCallbacks.assertExchange(exchange, type);
   }
 
@@ -123,20 +140,50 @@ export class RabbitMQServiceMock {
     return this.mockCallbacks.bindQueue(queue, exchange, routingKey);
   }
 
-  public sendToQueue(queue: string, message: any): Promise<boolean> {
+  public sendToQueue(queue: string, message: any, options?: any): Promise<boolean> {
     return this.mockCallbacks.sendToQueue(queue, message);
   }
 
-  public consumeQueue(queue: string, handler: MessageHandler): Promise<string | null> {
+  public consumeQueue(queue: string, handler: MessageHandler, options?: any): Promise<string | null> {
     return this.mockCallbacks.consumeQueue(queue, handler);
   }
 
-  public publish(exchange: string, routingKey: string, message: any): Promise<boolean> {
+  public publish(exchange: string, routingKey: string, message: any, options?: any): Promise<boolean> {
     return this.mockCallbacks.publish(exchange, routingKey, message);
   }
 
   public close(): Promise<void> {
     return this.mockCallbacks.close();
+  }
+
+  // Implement additional methods to match RabbitMQService structure
+  public resetConnection(): void {
+    this.channel = null;
+    this.connection = null;
+    this.connecting = false;
+  }
+
+  public scheduleReconnect(): void {
+    // Mock implementation that does nothing
+  }
+
+  public async reregisterConsumers(): Promise<void> {
+    // Mock implementation
+    return Promise.resolve();
+  }
+
+  public async getChannel(): Promise<any> {
+    // Mock implementation
+    return this.channel || this.connect();
+  }
+
+  public parseMessage(msg: any): any {
+    const content = msg.content.toString();
+    try {
+      return JSON.parse(content);
+    } catch (error) {
+      return content;
+    }
   }
 
   // Helper methods for testing
@@ -157,6 +204,7 @@ export class RabbitMQServiceMock {
 export function createRabbitMQServiceMock() {
   return {
     getInstance: jest.fn().mockReturnValue(RabbitMQServiceMock.getInstance()),
+    reset: jest.fn().mockImplementation(() => RabbitMQServiceMock.reset())
   };
 }
 

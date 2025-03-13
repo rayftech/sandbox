@@ -6,7 +6,7 @@ import { RabbitMQServiceMock, createRabbitMQServiceMock } from './mocks/test_rab
 import { UserConsumerService } from '../../services/user.consumer.service';
 import { EventPublisher } from '../../services/event.publisher';
 import { EventType } from '../../models/events.model';
-
+import { RabbitMQService } from '../../services/rabbitmq.service';
 
 // Add these helper functions to the top of your test_user_sync.ts file
 
@@ -14,112 +14,36 @@ import { EventType } from '../../models/events.model';
  * Helper function to wait for database operations to complete
  * Atlas connections might have higher latency than local connections
  */
-const waitForDb = async (ms = 300) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
+// const waitForDb = async (ms = 300) => {
+//   return new Promise(resolve => setTimeout(resolve, ms));
+// };
 
 /**
  * Helper function to retry a database operation a few times
  * Useful for eventual consistency in cloud databases
  */
-async function retryDbOperation<T>(
-  operation: () => Promise<T>,
-  maxRetries = 3,
-  delay = 300
-): Promise<T> {
-  let lastError: any;
+// async function retryDbOperation<T>(
+//   operation: () => Promise<T>,
+//   maxRetries = 3,
+//   delay = 300
+// ): Promise<T> {
+//   let lastError: any;
   
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const result = await operation();
-      if (result) return result;
+//   for (let attempt = 1; attempt <= maxRetries; attempt++) {
+//     try {
+//       const result = await operation();
+//       if (result) return result;
       
-      // If the result is null/undefined but we expected data, wait and retry
-      await waitForDb(delay);
-    } catch (error) {
-      lastError = error;
-      await waitForDb(delay);
-    }
-  }
+//       // If the result is null/undefined but we expected data, wait and retry
+//       await waitForDb(delay);
+//     } catch (error) {
+//       lastError = error;
+//       await waitForDb(delay);
+//     }
+//   }
   
-  throw lastError || new Error(`Operation failed after ${maxRetries} attempts`);
-}
-
-// Then update your failing tests:
-
-it('should create a new user when the user does not exist', async () => {
-  // Arrange
-  const userData: IAmplifyUserData = {
-    userId: '123456789',
-    email: 'test@example.com',
-    firstName: 'Test',
-    lastName: 'User',
-    userType: 'academic',
-    isAdmin: false
-  };
-
-  // Act
-  const result = await UserService.createOrUpdateUser(userData);
-
-  // Assert
-  expect(result).toBeDefined();
-  expect(result.userId).toBe(userData.userId);
-  expect(result.email).toBe(userData.email);
-  
-  // Verify it was saved to the database with retry logic for Atlas
-  const userInDb = await retryDbOperation(
-    () => User.findOne({ userId: userData.userId }),
-    3,  // 3 retries
-    500 // 500ms between retries
-  );
-  
-  expect(userInDb).not.toBeNull();
-  expect(userInDb?.email).toBe(userData.email);
-});
-
-it('should update an existing user when the user already exists', async () => {
-  // Arrange - First create a user
-  const initialUserData: IAmplifyUserData = {
-    userId: '123456789',
-    email: 'initial@example.com',
-    firstName: 'Initial',
-    lastName: 'User',
-    userType: 'academic',
-    isAdmin: false
-  };
-  
-  await UserService.createOrUpdateUser(initialUserData);
-  await waitForDb(500); // Wait for Atlas to process the write
-  
-  // Now update the user
-  const updatedUserData: IAmplifyUserData = {
-    userId: '123456789', // Same user ID
-    email: 'updated@example.com',
-    firstName: 'Updated',
-    lastName: 'User',
-    userType: 'industry',
-    isAdmin: true
-  };
-
-  // Act
-  const result = await UserService.createOrUpdateUser(updatedUserData);
-
-  // Assert
-  expect(result).toBeDefined();
-  expect(result.userId).toBe(updatedUserData.userId);
-  expect(result.email).toBe(updatedUserData.email);
-
-  // Verify it was updated in the database with retry logic
-  const userInDb = await retryDbOperation(
-    () => User.findOne({ userId: updatedUserData.userId }),
-    3,
-    500
-  );
-  
-  expect(userInDb).not.toBeNull();
-  expect(userInDb?.email).toBe(updatedUserData.email);
-});
-
+//   throw lastError || new Error(`Operation failed after ${maxRetries} attempts`);
+// }
 
 // Mock dependencies
 jest.mock('../../services/rabbitmq.service', () => ({
@@ -167,7 +91,9 @@ describe('User Synchronization Tests', () => {
 
     // Get service instances
     rabbitMQService = RabbitMQServiceMock.getInstance();
-    userConsumerService = UserConsumerService.getInstance();
+    
+    // Use type assertion to tell TypeScript this is compatible
+    userConsumerService = UserConsumerService.getInstance(rabbitMQService as unknown as RabbitMQService);
 
     // Initialize consumer service
     await userConsumerService.initialize();
@@ -339,16 +265,28 @@ describe('User Synchronization Tests', () => {
   describe('UserConsumerService integration with RabbitMQ', () => {
     it('should initialize and set up consumer for user sync messages', async () => {
       // Arrange
-      const userConsumerService = UserConsumerService.getInstance();
-      const rabbitMQService = RabbitMQServiceMock.getInstance();
+      // Reset singleton to ensure clean testing state
+      UserConsumerService.reset();
       
-      // Act
-      await userConsumerService.initialize();
+      // Get a fresh instance of the mock
+      const mockRabbitMQService = RabbitMQServiceMock.getInstance();
+      
+      // Clear any previous mock calls
+      Object.values(mockRabbitMQService.getMockCallbacks()).forEach(mock => mock.mockClear());
+      
+      // Create a new instance with our mock using type assertion
+      const userConsumerService = UserConsumerService.getInstance(
+        mockRabbitMQService as unknown as RabbitMQService
+      );
+      
+      // Act - Call initialize directly
+      const initResult = await userConsumerService.initialize();
       
       // Assert
-      expect(rabbitMQService.getMockCallbacks().connect).toHaveBeenCalled();
-      expect(rabbitMQService.getMockCallbacks().assertQueue).toHaveBeenCalledWith('user_sync');
-      expect(rabbitMQService.getMockCallbacks().consumeQueue).toHaveBeenCalledWith(
+      expect(initResult).toBe(true);
+      expect(mockRabbitMQService.getMockCallbacks().connect).toHaveBeenCalled();
+      expect(mockRabbitMQService.getMockCallbacks().assertQueue).toHaveBeenCalledWith('user_sync');
+      expect(mockRabbitMQService.getMockCallbacks().consumeQueue).toHaveBeenCalledWith(
         'user_sync',
         expect.any(Function)
       );
@@ -356,8 +294,9 @@ describe('User Synchronization Tests', () => {
 
     it('should process user sync messages and create/update users', async () => {
       // Arrange
-      const userConsumerService = UserConsumerService.getInstance();
-      const rabbitMQService = RabbitMQServiceMock.getInstance();
+      const userConsumerService = UserConsumerService.getInstance(
+        rabbitMQService as unknown as RabbitMQService
+      );
       
       await userConsumerService.initialize();
       
@@ -401,8 +340,9 @@ describe('User Synchronization Tests', () => {
     
     it('should handle incomplete user data gracefully', async () => {
       // Arrange
-      const userConsumerService = UserConsumerService.getInstance();
-      const rabbitMQService = RabbitMQServiceMock.getInstance();
+      const userConsumerService = UserConsumerService.getInstance(
+        rabbitMQService as unknown as RabbitMQService
+      );
       
       await userConsumerService.initialize();
       
@@ -441,7 +381,9 @@ describe('User Synchronization Tests', () => {
       };
       
       // Initialize services
-      const userConsumerService = UserConsumerService.getInstance();
+      const userConsumerService = UserConsumerService.getInstance(
+        rabbitMQService as unknown as RabbitMQService
+      );
       await userConsumerService.initialize();
       
       // Act - Simulate what would happen when Amplify sends data

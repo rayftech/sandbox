@@ -6,6 +6,11 @@ import { createLogger } from '../../config/logger';
 import * as dotenv from 'dotenv';
 import { setTimeout } from 'timers/promises';
 
+
+const describe = global.describe || ((_name: string, fn: () => void) => fn());
+const it = global.it || ((_name: string, fn: () => void) => fn());
+
+
 // Load environment variables
 dotenv.config();
 
@@ -77,22 +82,26 @@ async function testRabbitMQ() {
 }
 
 // Add a simple Jest test
-describe('RabbitMQ Service Tests', () => {
-  it('should have a test function defined', () => {
-    expect(typeof testRabbitMQ).toBe('function');
+if (typeof jest !== 'undefined') {
+  describe('RabbitMQ Service Tests', () => {
+    it('should have a test function defined', () => {
+      expect(typeof testRabbitMQ).toBe('function');
+    });
   });
-  
-  // This test won't actually run the function (which would require a real RabbitMQ instance)
-  // but just checks that the function is properly defined
-});
+}
 
 // The original code that runs outside of Jest tests
+// Only run the tests if we're executing the file directly
 if (require.main === module) {
-  // Run the test
+  console.log('Running RabbitMQ test...');
   testRabbitMQ().then(() => {
+    console.log('Test completed successfully');
     process.exit(0);
   }).catch((error) => {
     logger.error(`Unhandled error in test: ${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
   });
+} else {
+  // Export the test function for use in Jest tests
+  module.exports = { testRabbitMQ };
 }

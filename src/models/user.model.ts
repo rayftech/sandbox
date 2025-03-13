@@ -14,6 +14,7 @@ export interface IAmplifyUserData {
   lastName: string;
   userType: 'academic' | 'industry' | 'admin';
   isAdmin: boolean;
+  country:string;
 }
 
 /**
@@ -172,8 +173,17 @@ const UserSchema = new Schema<IUserDocument>(
       type: Number,
       min: 0,
       max: 100,
+    },
+
+    country:{
+      type: String,
+      trim: true,
+      index: true,
+      default: null,
+
     }
   },
+  
   {
     timestamps: true, // Adds createdAt and updatedAt automatically
     toJSON: {

@@ -13,6 +13,7 @@ export interface IAmplifyUserData {
   lastName: string;
   userType: 'academic' | 'industry' | 'admin';
   isAdmin: boolean;
+  country: string;
 }
 
 /**
@@ -38,6 +39,10 @@ export class UserService {
         user.userType = userData.userType;
         user.isAdmin = userData.isAdmin;
         
+
+        if (userData.country) {
+          user.country = userData.country;
+        }
         logger.info(`User updated: ${userData.userId}`);
         return await user.save();
       } else {
@@ -56,7 +61,7 @@ export class UserService {
     }
   }
   
-  // Add your other service methods here...
+  // Add service methods here...
   
   /**
    * Get a user by userId
@@ -132,6 +137,36 @@ static async updateProfileSettings(userId: string, profileSettings: any): Promis
     throw error;
   }
 }
+
+  /**
+   * Update user nationality
+   * @param userId The userId of the user
+   * @param nationality The nationality to update
+   * @returns The updated user document or null if not found
+   */
+  static async updateCountry(userId: string, country: string): Promise<IUser | null> {
+    try {
+      const user = await User.findOneAndUpdate(
+        { userId },
+        { $set: { country } },
+        { 
+          new: true,  // Return the updated document
+          runValidators: true // Run mongoose validation
+        }
+      );
+      
+      if (user) {
+        logger.info(`Updated country for user ${userId}`);
+      } else {
+        logger.warn(`Attempted to update country for non-existent user ${userId}`);
+      }
+      
+      return user;
+    } catch (error) {
+      logger.error(`Error updating country: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
 
 /**
  * Update user's last login timestamp

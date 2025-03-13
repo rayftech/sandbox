@@ -88,3 +88,61 @@
 2025-03-11 15:03:42 [RabbitMQTest] INFO: Closing RabbitMQ connection... 
 2025-03-11 15:03:42 [RabbitMQService] WARN: RabbitMQ channel closed 
 2025-03-11 15:03:42 [RabbitMQTest] INFO: RabbitMQ connection closed successfully! ✅ 
+2025-03-13 11:41:45 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Starting RabbitMQ connection test... 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Connecting to RabbitMQ... 
+2025-03-13 11:41:45 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Connected to RabbitMQ successfully! ✅ 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Asserting test queue: test_queue 
+2025-03-13 11:41:45 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Test queue created successfully! ✅ 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Setting up message consumer... 
+2025-03-13 11:41:45 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 11:41:45 [RabbitMQService] INFO: Consumer registered for queue 'test_queue' with tag 'amq.ctag-szkAsIKdHiaJTivU7j-m8Q' 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Consumer setup successful! ✅ 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Sending test messages... 
+2025-03-13 11:41:45 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Message 1 sent: success ✅ 
+2025-03-13 11:41:45 [RabbitMQService] DEBUG: Message sent to queue 'test_queue' successfully 
+2025-03-13 11:41:45 [RabbitMQTest] INFO: Received message: {"id":1,"text":"Test message 1","timestamp":"2025-03-13T00:41:45.894Z"} 
+2025-03-13 11:41:46 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 11:41:46 [RabbitMQTest] INFO: Message 2 sent: success ✅ 
+2025-03-13 11:41:46 [RabbitMQService] DEBUG: Message sent to queue 'test_queue' successfully 
+2025-03-13 11:41:46 [RabbitMQTest] INFO: Received message: {"id":2,"text":"Test message 2","timestamp":"2025-03-13T00:41:46.399Z"} 
+2025-03-13 11:41:46 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 11:41:46 [RabbitMQTest] INFO: Message 3 sent: success ✅ 
+2025-03-13 11:41:46 [RabbitMQService] DEBUG: Message sent to queue 'test_queue' successfully 
+2025-03-13 11:41:46 [RabbitMQTest] INFO: Received message: {"id":3,"text":"Test message 3","timestamp":"2025-03-13T00:41:46.905Z"} 
+2025-03-13 11:41:47 [RabbitMQTest] INFO: Waiting for message processing... 
+2025-03-13 11:41:49 [RabbitMQTest] INFO: Closing RabbitMQ connection... 
+2025-03-13 11:41:49 [RabbitMQService] WARN: RabbitMQ channel closed 
+2025-03-13 11:41:49 [RabbitMQTest] INFO: RabbitMQ connection closed successfully! ✅ 
+2025-03-13 12:09:34 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Starting RabbitMQ connection test... 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Connecting to RabbitMQ... 
+2025-03-13 12:09:34 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Connected to RabbitMQ successfully! ✅ 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Asserting test queue: test_queue 
+2025-03-13 12:09:34 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Test queue created successfully! ✅ 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Setting up message consumer... 
+2025-03-13 12:09:34 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 12:09:34 [RabbitMQService] INFO: Consumer registered for queue 'test_queue' with tag 'amq.ctag-RmcnuyFmTHu47sQcojCcRg' 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Consumer setup successful! ✅ 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Sending test messages... 
+2025-03-13 12:09:34 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Message 1 sent: success ✅ 
+2025-03-13 12:09:34 [RabbitMQService] DEBUG: Message sent to queue 'test_queue' successfully 
+2025-03-13 12:09:34 [RabbitMQTest] INFO: Received message: {"id":1,"text":"Test message 1","timestamp":"2025-03-13T01:09:34.572Z"} 
+2025-03-13 12:09:35 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 12:09:35 [RabbitMQTest] INFO: Message 2 sent: success ✅ 
+2025-03-13 12:09:35 [RabbitMQService] DEBUG: Message sent to queue 'test_queue' successfully 
+2025-03-13 12:09:35 [RabbitMQTest] INFO: Received message: {"id":2,"text":"Test message 2","timestamp":"2025-03-13T01:09:35.076Z"} 
+2025-03-13 12:09:35 [RabbitMQService] DEBUG: Queue 'test_queue' asserted successfully 
+2025-03-13 12:09:35 [RabbitMQTest] INFO: Message 3 sent: success ✅ 
+2025-03-13 12:09:35 [RabbitMQService] DEBUG: Message sent to queue 'test_queue' successfully 
+2025-03-13 12:09:35 [RabbitMQTest] INFO: Received message: {"id":3,"text":"Test message 3","timestamp":"2025-03-13T01:09:35.583Z"} 
+2025-03-13 12:09:36 [RabbitMQTest] INFO: Waiting for message processing... 
+2025-03-13 12:09:38 [RabbitMQTest] INFO: Closing RabbitMQ connection... 
+2025-03-13 12:09:38 [RabbitMQService] WARN: RabbitMQ channel closed 
+2025-03-13 12:09:38 [RabbitMQTest] INFO: RabbitMQ connection closed successfully! ✅ 

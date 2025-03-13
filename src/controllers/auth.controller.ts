@@ -38,7 +38,8 @@ export class AuthController {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        userType: user.userType
+        userType: user.userType,
+        country: user.country
       });
       
       logger.info(`User ${user.userId} successfully synchronized`);

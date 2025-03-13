@@ -70,6 +70,7 @@ export interface UserEvent extends BaseEvent {
   firstName: string;
   lastName: string;
   userType: 'academic' | 'industry' | 'admin';
+  country?: string; 
 }
 
 /**
