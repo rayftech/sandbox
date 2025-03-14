@@ -23,7 +23,7 @@
     "emitDecoratorMetadata": true,             /* Enable experimental support for emitting decorator metadata */
     "baseUrl": ".",                            /* Base directory to resolve non-relative module names */
     "paths": {
-      "@/*": ["src/*"]                         /* Path mapping for module imports */
+      "@/*": ["src/*"],                         /* Path mapping for module imports */
     }
   },
   "include": ["src/**/*"],

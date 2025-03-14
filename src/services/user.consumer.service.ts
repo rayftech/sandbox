@@ -103,7 +103,9 @@ export class UserConsumerService {
         firstName: content.firstName || '',
         lastName: content.lastName || '',
         userType: content.userType || 'academic',
+        country: content.country,
         isAdmin: content.isAdmin || false
+
       };
       
       // Create or update user

@@ -5,3 +5,44 @@
 2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
 2025-03-11 15:01:39 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
 2025-03-11 15:01:40 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: getaddrinfo ENOTFOUND rabbitmq 
+2025-03-13 14:24:05 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:24:05 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:24:05 [Server] ERROR: Uncaught Exception: listen EADDRINUSE: address already in use :::5050 {
+  "stack": "Error: listen EADDRINUSE: address already in use :::5050\n    at Server.setupListenHandle [as _listen2] (node:net:1817:16)\n    at listenInCluster (node:net:1865:12)\n    at Server.listen (node:net:1953:7)\n    at startServer (/Users/ray/Desktop/sandbox/sandbox_backend/src/server.ts:79:12)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)"
+}
+2025-03-13 14:24:27 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:24:27 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:24:27 [Server] ERROR: Uncaught Exception: listen EADDRINUSE: address already in use :::5050 {
+  "stack": "Error: listen EADDRINUSE: address already in use :::5050\n    at Server.setupListenHandle [as _listen2] (node:net:1817:16)\n    at listenInCluster (node:net:1865:12)\n    at Server.listen (node:net:1953:7)\n    at startServer (/Users/ray/Desktop/sandbox/sandbox_backend/src/server.ts:79:12)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)"
+}
+2025-03-13 14:28:50 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:28:50 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:28:50 [Server] ERROR: Uncaught Exception: listen EADDRINUSE: address already in use :::5050 {
+  "stack": "Error: listen EADDRINUSE: address already in use :::5050\n    at Server.setupListenHandle [as _listen2] (node:net:1817:16)\n    at listenInCluster (node:net:1865:12)\n    at Server.listen (node:net:1953:7)\n    at startServer (/Users/ray/Desktop/sandbox/sandbox_backend/src/server.ts:79:12)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)"
+}
+2025-03-13 14:29:19 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:29:19 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:29:20 [Server] ERROR: Uncaught Exception: listen EADDRINUSE: address already in use :::5050 {
+  "stack": "Error: listen EADDRINUSE: address already in use :::5050\n    at Server.setupListenHandle [as _listen2] (node:net:1817:16)\n    at listenInCluster (node:net:1865:12)\n    at Server.listen (node:net:1953:7)\n    at startServer (/Users/ray/Desktop/sandbox/sandbox_backend/src/server.ts:79:12)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)"
+}
+2025-03-13 14:31:04 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:31:04 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:31:09 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
