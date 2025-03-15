@@ -146,200 +146,253 @@
 2025-03-13 12:09:38 [RabbitMQTest] INFO: Closing RabbitMQ connection... 
 2025-03-13 12:09:38 [RabbitMQService] WARN: RabbitMQ channel closed 
 2025-03-13 12:09:38 [RabbitMQTest] INFO: RabbitMQ connection closed successfully! ✅ 
-2025-03-15 11:35:05 [UserModel] INFO: Configuring User model 
-2025-03-15 11:35:05 [UserModel] INFO: User model initialized 
-2025-03-15 11:35:06 [database] INFO: Connected to MongoDB 
-2025-03-15 11:35:06 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:06 [database] INFO: Database connection established 
-2025-03-15 11:35:06 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
-2025-03-15 11:35:06 [EventPublisher] INFO: Event publisher initialized successfully 
-2025-03-15 11:35:06 [Server] INFO: Event publisher initialized 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
-2025-03-15 11:35:06 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
-2025-03-15 11:35:06 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-9Fc5LuAje5e7kSpM33xisw' 
-2025-03-15 11:35:06 [UserConsumerService] INFO: User consumer service initialized successfully 
-2025-03-15 11:35:06 [Server] INFO: User consumer service initialized 
-2025-03-15 11:35:46 [UserModel] INFO: Configuring User model 
-2025-03-15 11:35:46 [UserModel] INFO: User model initialized 
-2025-03-15 11:35:46 [database] INFO: Connected to MongoDB 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [database] INFO: Database connection established 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 1 in 5 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 2 in 9 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 3 in 11 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 4 in 21 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 5 in 27 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 6 in 45 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 7 in 60 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 8 in 60 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 9 in 60 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Scheduling reconnection attempt 10 in 60 seconds 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [EventPublisher] INFO: Event publisher initialized successfully 
-2025-03-15 11:35:46 [Server] INFO: Event publisher initialized 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
-2025-03-15 11:35:46 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
-2025-03-15 11:35:46 [Server] INFO: User consumer service initialized 
-2025-03-15 11:35:46 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
-2025-03-15 11:35:46 [Server] INFO: Server running on port 5050 
-2025-03-15 11:35:46 [UserConsumerService] INFO: User consumer service initialized successfully 
-2025-03-15 11:36:06 [database] INFO: Application termination - closing MongoDB connection 
-2025-03-15 11:36:06 [Server] INFO: Received shutdown signal, starting graceful shutdown 
-2025-03-15 11:36:15 [UserModel] INFO: Configuring User model 
-2025-03-15 11:36:15 [UserModel] INFO: User model initialized 
-2025-03-15 11:36:15 [database] INFO: Connected to MongoDB 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [database] INFO: Database connection established 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 1 in 6 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 2 in 10 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 3 in 13 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 4 in 21 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 5 in 31 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 6 in 39 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 7 in 60 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 8 in 60 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 9 in 60 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Scheduling reconnection attempt 10 in 60 seconds 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [EventPublisher] INFO: Event publisher initialized successfully 
-2025-03-15 11:36:15 [Server] INFO: Event publisher initialized 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
-2025-03-15 11:36:15 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:36:15 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: read ECONNRESET 
-2025-03-15 11:36:15 [UserConsumerService] INFO: User consumer service initialized successfully 
-2025-03-15 11:36:15 [Server] INFO: User consumer service initialized 
-2025-03-15 11:45:21 [UserModel] INFO: Configuring User model 
-2025-03-15 11:45:21 [UserModel] INFO: User model initialized 
-2025-03-15 11:45:22 [database] INFO: Connected to MongoDB 
-2025-03-15 11:45:22 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:45:22 [database] INFO: Database connection established 
-2025-03-15 11:45:22 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
-2025-03-15 11:45:22 [EventPublisher] INFO: Event publisher initialized successfully 
-2025-03-15 11:45:22 [Server] INFO: Event publisher initialized 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
-2025-03-15 11:45:22 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
-2025-03-15 11:45:22 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-qFBCyZpmim70hQmoO16m4w' 
-2025-03-15 11:45:22 [UserConsumerService] INFO: User consumer service initialized successfully 
-2025-03-15 11:45:22 [Server] INFO: User consumer service initialized 
-2025-03-15 11:57:45 [UserModel] INFO: Configuring User model 
-2025-03-15 11:57:45 [UserModel] INFO: User model initialized 
-2025-03-15 11:57:45 [database] INFO: Connected to MongoDB 
-2025-03-15 11:57:45 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:57:45 [database] INFO: Database connection established 
-2025-03-15 11:57:45 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
-2025-03-15 11:57:45 [EventPublisher] INFO: Event publisher initialized successfully 
-2025-03-15 11:57:45 [Server] INFO: Event publisher initialized 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
-2025-03-15 11:57:45 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
-2025-03-15 11:57:45 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag--AMCdehNtAROZJE5PqPawQ' 
-2025-03-15 11:57:45 [UserConsumerService] INFO: User consumer service initialized successfully 
-2025-03-15 11:57:45 [Server] INFO: User consumer service initialized 
-2025-03-15 11:57:57 [UserModel] INFO: Configuring User model 
-2025-03-15 11:57:57 [UserModel] INFO: User model initialized 
-2025-03-15 11:57:57 [database] INFO: Connected to MongoDB 
-2025-03-15 11:57:57 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
-2025-03-15 11:57:57 [database] INFO: Database connection established 
-2025-03-15 11:57:57 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
-2025-03-15 11:57:57 [EventPublisher] INFO: Event publisher initialized successfully 
-2025-03-15 11:57:57 [Server] INFO: Event publisher initialized 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
-2025-03-15 11:57:57 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
-2025-03-15 11:57:57 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-JAuRfL09ZQerYL7TMe04wg' 
-2025-03-15 11:57:57 [UserConsumerService] INFO: User consumer service initialized successfully 
-2025-03-15 11:57:57 [Server] INFO: User consumer service initialized 
-2025-03-15 11:57:57 [Server] INFO: Server running on port 3000 
-2025-03-15 12:00:44 [database] INFO: Application termination - closing MongoDB connection 
-2025-03-15 12:00:44 [Server] INFO: Received shutdown signal, starting graceful shutdown 
+2025-03-13 14:24:05 [UserModel] INFO: Configuring User model 
+2025-03-13 14:24:05 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-13 14:24:05 [UserModel] INFO: User model initialized 
+2025-03-13 14:24:05 [database] WARN: MongoDB disconnected 
+2025-03-13 14:24:05 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-13 14:24:05 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-13 14:24:05 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:24:05 [database] INFO: Retrying connection in 10000ms (attempt 2/5) 
+2025-03-13 14:24:05 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:24:05 [database] INFO: Retrying connection in 20000ms (attempt 3/5) 
+2025-03-13 14:24:05 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-13 14:24:05 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-13 14:24:05 [Server] INFO: Event publisher initialized 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:24:05 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:24:05 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-5kgrKkQZb5PwD_2TgtZN-A' 
+2025-03-13 14:24:05 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-13 14:24:05 [Server] INFO: User consumer service initialized 
+2025-03-13 14:24:27 [UserModel] INFO: Configuring User model 
+2025-03-13 14:24:27 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-13 14:24:27 [UserModel] INFO: User model initialized 
+2025-03-13 14:24:27 [database] WARN: MongoDB disconnected 
+2025-03-13 14:24:27 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-13 14:24:27 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-13 14:24:27 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:24:27 [database] INFO: Retrying connection in 10000ms (attempt 2/5) 
+2025-03-13 14:24:27 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:24:27 [database] INFO: Retrying connection in 20000ms (attempt 3/5) 
+2025-03-13 14:24:27 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-13 14:24:27 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-13 14:24:27 [Server] INFO: Event publisher initialized 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:24:27 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:24:27 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-ctMSNcoZICOnGoLpFk1C8Q' 
+2025-03-13 14:24:27 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-13 14:24:27 [Server] INFO: User consumer service initialized 
+2025-03-13 14:28:50 [UserModel] INFO: Configuring User model 
+2025-03-13 14:28:50 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-13 14:28:50 [database] WARN: MongoDB disconnected 
+2025-03-13 14:28:50 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-13 14:28:50 [UserModel] INFO: User model initialized 
+2025-03-13 14:28:50 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-13 14:28:50 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:28:50 [database] INFO: Retrying connection in 10000ms (attempt 2/5) 
+2025-03-13 14:28:50 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:28:50 [database] INFO: Retrying connection in 20000ms (attempt 3/5) 
+2025-03-13 14:28:50 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-13 14:28:50 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-13 14:28:50 [Server] INFO: Event publisher initialized 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:28:50 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:28:50 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-xaz0HWDSFelJ1r1i55mvzQ' 
+2025-03-13 14:28:50 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-13 14:28:50 [Server] INFO: User consumer service initialized 
+2025-03-13 14:29:19 [UserModel] INFO: Configuring User model 
+2025-03-13 14:29:19 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-13 14:29:19 [database] WARN: MongoDB disconnected 
+2025-03-13 14:29:19 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-13 14:29:19 [UserModel] INFO: User model initialized 
+2025-03-13 14:29:19 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-13 14:29:19 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:29:19 [database] INFO: Retrying connection in 10000ms (attempt 2/5) 
+2025-03-13 14:29:19 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:29:19 [database] INFO: Retrying connection in 20000ms (attempt 3/5) 
+2025-03-13 14:29:19 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-13 14:29:19 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-13 14:29:19 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-13 14:29:19 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-13 14:29:19 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-13 14:29:19 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-13 14:29:19 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-13 14:29:19 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-13 14:29:19 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-13 14:29:19 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-13 14:29:20 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-13 14:29:20 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-13 14:29:20 [Server] INFO: Event publisher initialized 
+2025-03-13 14:29:20 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:29:20 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:29:20 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-v_YgMpIQ_vwWLJTjpcNMWA' 
+2025-03-13 14:29:20 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-13 14:29:20 [Server] INFO: User consumer service initialized 
+2025-03-13 14:31:04 [UserModel] INFO: Configuring User model 
+2025-03-13 14:31:04 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-13 14:31:04 [database] WARN: MongoDB disconnected 
+2025-03-13 14:31:04 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-13 14:31:04 [UserModel] INFO: User model initialized 
+2025-03-13 14:31:04 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-13 14:31:04 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:31:04 [database] INFO: Retrying connection in 10000ms (attempt 2/5) 
+2025-03-13 14:31:04 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-13 14:31:04 [database] INFO: Retrying connection in 20000ms (attempt 3/5) 
+2025-03-13 14:31:04 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-13 14:31:04 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-13 14:31:04 [Server] INFO: Event publisher initialized 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:31:04 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-13 14:31:04 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-XR7v0YAOJXf9DhlE76zBfw' 
+2025-03-13 14:31:04 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-13 14:31:04 [Server] INFO: User consumer service initialized 
+2025-03-13 14:31:04 [Server] INFO: Server running on port 3000 
+2025-03-13 14:31:09 [database] WARN: MongoDB disconnected 
+2025-03-14 12:13:49 [UserModel] INFO: Configuring User model 
+2025-03-14 12:13:49 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-14 12:13:49 [UserModel] INFO: User model initialized 
+2025-03-14 12:13:49 [database] INFO: Connected to MongoDB 
+2025-03-14 12:13:49 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-14 12:13:49 [database] INFO: Database connection established 
+2025-03-14 12:13:49 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-14 12:13:49 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-14 12:13:49 [Server] INFO: Event publisher initialized 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-14 12:13:49 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-14 12:13:49 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-wvOv1vOFINKj64Kh26Aa_w' 
+2025-03-14 12:13:49 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-14 12:13:49 [Server] INFO: User consumer service initialized 
+2025-03-14 12:13:49 [Server] INFO: Server running on port 3000 
+2025-03-14 12:14:09 [database] INFO: Application termination - closing MongoDB connection 
+2025-03-14 12:14:09 [Server] INFO: Received shutdown signal, starting graceful shutdown 
+2025-03-15 10:24:31 [UserModel] INFO: Configuring User model 
+2025-03-15 10:24:31 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-15 10:24:31 [UserModel] INFO: User model initialized 
+2025-03-15 10:24:32 [database] INFO: Connected to MongoDB 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [database] INFO: Database connection established 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 1 in 6 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 2 in 9 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 3 in 13 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 4 in 21 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 5 in 28 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 6 in 39 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 7 in 60 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 8 in 60 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 9 in 60 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Scheduling reconnection attempt 10 in 60 seconds 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-15 10:24:32 [Server] INFO: Event publisher initialized 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-15 10:24:32 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-15 10:24:32 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-15 10:24:32 [Server] INFO: User consumer service initialized 
+2025-03-15 10:24:32 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-15 10:24:32 [Server] INFO: Server running on port 3000 
+2025-03-15 10:24:42 [database] INFO: Application termination - closing MongoDB connection 
+2025-03-15 10:24:42 [Server] INFO: Received shutdown signal, starting graceful shutdown 
+2025-03-15 10:24:59 [UserModel] INFO: Configuring User model 
+2025-03-15 10:24:59 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-15 10:24:59 [UserModel] INFO: User model initialized 
+2025-03-15 10:24:59 [database] INFO: Connected to MongoDB 
+2025-03-15 10:24:59 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 10:24:59 [database] INFO: Database connection established 
+2025-03-15 10:24:59 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-15 10:24:59 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-15 10:24:59 [Server] INFO: Event publisher initialized 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-15 10:24:59 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-15 10:24:59 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-J5zsjaORTZ5Q4nn4kmvWUg' 
+2025-03-15 10:24:59 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-15 10:24:59 [Server] INFO: User consumer service initialized 
+2025-03-15 10:24:59 [Server] INFO: Server running on port 3000 
+2025-03-15 10:25:10 [database] INFO: Application termination - closing MongoDB connection 
+2025-03-15 10:25:10 [Server] INFO: Received shutdown signal, starting graceful shutdown 

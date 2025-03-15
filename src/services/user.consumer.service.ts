@@ -100,11 +100,12 @@ export class UserConsumerService {
       const userData: IAmplifyUserData = {
         userId: content.userId,
         email: content.email,
-        country: content.country,
+        country: content.country || '',
         firstName: content.firstName || '',
         lastName: content.lastName || '',
         userType: content.userType || 'academic',
         isAdmin: content.isAdmin || false
+
       };
       
       // Create or update user
