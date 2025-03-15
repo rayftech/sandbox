@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "dependencies": {
     "@payloadcms/db-mongodb": "^3.28.1",
+    "@payloadcms/richtext-lexical": "^3.28.1",
     "amqplib": "^0.10.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -17,6 +18,7 @@
     "payload": "^3.28.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "sharp": "^0.33.5",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.1",
