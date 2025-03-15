@@ -396,3 +396,57 @@
 2025-03-15 10:24:59 [Server] INFO: Server running on port 3000 
 2025-03-15 10:25:10 [database] INFO: Application termination - closing MongoDB connection 
 2025-03-15 10:25:10 [Server] INFO: Received shutdown signal, starting graceful shutdown 
+2025-03-15 12:21:26 [UserModel] INFO: Configuring User model 
+2025-03-15 12:21:26 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-15 12:21:26 [UserModel] INFO: User model initialized 
+2025-03-15 12:21:27 [database] INFO: Connected to MongoDB 
+2025-03-15 12:21:27 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 12:21:27 [database] INFO: Database connection established 
+2025-03-15 12:21:27 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-15 12:21:27 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-15 12:21:27 [Server] INFO: Event publisher initialized 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-15 12:21:27 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-15 12:21:27 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-kG-7Yn_F19xd5VLq4OQIoA' 
+2025-03-15 12:21:27 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-15 12:21:27 [Server] INFO: User consumer service initialized 
+2025-03-15 12:21:27 [Server] INFO: Server running on port 3000 
+2025-03-15 12:21:56 [UserModel] INFO: Configuring User model 
+2025-03-15 12:21:56 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-15 12:21:56 [UserModel] INFO: User model initialized 
+2025-03-15 12:21:56 [database] INFO: Connected to MongoDB 
+2025-03-15 12:21:56 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-15 12:21:56 [database] INFO: Database connection established 
+2025-03-15 12:21:56 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-15 12:21:56 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-15 12:21:56 [Server] INFO: Event publisher initialized 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-15 12:21:56 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-15 12:21:56 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-nMeum2dKNJX4mDyjHx6xwQ' 
+2025-03-15 12:21:56 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-15 12:21:56 [Server] INFO: User consumer service initialized 
+2025-03-15 12:21:56 [Server] INFO: Server running on port 3000 
+2025-03-15 12:22:41 [UserModel] INFO: Configuring User model 
+2025-03-15 12:22:42 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-15 12:22:41 [UserModel] INFO: User model initialized 
+2025-03-15 12:22:42 [database] INFO: Application termination - closing MongoDB connection 
