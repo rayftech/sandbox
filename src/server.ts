@@ -13,7 +13,7 @@ dotenv.config();
 const logger = createLogger('Server');
 
 // Get port from environment variable or default to 5050
-const PORT = process.env.PORT || 5050;
+const PORT = process.env.PORT || 3000;
 
 // Create HTTP server
 const server = http.createServer(app);

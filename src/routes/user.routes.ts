@@ -21,7 +21,7 @@ router.post('/:userId/record-login', UserController.recordLogin);
 router.get(
   '/admin/all-users',
   AuthMiddleware.requireAdmin,
-  (req, res) => {
+  (_req, res) => {
     // Admin-only endpoint to get all users
     // To be implemented
     res.status(501).json({ message: 'Not implemented yet' });
