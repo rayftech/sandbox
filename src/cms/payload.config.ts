@@ -12,7 +12,7 @@ import sharp from 'sharp'
 // import { Media } from './collections/Media'
 
 // Use dirname correctly in ESM
-const dirname = path.dirname(fileURLToPath(import.meta.url))
+const dirname = __dirname
 
 export default buildConfig({
 //   admin: {
