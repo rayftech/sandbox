@@ -1,38 +1,51 @@
 // src/models/project.model.ts
 import mongoose, { Document, Schema, Model } from 'mongoose';
-import { CourseLevel } from './course.model';
 import { createLogger } from '../config/logger';
 import { ItemLifecycleStatus, determineItemStatus } from './status.enum';
-
 
 const logger = createLogger('ProjectModel');
 
 /**
+ * Enum for student level (should match Strapi schema)
+ */
+export enum StudentLevel {
+  UNDERGRAD_EARLY = 'Undergraduate 1st & 2nd year',
+  UNDERGRAD_LATE = 'Undergraduate penultimate & final year',
+  POSTGRAD = 'Postgraduate',
+  OTHER = 'Other'
+}
+
+/**
  * Interface for Project document with methods
+ * This is a lightweight version that references Strapi content
  */
 interface IProjectDocument extends Document {
-  creatorUserId: string;
-  title: string;
-  shortDescription: string;
-  detailedDescription: string;
-  aim: string;
-  potentialSolution?: string;
-  additionalInformation?: string;
-  targetAcademicPartnership?: string;
-  studentLevel: CourseLevel;
-  startDate: Date;
-  endDate: Date;
-  isActive: boolean;
-  status: ItemLifecycleStatus;
-  country: string;
-  year?: number;
-  quarter?: number;
-  fiscalYear?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  // Identifiers
+  _id:mongoose.Types.ObjectId;
+  creatorUserId: string;                  // Amplify userId of the creator
+  strapiId: string;                       // ID of the corresponding Strapi challenge
+  strapiCreatedAt: Date;                  // When the content was created in Strapi
+  strapiUpdatedAt: Date;                  // When the content was last updated in Strapi
+
   
-  // Define method in the interface
-  setTimeAnalyticsDimensions(): void;
+  // Essential data needed for relationship management and searching
+  title: string;                         // Name of the project (from Strapi)
+  studentLevel: StudentLevel;            // Required for matching with courses
+  startDate: Date;                       // For determining lifecycle and partnerships
+  endDate: Date;                         // For determining lifecycle and partnerships
+  country: string;                       // For geographic filtering
+  targetAcademicPartnership?:string;
+  
+  // Status fields
+  isActive: boolean;                     // Whether this project is active
+  status: ItemLifecycleStatus;           // Lifecycle status (upcoming, ongoing, completed)
+  
+  // MongoDB timestamps
+  createdAt: Date;                       // When this MongoDB document was created
+  updatedAt: Date;                       // When this MongoDB document was last updated
+  
+  // Methods
+  updateStatus(): boolean;               // Update status based on dates and return if it changed
 }
 
 /**
@@ -43,7 +56,8 @@ interface IProjectModel extends Model<IProjectDocument> {
 }
 
 /**
- * Project Schema for MongoDB (Snowflake Schema Design)
+ * Project Schema for MongoDB
+ * This schema represents the relationship between users and Strapi challenges
  */
 const ProjectSchema = new Schema<IProjectDocument>(
   {
@@ -53,42 +67,29 @@ const ProjectSchema = new Schema<IProjectDocument>(
       index: true,
       comment: 'Amplify userId of the creator'
     },
+    strapiId: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+      comment: 'ID of the corresponding challenge in Strapi CMS'
+    },
+    strapiCreatedAt: {
+      type: Date,
+      required: true
+    },
+    strapiUpdatedAt: {
+      type: Date,
+      required: true
+    },
     title: {
       type: String,
       required: true,
-      trim: true,
-    },
-    shortDescription: {
-      type: String,
-      required: true,
-      trim: true,
-      maxlength: 250,
-    },
-    detailedDescription: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    aim: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    potentialSolution: {
-      type: String,
-      trim: true,
-    },
-    additionalInformation: {
-      type: String,
-      trim: true,
-    },
-    targetAcademicPartnership: {
-      type: String,
-      trim: true,
+      index: true,
     },
     studentLevel: {
       type: String,
-      enum: Object.values(CourseLevel),
+      enum: Object.values(StudentLevel),
       required: true,
       index: true,
     },
@@ -102,35 +103,20 @@ const ProjectSchema = new Schema<IProjectDocument>(
       required: true,
       index: true,
     },
+    country: {
+      type: String,
+      required: true,
+      index: true,
+    },
     isActive: {
       type: Boolean,
       default: true,
       index: true,
     },
-    status:{
+    status: {
       type: String,
       enum: Object.values(ItemLifecycleStatus),
       default: ItemLifecycleStatus.UPCOMING,
-      index: true,
-    },
-    country:{
-      type: String,
-      trim: true,
-      index: true,
-    },
-    // Derived time dimension fields to support analytical queries
-    year: {
-      type: Number,
-      index: true,
-    },
-    quarter: {
-      type: Number,
-      min: 1,
-      max: 4,
-      index: true,
-    },
-    fiscalYear: {
-      type: String,
       index: true,
     }
   },
@@ -147,25 +133,6 @@ const ProjectSchema = new Schema<IProjectDocument>(
   }
 );
 
-// Add method to calculate time analytics dimensions
-// Use 'this: IProjectDocument' to provide type information to TypeScript
-ProjectSchema.methods.setTimeAnalyticsDimensions = function(this: IProjectDocument) {
-  const startDate = this.startDate;
-  
-  // Extract year
-  this.year = startDate.getFullYear();
-  
-  // Calculate quarter (1-4)
-  const month = startDate.getMonth(); // 0-11
-  this.quarter = Math.floor(month / 3) + 1;
-  
-  // Calculate fiscal year (assuming fiscal year starts in July)
-  // e.g., July 2023 - June 2024 would be FY2024
-  const fiscalYearStart = month >= 6 ? this.year : this.year - 1;
-  const fiscalYearEnd = fiscalYearStart + 1;
-  this.fiscalYear = `FY${fiscalYearEnd}`;
-};
-
 // Add method to update status based on dates and return if it changed
 ProjectSchema.methods.updateStatus = function(this: IProjectDocument): boolean {
   const isCompleted = !this.isActive && new Date() > this.endDate;
@@ -179,7 +146,6 @@ ProjectSchema.methods.updateStatus = function(this: IProjectDocument): boolean {
   return false;
 };
 
-
 // Validation middleware with proper type handling
 ProjectSchema.pre('save', function(this: IProjectDocument, next) {
   try {
@@ -189,9 +155,9 @@ ProjectSchema.pre('save', function(this: IProjectDocument, next) {
       logger.warn(`Project validation failed: End date must be after start date for project "${this.title}"`);
       return next(error);
     }
-
-    // Calculate and set derived time dimension fields
-    this.setTimeAnalyticsDimensions();
+    
+    // Update status
+    this.updateStatus();
     
     next();
   } catch (error) {
@@ -199,12 +165,11 @@ ProjectSchema.pre('save', function(this: IProjectDocument, next) {
   }
 });
 
-// Compound indexes for analytical queries
+// Create compound indexes for efficient queries
 ProjectSchema.index({ creatorUserId: 1, studentLevel: 1 });
-ProjectSchema.index({ year: 1, quarter: 1 });
-ProjectSchema.index({ fiscalYear: 1, isActive: 1 });
 ProjectSchema.index({ startDate: 1, endDate: 1 });
-ProjectSchema.index({ country: 1, studentLevel: 1 }); 
+ProjectSchema.index({ country: 1, studentLevel: 1 });
+ProjectSchema.index({ status: 1, isActive: 1 });
 
 // Create and export the model with proper type information
 export const Project = mongoose.model<IProjectDocument, IProjectModel>('Project', ProjectSchema);

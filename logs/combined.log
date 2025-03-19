@@ -486,3 +486,57 @@
 2025-03-15 18:28:37 [database] INFO: Application termination - closing MongoDB connection 
 2025-03-15 18:28:37 [Server] INFO: Received shutdown signal, starting graceful shutdown 
 2025-03-15 18:28:37 [database] WARN: MongoDB disconnected 
+2025-03-19 20:15:09 [UserModel] INFO: Configuring User model 
+2025-03-19 20:15:09 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-19 20:15:09 [UserModel] INFO: User model initialized 
+2025-03-19 20:15:10 [database] INFO: Connected to MongoDB 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [database] INFO: Database connection established 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 1 in 5 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 2 in 8 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 3 in 12 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 4 in 18 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 5 in 32 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 6 in 43 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 7 in 60 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 8 in 60 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 9 in 60 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Scheduling reconnection attempt 10 in 60 seconds 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-19 20:15:10 [Server] INFO: Event publisher initialized 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-19 20:15:10 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-19 20:15:10 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-19 20:15:10 [Server] INFO: User consumer service initialized 
+2025-03-19 20:15:10 [Server] INFO: Server running on port 3000 
+2025-03-19 20:15:10 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-19 20:15:19 [database] INFO: Application termination - closing MongoDB connection 
+2025-03-19 20:15:19 [Server] INFO: Received shutdown signal, starting graceful shutdown 

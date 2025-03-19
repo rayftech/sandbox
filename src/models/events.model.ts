@@ -3,6 +3,12 @@ import { PartnershipStatus } from './partnership.model';
 import { CourseLevel } from './course.model';
 
 /**
+ * Common type for student level that works across models
+ * This helps align StudentLevel and CourseLevel between models
+ */
+export type StudentLevelType = string;
+
+/**
  * Event types for the message system
  */
 export enum EventType {
@@ -80,7 +86,7 @@ export interface CourseEvent extends BaseEvent {
   courseId: string;
   name: string;
   code: string;
-  level: CourseLevel;
+  level: CourseLevel | string; // Allow string to be more flexible
   creatorUserId: string;
   startDate: Date;
   endDate: Date;
@@ -94,7 +100,7 @@ export interface ProjectEvent extends BaseEvent {
   title: string;
   shortDescription: string;
   creatorUserId: string;
-  studentLevel: CourseLevel;
+  studentLevel: StudentLevelType; // Using the common type
   startDate: Date;
   endDate: Date;
 }
