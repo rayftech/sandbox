@@ -471,6 +471,42 @@ export class StrapiSyncService {
   }
 
   /**
+ * Get a course by its Strapi ID
+ * @param strapiId The Strapi ID
+ * @returns The Strapi course data
+ */
+public async getCourseBystrapiId(strapiId: string): Promise<any> {
+  try {
+    const response = await this.strapiClient.get(`/api/courses/${strapiId}`);
+    return response.data?.data;
+  } catch (error) {
+    logger.error(`Error fetching course from Strapi: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
+
+/**
+ * Search for courses in Strapi
+ * @param query Search query
+ * @param limit Maximum number of results
+ * @returns Array of courses matching the query
+ */
+public async searchCourses(query: string, limit: number = 10): Promise<any[]> {
+  try {
+    const response = await this.strapiClient.get(`/api/courses`, {
+      params: {
+        _q: query,
+        _limit: limit
+      }
+    });
+    return response.data?.data || [];
+  } catch (error) {
+    logger.error(`Error searching courses in Strapi: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
+
+  /**
    * Create a course in Strapi
    * @param courseData The course data to create
    * @returns The created Strapi course ID
@@ -491,7 +527,45 @@ export class StrapiSyncService {
   }
 
   /**
-   * Create a project (challenge) in Strapi
+ * Update a course in Strapi
+ * @param strapiId The Strapi ID of the course
+ * @param updateData The data to update in Strapi
+ * @returns Promise resolving to true if successful
+ */
+public async updateCourseInStrapi(strapiId: string, updateData: any): Promise<boolean> {
+  try {
+    await this.strapiClient.put(
+      `/api/courses/${strapiId}`,
+      { data: updateData }
+    );
+    
+    logger.info(`Updated course in Strapi with ID ${strapiId}`);
+    return true;
+  } catch (error) {
+    logger.error(`Error updating course in Strapi: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
+
+/**
+ * Delete a course in Strapi
+ * @param strapiId The Strapi ID of the course
+ * @returns Promise resolving to true if successful
+ */
+public async deleteCourseInStrapi(strapiId: string): Promise<boolean> {
+  try {
+    await this.strapiClient.delete(`/api/courses/${strapiId}`);
+    
+    logger.info(`Deleted course in Strapi with ID ${strapiId}`);
+    return true;
+  } catch (error) {
+    logger.error(`Error deleting course in Strapi: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
+
+  /**
+   * Create a challenge in Strapi
    * @param projectData The project data to create
    * @returns The created Strapi challenge ID
    */
@@ -508,5 +582,81 @@ export class StrapiSyncService {
       logger.error(`Error creating challenge in Strapi: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
+  }
+
+  /**
+ * Update a challenge in Strapi
+ * @param strapiId The Strapi ID of the project
+ * @param updateData The data to update in Strapi
+ * @returns Promise resolving to true if successful
+ */
+public async updateProjectInStrapi(strapiId: string, updateData: any): Promise<boolean> {
+  try {
+    await this.strapiClient.put(
+      `/api/challenges/${strapiId}`,
+      { data: updateData }
+    );
+    
+    logger.info(`Updated project in Strapi with ID ${strapiId}`);
+    return true;
+  } catch (error) {
+    logger.error(`Error updating challenge in Strapi: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
+
+/**
+ * Delete a challenge in Strapi
+ * @param strapiId The Strapi ID of the project
+ * @returns Promise resolving to true if successful
+ */
+public async deleteProjectInStrapi(strapiId: string): Promise<boolean> {
+  try {
+    await this.strapiClient.delete(`/api/challenges/${strapiId}`);
+    
+    logger.info(`Deleted project in Strapi with ID ${strapiId}`);
+    return true;
+  } catch (error) {
+    logger.error(`Error deleting challenge in Strapi: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
+
+/**
+ * Get a challenge by its Strapi ID
+ * @param strapiId The Strapi ID
+ * @returns The Strapi project data
+ */
+public async getProjectBystrapiId(strapiId: string): Promise<any> {
+  try {
+    const response = await this.strapiClient.get(`/api/challenges/${strapiId}`);
+    return response.data?.data;
+  } catch (error) {
+    logger.error(`Error fetching challenge from Strapi: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  }
+}
+
+  /**
+   * Search for challenge in Strapi
+   * @param query Search query
+   * @param limit Maximum number of results
+   * @returns Array of projects matching the query
+   */
+  public async searchProjects(query: string, limit: number = 10): Promise<any[]> {
+    try {
+      const response = await this.strapiClient.get(`/api/challenges`, {
+        params: {
+          _q: query,
+          _limit: limit
+        }
+      });
+      return response.data?.data || [];
+    } catch (error) {
+      logger.error(`Error searching challenge in Strapi: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+
+
   }
 }

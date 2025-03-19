@@ -2,7 +2,10 @@
 import mongoose from 'mongoose';
 import { Course, ICourse, CourseLevel } from '../models/course.model';
 import { User, IUser } from '../models/user.model';
+import { StrapiSyncService } from './strapi-sync.service';
 import { createLogger } from '../config/logger';
+import { RetryUtility } from '../utils/retry.util';
+import { ItemLifecycleStatus } from '../models/status.enum';
 
 const logger = createLogger('CourseService');
 
@@ -10,43 +13,52 @@ const logger = createLogger('CourseService');
  * Interface for course creation data
  */
 export interface ICourseCreationData {
-  creatorUserId: string; // Amplify userId of creator
-  name: string;
-  code: string;
-  level: CourseLevel;
-  expectedEnrollment: number;
-  description: string;
-  assessmentRedesign?: string;
-  targetIndustryPartnership?: string;
-  preferredPartnerRepresentative?: string;
-  country?: string;
-  startDate: Date;
-  endDate: Date;
+  creatorUserId: string;           // Amplify userId of creator
+  name: string;                    // Name of the course
+  code: string;                    // Course code
+  level: CourseLevel;              // Course level (for matching)
+  startDate: Date;                 // Start date
+  endDate: Date;                   // End date
+  country: string;                 // Country
+  description?: string;            // Course description (will be stored in Strapi)
+  expectedEnrollment?: number;     // Expected enrollment (will be stored in Strapi)
+  assessmentRedesign?: string;     // Assessment redesign info (will be stored in Strapi)
+  targetIndustryPartnership?: string; // Target industry (will be stored in Strapi)
+  preferredPartnerRepresentative?: string; // Preferred partner (will be stored in Strapi)
 }
 
 /**
  * Interface for course update data
  */
 export interface ICourseUpdateData {
-  name?: string;
-  code?: string;
-  level?: CourseLevel;
-  expectedEnrollment?: number;
-  description?: string;
-  assessmentRedesign?: string;
-  targetIndustryPartnership?: string;
-  preferredPartnerRepresentative?: string;
-  country?: string;
-  startDate?: Date;
-  endDate?: Date;
-  isActive?: boolean;
+  strapiId?: string;               // ID in Strapi CMS
+  name?: string;                   // Name of the course
+  code?: string;                   // Course code
+  level?: CourseLevel;             // Course level (for matching)
+  startDate?: Date;                // Start date
+  endDate?: Date;                  // End date
+  country?: string;                // Country
+  isActive?: boolean;              // Active status
+  status?: ItemLifecycleStatus;    // Lifecycle status
+  strapiCreatedAt?: Date;          // When created in Strapi
+  strapiUpdatedAt?: Date;          // When updated in Strapi
+  
+  // Extended fields for Strapi (not stored in MongoDB)
+  description?: string;            // Course description
+  expectedEnrollment?: number;     // Expected enrollment
+  assessmentRedesign?: string;     // Assessment redesign info
+  targetIndustryPartnership?: string; // Target industry
+  preferredPartnerRepresentative?: string; // Preferred partner
 }
 
 /**
  * Course service class for managing course operations
  * Implements core business logic for course-related functionality
+ * Uses a hybrid storage approach with MongoDB and Strapi CMS
  */
 export class CourseService {
+  private static strapiSyncService: StrapiSyncService = StrapiSyncService.getInstance();
+
   /**
    * Create a new course
    * @param courseData The course data
@@ -68,40 +80,45 @@ export class CourseService {
         throw new Error(`Creator with userId ${courseData.creatorUserId} not found`);
       }
 
-      // Create the new course
+      // Set default values for required fields
+      const now = new Date();
+      
+      // Create the new course (store minimal data in MongoDB)
       const course = new Course({
         creatorUserId: courseData.creatorUserId,
         name: courseData.name,
         code: courseData.code,
         level: courseData.level,
-        expectedEnrollment: courseData.expectedEnrollment,
-        description: courseData.description,
-        assessmentRedesign: courseData.assessmentRedesign,
-        targetIndustryPartnership: courseData.targetIndustryPartnership,
-        preferredPartnerRepresentative: courseData.preferredPartnerRepresentative,
         startDate: courseData.startDate,
         endDate: courseData.endDate,
-        country: courseData.country,
-        isActive: true
+        country: courseData.country || 'Unknown',
+        isActive: true,
+        status: ItemLifecycleStatus.UPCOMING, // Will be updated by pre-save middleware
+        strapiCreatedAt: now,
+        strapiUpdatedAt: now
+        // Note: strapiId will be set after successful creation in Strapi
       });
 
       // Calculate academic year and semester
       course.setAcademicYearAndSemester();
-
-      // Save the course
-      const savedCourse = await course.save({ session });
       
-      // Update user analytics - increment course count
+      // Ensure status is set correctly based on dates
+      course.updateStatus();
+
+      // Save the course in MongoDB
+      const savedCourse = await course.save({ session });
+
+      // Increment user course count metric
       await CourseService.incrementUserMetric(
-        courseData.creatorUserId, 
-        'totalCoursesCreated', 
+        courseData.creatorUserId,
+        'totalCoursesCreated',
         1,
         session
       );
-      
+
       await session.commitTransaction();
-      logger.info(`New course created: ${savedCourse._id} by user ${courseData.creatorUserId} from ${courseData.country || 'missing country input'}`);
-      
+      logger.info(`New course created in MongoDB: ${savedCourse._id} by user ${courseData.creatorUserId} from ${courseData.country || 'unknown'}`);
+
       return savedCourse;
     } catch (error) {
       await session.abortTransaction();
@@ -123,12 +140,61 @@ export class CourseService {
         throw new Error('Invalid course ID format');
       }
       
-      return await Course.findById(courseId);
+      const course = await Course.findById(courseId);
+      
+      // If course has a strapiId, attempt to fetch enriched data from Strapi
+      if (course && course.strapiId) {
+        try {
+          // No need to await this - we'll return the MongoDB data and let Strapi
+          // data be fetched asynchronously if needed by the consumer
+          CourseService.enrichCourseWithStrapiData(course);
+        } catch (strapiError) {
+          logger.warn(`Could not fetch Strapi data for course ${courseId}: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
+          // Continue anyway - we can return the MongoDB data
+        }
+      }
+      
+      return course;
     } catch (error) {
       logger.error(`Error getting course: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
   }
+
+/**
+ * Enrich a course with data from Strapi
+ * @param course The course document to enrich
+ * @returns Promise resolving to the enriched course
+ */
+static async enrichCourseWithStrapiData(course: ICourse): Promise<ICourse> {
+  if (!course.strapiId) {
+    return course; // No Strapi ID, return as is
+  }
+
+  try {
+    // Use RetryUtility for a more robust fetch
+    const strapiCourse = await RetryUtility.withRetryOrFallback(
+      async () => {
+        // Use the StrapiSyncService method instead of accessing strapiClient directly
+        return await CourseService.strapiSyncService.getCourseBystrapiId(course.strapiId);
+      },
+      null, // Fallback to null if fetching fails
+      { maxRetries: 3, initialDelay: 500 }
+    );
+
+    if (strapiCourse && strapiCourse.attributes) {
+      // Attach Strapi data as a non-persisted property if needed
+      (course as any).strapiData = strapiCourse.attributes;
+    }
+
+    return course;
+  } catch (error) {
+    logger.error(`Error enriching course with Strapi data: ${error instanceof Error ? error.message : String(error)}`);
+    return course; // Return original course on error
+  }
+}
+
+
 
   /**
    * Get all courses created by a specific user
@@ -161,6 +227,8 @@ export class CourseService {
     isActive?: boolean;
     academicYear?: string;
     semester?: string;
+    status?: ItemLifecycleStatus;
+    country?: string;
     startDate?: { $gte?: Date, $lte?: Date };
     endDate?: { $gte?: Date, $lte?: Date };
   }): Promise<ICourse[]> {
@@ -225,12 +293,30 @@ export class CourseService {
         throw new Error('End date must be after existing start date');
       }
 
+      // Extract MongoDB-only fields for the update
+      const mongoUpdateData: Partial<ICourse> = {
+        name: updateData.name,
+        code: updateData.code,
+        level: updateData.level,
+        startDate: updateData.startDate,
+        endDate: updateData.endDate,
+        country: updateData.country,
+        isActive: updateData.isActive,
+        strapiId: updateData.strapiId,
+        strapiUpdatedAt: new Date() // Update the last Strapi update timestamp
+      };
+
       // Apply updates to the course object
-      Object.assign(course, updateData);
+      Object.assign(course, mongoUpdateData);
       
       // Recalculate academic year and semester if dates changed
       if (updateData.startDate) {
         course.setAcademicYearAndSemester();
+      }
+      
+      // Update status based on new dates if provided
+      if (updateData.startDate || updateData.endDate || updateData.isActive !== undefined) {
+        course.updateStatus();
       }
 
       // Save the updated course
@@ -366,8 +452,6 @@ export class CourseService {
    * @returns Boolean indicating if the course has active partnerships
    */
   private static async hasActivePartnerships(courseId: string): Promise<boolean> {
-    // This implementation would typically involve the Partnership model
-    // For now, it's a placeholder
     try {
       const Partnership = mongoose.model('Partnership');
       const activePartnership = await Partnership.findOne({
@@ -384,45 +468,44 @@ export class CourseService {
     }
   }
 
-    /**
+  /**
    * Get courses by country
    * @param country The country to filter by
    * @returns Array of matching course documents
    */
-    static async getCoursesByCountry(country: string): Promise<ICourse[]> {
-      try {
-        return await Course.find({ country })
-          .sort({ createdAt: -1 });
-      } catch (error) {
-        logger.error(`Error getting courses by country: ${error instanceof Error ? error.message : String(error)}`);
-        throw error;
-      }
+  static async getCoursesByCountry(country: string): Promise<ICourse[]> {
+    try {
+      return await Course.find({ country })
+        .sort({ createdAt: -1 });
+    } catch (error) {
+      logger.error(`Error getting courses by country: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
+  }
 
-      /**
+  /**
    * Get course statistics by country
    * @returns Array of statistical groupings by country
    */
-    static async getCourseStatsByCountry(): Promise<any[]> {
-      try {
-        return await Course.aggregate([
-          {
-            $group: {
-              _id: { country: '$country' },
-              count: { $sum: 1 },
-              avgEnrollment: { $avg: '$expectedEnrollment' },
-              countries: { $addToSet: '$country' }
-            }
-          },
-          {
-            $sort: { count: -1 }
+  static async getCourseStatsByCountry(): Promise<any[]> {
+    try {
+      return await Course.aggregate([
+        {
+          $group: {
+            _id: { country: '$country' },
+            count: { $sum: 1 },
+            countries: { $addToSet: '$country' }
           }
-        ]);
-      } catch (error) {
-        logger.error(`Error getting course statistics by country: ${error instanceof Error ? error.message : String(error)}`);
-        throw error;
-      }
+        },
+        {
+          $sort: { count: -1 }
+        }
+      ]);
+    } catch (error) {
+      logger.error(`Error getting course statistics by country: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
+  }
 
   /**
    * Get courses with pagination
@@ -465,42 +548,128 @@ export class CourseService {
     }
   }
 
-  /**
-   * Search courses by name, code, or description
-   * @param searchQuery The search string
-   * @param limit Maximum number of results to return
-   * @returns Array of matching course documents
-   */
-  static async searchCourses(searchQuery: string, limit: number = 10): Promise<ICourse[]> {
-    try {
-      // Create text index if it doesn't exist yet
-      const collection = Course.collection;
-      const indexes = await collection.indexes();
-      
-      const hasTextIndex = indexes.some(index => 
-        index.name === 'name_text_code_text_description_text'
-      );
-      
-      if (!hasTextIndex) {
-        await collection.createIndex({ 
-          name: 'text', 
-          code: 'text',
-          description: 'text' 
-        });
-      }
-
-      // Perform text search
-      return await Course.find(
-        { $text: { $search: searchQuery } },
-        { score: { $meta: 'textScore' } }
-      )
-        .sort({ score: { $meta: 'textScore' } })
-        .limit(limit);
-    } catch (error) {
-      logger.error(`Error searching courses: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
+/**
+ * Search courses by name, code, or description
+ * @param searchQuery The search string
+ * @param limit Maximum number of results to return
+ * @returns Array of matching course documents
+ */
+static async searchCourses(searchQuery: string, limit: number = 10): Promise<ICourse[]> {
+  try {
+    // Create text index if it doesn't exist yet
+    const collection = Course.collection;
+    const indexes = await collection.indexes();
+    
+    const hasTextIndex = indexes.some(index => 
+      index.name === 'name_text_code_text'
+    );
+    
+    if (!hasTextIndex) {
+      await collection.createIndex({ 
+        name: 'text', 
+        code: 'text'
+      });
     }
+
+    // Perform text search in MongoDB
+    const mongodbCourses = await Course.find(
+      { $text: { $search: searchQuery } },
+      { score: { $meta: 'textScore' } }
+    )
+      .sort({ score: { $meta: 'textScore' } })
+      .limit(limit);
+    
+    // Convert to plain array we can safely modify
+    const courses: ICourse[] = mongodbCourses.map(doc => doc.toObject());
+    
+    // If we have few results, also try to search in Strapi
+    if (courses.length < limit) {
+      try {
+        // Search in Strapi asynchronously
+        const strapiSearchLimit = limit - courses.length;
+        
+        // Use the StrapiSyncService method instead of accessing strapiClient directly
+        const strapiCourses = await CourseService.strapiSyncService.searchCourses(searchQuery, strapiSearchLimit);
+        
+        // Add Strapi search results to MongoDB results
+        for (const strapiCourse of strapiCourses) {
+          const strapiId = strapiCourse.id.toString();
+          
+          // Check if this Strapi course is already in our MongoDB results
+          const existingCourse = courses.find(c => c.strapiId === strapiId);
+          
+          if (!existingCourse) {
+            // Find or create a MongoDB record for this Strapi course
+            const existingDoc = await Course.findOne({ strapiId });
+            
+            if (existingDoc) {
+              // Add to results
+              courses.push(existingDoc.toObject());
+            } else {
+              // Create a new MongoDB record for this Strapi course
+              const newCourse = await CourseService.createCourseFromStrapi(strapiCourse);
+              if (newCourse) {
+                courses.push(newCourse.toObject());
+              }
+            }
+          }
+        }
+      } catch (strapiError) {
+        logger.warn(`Error searching courses in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
+        // Continue with MongoDB results only
+      }
+    }
+
+    return courses.slice(0, limit); // Ensure we don't exceed the requested limit
+  } catch (error) {
+    logger.error(`Error searching courses: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
   }
+}
+
+/**
+ * Create a MongoDB course record from Strapi data
+ * @param strapiCourse The Strapi course data
+ * @returns The created course document
+ */
+private static async createCourseFromStrapi(strapiCourse: any): Promise<ICourse | null> {
+  try {
+    const attrs = strapiCourse.attributes;
+    
+    if (!attrs || !attrs.userId || !attrs.name || !attrs.code) {
+      logger.warn(`Incomplete Strapi course data for ID ${strapiCourse.id}`);
+      return null;
+    }
+    
+    // Create a new course document
+    const courseData = {
+      strapiId: strapiCourse.id.toString(),
+      creatorUserId: attrs.userId,
+      name: attrs.name,
+      code: attrs.code,
+      level: attrs.courseLevel || CourseLevel.OTHER,
+      startDate: new Date(attrs.startDate),
+      endDate: new Date(attrs.endDate),
+      country: attrs.country || 'Unknown',
+      isActive: attrs.isActive !== undefined ? attrs.isActive : true,
+      strapiCreatedAt: new Date(attrs.createdAt),
+      strapiUpdatedAt: new Date(attrs.updatedAt)
+    };
+    
+    const course = new Course(courseData);
+    
+    // Call methods on the course document
+    course.setAcademicYearAndSemester();
+    course.updateStatus();
+    
+    // Save the document
+    const savedCourse = await course.save();
+    return savedCourse;
+  } catch (error) {
+    logger.error(`Error creating course from Strapi data: ${error instanceof Error ? error.message : String(error)}`);
+    return null;
+  }
+}
 
   /**
    * Get course statistics grouped by academic year and semester
@@ -516,9 +685,6 @@ export class CourseService {
               semester: '$semester'
             },
             count: { $sum: 1 },
-            avgEnrollment: { $avg: '$expectedEnrollment' },
-            minEnrollment: { $min: '$expectedEnrollment' },
-            maxEnrollment: { $max: '$expectedEnrollment' },
             courses: { $push: { id: '$_id', name: '$name', code: '$code' } }
           }
         },
