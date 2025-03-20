@@ -6,6 +6,8 @@ import { createLogger } from './config/logger';
 import { dbConnection } from './config/database';
 import { UserConsumerService } from './services/user.consumer.service';
 import { EventPublisher } from './services/event.publisher';
+import { StrapiConsumerService } from './services/strapi-consumer.service';
+import { RequestResponseService } from './services/request-response.service';
 
 // Load environment variables
 dotenv.config();
@@ -30,6 +32,14 @@ async function initializeMessageServices() {
     // Initialize user consumer
     await UserConsumerService.getInstance().initialize();
     logger.info('User consumer service initialized');
+    
+    // Initialize request-response service
+    await RequestResponseService.getInstance().initialize();
+    logger.info('Request-Response service initialized');
+    
+    // Initialize Strapi consumer service to handle Strapi operations
+    await StrapiConsumerService.getInstance().initialize();
+    logger.info('Strapi consumer service initialized');
   } catch (error) {
     logger.error(`Failed to initialize message services: ${error instanceof Error ? error.message : String(error)}`);
   }

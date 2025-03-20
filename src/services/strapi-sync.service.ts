@@ -36,7 +36,7 @@ interface IStrapiCourse {
 }
 
 /**
- * Interface for Strapi challenge (project) data
+ * Interface for Strapi challenge data
  */
 interface IStrapiChallenge {
   id: number;
