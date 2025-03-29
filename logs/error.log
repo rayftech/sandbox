@@ -82,3 +82,60 @@
 2025-03-19 20:15:59 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
 2025-03-19 20:15:59 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
 2025-03-19 20:15:59 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-20 17:02:58 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-20 17:02:58 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-20 17:03:03 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-20 17:04:39 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-20 17:04:39 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-20 17:04:44 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-20 17:06:10 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-20 17:06:10 [database] ERROR: MongoDB connection error: Error: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-20 17:06:15 [database] ERROR: Database connection failed: querySrv ECONNREFUSED _mongodb._tcp.cluster0.vqhve.mongodb.net 
+2025-03-20 17:41:08 [database] ERROR: Failed to connect to MongoDB after 5 attempts 
+2025-03-20 18:26:37 [CourseService] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-20 18:26:37 [CourseController] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-20 18:41:51 [CourseService] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-20 18:41:51 [CourseController] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-20 18:43:20 [CourseService] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-20 18:43:20 [CourseController] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-20 18:50:36 [RequestResponseService] ERROR: Operation create_course failed for correlationId: b59f436a-d913-46d7-9353-70ba65e64b15: Unsupported operation type: create_course 
+2025-03-20 18:50:37 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 400 
+2025-03-20 18:50:37 [StrapiConsumerService] ERROR: Error processing create_course request: Request failed with status code 400 
+2025-03-20 18:50:37 [RequestResponseService] ERROR: Operation create_course failed for correlationId: 8d0354c7-d69c-4fbc-b0ec-3a48df28e2d0: Request failed with status code 400 
+2025-03-20 18:50:39 [RequestResponseService] ERROR: Operation create_course failed for correlationId: f07ad64b-674c-4592-b880-1fedcdb3642c: Unsupported operation type: create_course 
+2025-03-20 18:50:39 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-20 18:50:39 [CourseController] ERROR: Failed to create course in Strapi: Unsupported operation type: create_course 
+2025-03-20 18:58:26 [CourseService] ERROR: Error creating course: E11000 duplicate key error collection: test.courses index: strapiId_1 dup key: { strapiId: null } 
+2025-03-20 18:58:26 [CourseController] ERROR: Error creating course: E11000 duplicate key error collection: test.courses index: strapiId_1 dup key: { strapiId: null } 
+2025-03-20 18:59:15 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: f78cb97d-2b13-49cf-b968-645dc1842699: strapi is not defined 
+2025-03-20 18:59:17 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 1ccaf797-d19f-4ce4-b85e-adf67c9fc572: Unsupported operation type: CREATE_COURSE 
+2025-03-20 18:59:19 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 9271cab9-307a-456f-b038-b5595d02efdc: targetIndustryPartnership must be one of the following values: Information System, Information Technology, Cyber Security, Accounting, Education, Supply Chain, Fintech,  
+2025-03-20 18:59:19 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-20 18:59:19 [CourseController] ERROR: Failed to create course in Strapi: targetIndustryPartnership must be one of the following values: Information System, Information Technology, Cyber Security, Accounting, Education, Supply Chain, Fintech,  
+2025-03-20 19:08:09 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 400 
+2025-03-20 19:08:09 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 400 
+2025-03-20 19:08:09 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 891c2956-09a9-4573-9819-3f1868578dea: Request failed with status code 400 
+2025-03-20 19:08:10 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: bb606caa-2b98-42c8-a3f2-ec8035d89691: Invalid target industry partnership: Technology 
+2025-03-20 19:08:12 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 400 
+2025-03-20 19:08:12 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 400 
+2025-03-20 19:08:12 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 148bf323-367f-4ad1-bf27-9ac603ae5ccf: Request failed with status code 400 
+2025-03-20 19:08:12 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-20 19:08:12 [CourseController] ERROR: Failed to create course in Strapi: Request failed with status code 400 
+2025-03-20 19:09:31 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 0bbe6857-c4b5-475f-981f-c1295f60a042: This attribute must be unique 
+2025-03-20 19:09:33 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 400 
+2025-03-20 19:09:33 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 400 
+2025-03-20 19:09:33 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: a16dbf60-922e-40a7-bb73-a02d67dbdf04: Request failed with status code 400 
+2025-03-20 19:09:35 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 678e1f1d-3b6b-4aff-804d-cab8650d7cbb: This attribute must be unique 
+2025-03-20 19:09:35 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-20 19:09:35 [CourseController] ERROR: Failed to create course in Strapi: This attribute must be unique 
+2025-03-20 19:12:54 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 400 
+2025-03-20 19:12:54 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 400 
+2025-03-20 19:12:54 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: c5a76422-4521-4216-b98f-7ea6d9e5e343: Request failed with status code 400 
+2025-03-20 19:12:55 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: aa70b8e3-029d-47f1-883c-c17704a815c6: This attribute must be unique 
+2025-03-20 19:12:57 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 400 
+2025-03-20 19:12:57 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 400 
+2025-03-20 19:12:57 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 01644da4-f8e3-4215-94e4-6d0fd87c487d: Request failed with status code 400 
+2025-03-20 19:12:57 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-20 19:12:57 [CourseController] ERROR: Failed to create course in Strapi: Request failed with status code 400 
+2025-03-20 19:17:40 [CourseService] ERROR: Error updating course: Course validation failed: name: Path `name` is required., code: Path `code` is required., level: Path `level` is required., startDate: Path `startDate` is required., endDate: Path `endDate` is required., country: Path `country` is required. 
+2025-03-20 19:17:40 [CourseController] ERROR: Failed to create course in Strapi: Course validation failed: name: Path `name` is required., code: Path `code` is required., level: Path `level` is required., startDate: Path `startDate` is required., endDate: Path `endDate` is required., country: Path `country` is required. 

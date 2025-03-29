@@ -74,18 +74,18 @@ const CourseSchema = new Schema<ICourseDocument>(
     },
     strapiId: {
       type: String,
-      required: true,
+      required: false,
       unique: true,
       index: true,
-      comment: 'ID of the corresponding course in Strapi CMS'
+      comment: 'ID of the corresponding course in Strapi CMS, updated once course is created in Strapi'
     },
     strapiCreatedAt: {
       type: Date,
-      required: true
+      required: false
     },
     strapiUpdatedAt: {
       type: Date,
-      required: true
+      required: false
     },
     name: {
       type: String,

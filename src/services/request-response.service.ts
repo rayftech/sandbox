@@ -1,7 +1,7 @@
 // src/services/request-response.service.ts
 import { v4 as uuidv4 } from 'uuid';
 import { createLogger } from '../config/logger';
-import { RabbitMQService, QueueType, ExchangeType } from './rabbitmq.service';
+import { RabbitMQService, ExchangeType } from './rabbitmq.service';
 import { RetryUtility } from '../utils/retry.util';
 
 const logger = createLogger('RequestResponseService');
@@ -14,13 +14,13 @@ const QUEUE_RESPONSES = 'strapi_operation_responses';
 
 // Define types of operations that can be performed
 export enum StrapiOperationType {
-  CREATE_COURSE = 'create_course',
-  UPDATE_COURSE = 'update_course',
-  DELETE_COURSE = 'delete_course',
-  CREATE_PROJECT = 'create_project',
-  UPDATE_PROJECT = 'update_project',
-  DELETE_PROJECT = 'delete_project',
-  SYNC_USER = 'sync_user'
+  CREATE_COURSE = 'CREATE_COURSE',
+  UPDATE_COURSE = 'UPDATE_COURSE',
+  DELETE_COURSE = 'DELETE_COURSE',
+  CREATE_PROJECT = 'CREATE_PROJECT',
+  UPDATE_PROJECT = 'UPDATE_PROJECT',
+  DELETE_PROJECT = 'DELETE_PROJECT',
+  SYNC_USER = 'SYNC_USER'
 }
 
 // Structure for requests sent to Strapi

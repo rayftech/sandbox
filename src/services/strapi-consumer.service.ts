@@ -1,6 +1,6 @@
 // src/services/strapi-consumer.service.ts
 import { createLogger } from '../config/logger';
-import { RabbitMQService, QueueType, ExchangeType } from './rabbitmq.service';
+import { RabbitMQService, ExchangeType } from './rabbitmq.service';
 import { StrapiSyncService } from './strapi-sync.service';
 import { StrapiOperationType, StrapiOperationRequest, StrapiOperationResponse } from './request-response.service';
 
@@ -107,7 +107,7 @@ export class StrapiConsumerService {
     const request = content as StrapiOperationRequest;
     const { correlationId, operationType, data, userId } = request;
     
-    logger.info(`Processing ${operationType} request with correlationId: ${correlationId}`);
+    logger.info(`Processing ${operationType} request with correlationId: ${correlationId} and the userid is ${userId}`);
 
     try {
       // Process the operation based on type

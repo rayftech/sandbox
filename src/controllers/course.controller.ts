@@ -44,11 +44,17 @@ export class CourseController {
     try {
       // Add creator ID to course data
       courseData.creatorUserId = userId;
-
-      // First create in MongoDB (our source of truth)
-      const course = await CourseService.createCourse(courseData);
-
-      // Prepare data for Strapi (keeping only what Strapi needs)
+  
+      // Create in MongoDB WITHOUT requiring strapiId
+      const course = await CourseService.createCourse({
+        ...courseData,
+        // Explicitly set initial synchronization status
+        strapiId: null,
+        strapiCreatedAt: null,
+        strapiUpdatedAt: null
+      });
+  
+      // Prepare data for Strapi 
       const strapiCourseData = {
         name: course.name,
         code: course.code,
@@ -63,47 +69,33 @@ export class CourseController {
         targetIndustryPartnership: courseData.targetIndustryPartnership,
         preferredPartnerRepresentative: courseData.preferredPartnerRepresentative
       };
-
+  
       // Use the request-response pattern to create in Strapi 
-      // This could be implemented as a fire-and-forget approach, but here we wait for confirmation
       try {
         const strapiId = await CourseController.requestResponseService.createCourse(
           strapiCourseData, 
           userId
         );
-
+  
         // Update MongoDB with the Strapi ID
         if (strapiId) {
-          const updateData: ICourseUpdateData = { strapiId };
+          const updateData: ICourseUpdateData = { 
+            strapiId,
+            strapiCreatedAt: new Date(),
+            strapiUpdatedAt: new Date()
+          };
           await CourseService.updateCourse(course._id.toString(), updateData, userId);
           logger.info(`Updated course ${course._id} with Strapi ID ${strapiId}`);
+          
+          // Update the course object with Strapi ID for response
+          course.strapiId = strapiId;
         }
       } catch (strapiError) {
-        // If Strapi operation fails, we still have the MongoDB record
-        // We could consider adding this to a retry queue
+        // Log the error, but still return the course created in MongoDB
         logger.error(`Failed to create course in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
       }
-
-      // Publish course creation event to RabbitMQ asynchronously
-      try {
-        await CourseController.eventPublisher.publishCourseEvent(
-          EventType.COURSE_CREATED,
-          {
-            courseId: course._id.toString(),
-            name: course.name,
-            code: course.code,
-            level: course.level,
-            creatorUserId: userId,
-            startDate: course.startDate,
-            endDate: course.endDate
-          }
-        );
-        logger.info(`Published COURSE_CREATED event for course ${course._id}`);
-      } catch (eventError) {
-        logger.error(`Error publishing course creation event: ${eventError instanceof Error ? eventError.message : String(eventError)}`);
-      }
-
-      // Return success response immediately
+  
+      // Return success response
       return res.status(201).json({
         status: 'success',
         data: {
@@ -115,6 +107,7 @@ export class CourseController {
             startDate: course.startDate,
             endDate: course.endDate,
             isActive: course.isActive,
+            strapiId: course.strapiId, // Include strapiId in response
             createdAt: course.createdAt
           }
         }
