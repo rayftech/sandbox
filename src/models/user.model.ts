@@ -14,7 +14,9 @@ export interface IAmplifyUserData {
   lastName: string;
   userType: 'academic' | 'industry' | 'admin';
   isAdmin: boolean;
-  country:string;
+  country: string;
+  organisation?: string;
+  fieldOfExpertise?: string;
 }
 
 /**
@@ -175,12 +177,20 @@ const UserSchema = new Schema<IUserDocument>(
       max: 100,
     },
 
-    country:{
+    // New fields from Amplify auth return
+    country: {
       type: String,
       trim: true,
       index: true,
-      default: null,
-
+    },
+    organisation: {
+      type: String,
+      trim: true,
+      index: true,
+    },
+    fieldOfExpertise: {
+      type: String,
+      trim: true,
     }
   },
   
@@ -213,6 +223,7 @@ UserSchema.index({ lastName: 1, firstName: 1 });
 UserSchema.index({ 'friendRequests.accepted': 1 });
 UserSchema.index({ 'friendRequests.sent': 1 });
 UserSchema.index({ 'friendRequests.received': 1 });
+UserSchema.index({ country: 1, organisation: 1 });
 
 // Log model initialization
 logger.info('Configuring User model');

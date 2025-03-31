@@ -1,8 +1,8 @@
-// src/routes/course.routes.ts
+// src/routes/course.routes.ts - Updated with organisation routes
 import { Router } from 'express';
 import { CourseController } from '../controllers/course.controller';
 import { AuthMiddleware } from '../middlewares/auth.middleware';
-import { body } from 'express-validator';
+import { body, query } from 'express-validator';
 
 const router = Router();
 
@@ -51,6 +51,9 @@ const router = Router();
  *               country:
  *                 type: string
  *                 example: 'Australia'
+ *               organisation:
+ *                 type: string
+ *                 example: 'University of Sydney'
  *               description:
  *                 type: string
  *                 example: 'An introductory course to computer science principles'
@@ -83,7 +86,8 @@ router.post(
       .withMessage('Valid course level is required'),
     body('startDate').isISO8601().withMessage('Valid start date is required'),
     body('endDate').isISO8601().withMessage('Valid end date is required'),
-    body('country').notEmpty().withMessage('Country is required')
+    body('country').notEmpty().withMessage('Country is required'),
+    body('organisation').optional()
   ],
   CourseController.createCourse
 );
@@ -113,6 +117,11 @@ router.post(
  *           type: string
  *         description: Filter by country
  *       - in: query
+ *         name: organisation
+ *         schema:
+ *           type: string
+ *         description: Filter by organisation
+ *       - in: query
  *         name: page
  *         schema:
  *           type: integer
@@ -138,7 +147,7 @@ router.get('/', CourseController.getCourses);
  * /api/courses/search:
  *   get:
  *     summary: Search courses
- *     description: Search courses by name, code, or description
+ *     description: Search courses by name, code, description, country or organisation
  *     tags:
  *       - Courses
  *     parameters:
@@ -148,6 +157,16 @@ router.get('/', CourseController.getCourses);
  *         schema:
  *           type: string
  *         description: Search query
+ *       - in: query
+ *         name: country
+ *         schema:
+ *           type: string
+ *         description: Filter by country
+ *       - in: query
+ *         name: organisation
+ *         schema:
+ *           type: string
+ *         description: Filter by organisation
  *       - in: query
  *         name: limit
  *         schema:
@@ -163,7 +182,53 @@ router.get('/', CourseController.getCourses);
  *       500:
  *         description: Internal server error
  */
-router.get('/search', CourseController.searchCourses);
+router.get('/search', [
+  query('q').optional(),
+  query('country').optional(),
+  query('organisation').optional(),
+  query('limit').optional().isInt({ min: 1, max: 50 }).toInt()
+], CourseController.searchCourses);
+
+/**
+ * @swagger
+ * /api/courses/organisation/{organisation}:
+ *   get:
+ *     summary: Get courses by organisation
+ *     description: Retrieve courses offered by a specific organisation
+ *     tags:
+ *       - Courses
+ *     parameters:
+ *       - in: path
+ *         name: organisation
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The organisation name
+ *     responses:
+ *       200:
+ *         description: List of courses
+ *       400:
+ *         description: Bad request - missing organisation
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/organisation/:organisation', CourseController.getCoursesByOrganisation);
+
+/**
+ * @swagger
+ * /api/courses/stats/organisation:
+ *   get:
+ *     summary: Get course statistics by organisation
+ *     description: Retrieve statistics about courses grouped by organisation
+ *     tags:
+ *       - Courses
+ *     responses:
+ *       200:
+ *         description: Course statistics
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/stats/organisation', CourseController.getCourseStatsByOrganisation);
 
 /**
  * @swagger
@@ -196,6 +261,31 @@ router.get('/stats/academic', CourseController.getCourseStatsByAcademicPeriod);
  *         description: Internal server error
  */
 router.get('/stats/country', CourseController.getCourseStatsByCountry);
+
+/**
+ * @swagger
+ * /api/courses/country/{country}:
+ *   get:
+ *     summary: Get courses by country
+ *     description: Retrieve courses from a specific country
+ *     tags:
+ *       - Courses
+ *     parameters:
+ *       - in: path
+ *         name: country
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The country name
+ *     responses:
+ *       200:
+ *         description: List of courses
+ *       400:
+ *         description: Bad request - missing country
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/country/:country', CourseController.getCoursesByCountry);
 
 /**
  * @swagger
@@ -287,6 +377,8 @@ router.get('/:courseId', CourseController.getCourseById);
  *                 type: string
  *                 format: date
  *               country:
+ *                 type: string
+ *               organisation:
  *                 type: string
  *               isActive:
  *                 type: boolean

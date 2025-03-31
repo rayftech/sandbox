@@ -34,6 +34,7 @@ interface ICourseDocument extends Document {
   startDate: Date;                       // For determining lifecycle and partnerships
   endDate: Date;                         // For determining lifecycle and partnerships
   country: string;                       // For geographic filtering
+  organisation: string;                  // Academic/educational organisation offering the course
   targetIndustryPartnership?: string;    // Target industry field for partnership
   
   // Status fields
@@ -63,6 +64,7 @@ interface ICourseModel extends Model<ICourseDocument> {
 /**
  * Course Schema for MongoDB
  * This schema represents the relationship between users and Strapi courses
+ * Modified to handle strapiId automatically
  */
 const CourseSchema = new Schema<ICourseDocument>(
   {
@@ -74,18 +76,21 @@ const CourseSchema = new Schema<ICourseDocument>(
     },
     strapiId: {
       type: String,
-      required: false,
-      unique: true,
+      required: false, // Changed from required:true to false
+      default: function() {
+        // Generate a temporary placeholder ID when strapiId isn't provided
+        return `temp-${new mongoose.Types.ObjectId().toString()}`;
+      },
       index: true,
-      comment: 'ID of the corresponding course in Strapi CMS, updated once course is created in Strapi'
+      comment: 'ID of the corresponding course in Strapi CMS'
     },
     strapiCreatedAt: {
       type: Date,
-      required: false
+      required: true
     },
     strapiUpdatedAt: {
       type: Date,
-      required: false
+      required: true
     },
     name: {
       type: String,
@@ -117,6 +122,12 @@ const CourseSchema = new Schema<ICourseDocument>(
       type: String,
       required: true,
       index: true,
+    },
+    organisation: {
+      type: String,
+      required: false,
+      index: true,
+      default: '',
     },
     targetIndustryPartnership: {
       type: String,
@@ -202,6 +213,12 @@ CourseSchema.pre('save', function(this: ICourseDocument, next) {
       return next(error);
     }
 
+    // Ensure strapiId is set even if not provided
+    if (!this.strapiId) {
+      this.strapiId = `temp-${new mongoose.Types.ObjectId().toString()}`;
+      logger.debug(`Generated temporary strapiId: ${this.strapiId} for course ${this.name}`);
+    }
+
     // Calculate academic year and semester
     this.setAcademicYearAndSemester();
     
@@ -220,6 +237,7 @@ CourseSchema.index({ academicYear: 1, semester: 1 });
 CourseSchema.index({ startDate: 1, endDate: 1 });
 CourseSchema.index({ country: 1, level: 1 });
 CourseSchema.index({ status: 1, isActive: 1 });
+CourseSchema.index({ organisation: 1, country: 1 });
 
 // Create and export the model with proper type information
 export const Course = mongoose.model<ICourseDocument, ICourseModel>('Course', CourseSchema);

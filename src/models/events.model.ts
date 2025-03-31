@@ -68,7 +68,7 @@ export interface PartnershipEvent extends BaseEvent {
 }
 
 /**
- * User event interface
+ * User event interface - updated to include new fields from Amplify
  */
 export interface UserEvent extends BaseEvent {
   userId: string;
@@ -76,7 +76,9 @@ export interface UserEvent extends BaseEvent {
   firstName: string;
   lastName: string;
   userType: 'academic' | 'industry' | 'admin';
-  country?: string; 
+  country?: string;
+  organisation?: string;
+  fieldOfExpertise?: string;
 }
 
 /**

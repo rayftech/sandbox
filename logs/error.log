@@ -139,3 +139,205 @@
 2025-03-20 19:12:57 [CourseController] ERROR: Failed to create course in Strapi: Request failed with status code 400 
 2025-03-20 19:17:40 [CourseService] ERROR: Error updating course: Course validation failed: name: Path `name` is required., code: Path `code` is required., level: Path `level` is required., startDate: Path `startDate` is required., endDate: Path `endDate` is required., country: Path `country` is required. 
 2025-03-20 19:17:40 [CourseController] ERROR: Failed to create course in Strapi: Course validation failed: name: Path `name` is required., code: Path `code` is required., level: Path `level` is required., startDate: Path `startDate` is required., endDate: Path `endDate` is required., country: Path `country` is required. 
+2025-03-29 16:48:29 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:29 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:59:15 [UserService] ERROR: Error creating/updating user: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "raymondf0123@gmail.com" } 
+2025-03-29 16:59:15 [AuthController] ERROR: Error synchronizing user data: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "raymondf0123@gmail.com" } 
+2025-03-29 21:24:00 [CourseService] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-29 21:24:00 [CourseController] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-29 21:48:10 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:48:11 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:48:11 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:48:11 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 1db98ba9-a00a-482d-b2cb-d0da703a8b09: Request failed with status code 403 
+2025-03-29 21:48:12 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: f0afc868-eb83-4ed7-9dc3-5c0d824dc76b: targetIndustryPartnership must be one of the following values: Financial Services, Technology Consulting, Cybersecurity, Digital Transformation, Data Analytics, Enterprise Software, Healthcare Information Systems, Government & Public Sector, Retail Technology, Supply Chain & Logistics, Fintech, Education Technology, Manufacturing Systems, Professional Services, Business Process Outsourcing, Cloud Services, E-commerce, Telecommunications, Intellectual Property & Digital Assets, Business Intelligence,  
+2025-03-29 21:48:14 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:48:14 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:48:14 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 28f0d9c4-4819-4409-a86d-d5d957f98dd4: Request failed with status code 403 
+2025-03-29 21:48:14 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 21:48:14 [CourseController] ERROR: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 21:52:46 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:52:46 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: b2f7c745-a44f-4511-9c07-5ea080e44d50: Invalid target industry partnership: Education Technology 
+2025-03-29 21:52:47 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:52:47 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:52:47 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 5ce0c68a-e07f-42a4-8dff-0f01ae6eefa8: Request failed with status code 403 
+2025-03-29 21:52:50 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: d34a3fed-d62d-4157-9339-f9958e0ddff9: Invalid target industry partnership: Education Technology 
+2025-03-29 21:52:50 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 21:52:50 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: Education Technology 
+2025-03-29 21:55:54 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:55:54 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:55:54 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:55:54 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 840c0c9c-9454-4d02-8256-bf3c60776330: Request failed with status code 403 
+2025-03-29 21:55:56 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 21:58:20 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:58:20 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:58:20 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:58:20 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: c02fd25f-df65-4236-9d47-b35001452167: Request failed with status code 403 
+2025-03-29 21:58:21 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: dd18aba1-c71c-450b-8ba5-e50244e9659c: Strapi global object is not available 
+2025-03-29 21:58:24 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 22:00:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:00:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:00:31 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:00:31 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 9d840603-4a58-42d3-967e-0b74fb94800a: Request failed with status code 403 
+2025-03-29 22:00:32 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 05092d7f-98e6-40b5-beff-779ee226f5da: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:00:34 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: b99306e3-0b4a-4f0a-9cb4-f3c88b49ed08: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:00:34 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:00:34 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:02:19 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:02:19 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:02:19 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:02:19 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: d89a40b2-3799-4bff-8c6c-5b0ffc861ec2: Request failed with status code 403 
+2025-03-29 22:02:20 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: ad813c60-0a9b-4721-a8d2-387ed941f7da: Invalid target industry partnership: HealthcareInformationSystems 
+2025-03-29 22:02:23 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 825f0c06-eaa0-441b-a4ea-3779256c21a8: Invalid target industry partnership: HealthcareInformationSystems 
+2025-03-29 22:02:23 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:02:23 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: HealthcareInformationSystems 
+2025-03-29 22:05:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:05:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:05:31 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:05:31 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 982bcae2-a429-46cd-b879-217ba23989af: Request failed with status code 403 
+2025-03-29 22:05:33 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: d4e71ef1-af32-44a2-bba6-922dc2b114bb: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:05:35 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 99ecd700-c03e-45bd-9898-a0563d2985e8: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:05:35 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:05:35 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:06:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:06:31 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: e44f5594-889f-4885-95be-2f29aeffdef6: Strapi global object is not available 
+2025-03-29 22:06:32 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:06:32 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:06:32 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 2ba26965-6f83-4fef-b0e2-46726d3ebc55: Request failed with status code 403 
+2025-03-29 22:06:34 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 1541ef5e-2793-41c6-8d09-82a0f3fe3323: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:06:34 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:06:34 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:10:11 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:10:11 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 22:13:39 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:13:39 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:13:39 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:13:39 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: f0903212-1eac-43dc-865f-2ba3dce1b787: Request failed with status code 403 
+2025-03-29 22:13:40 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 8daa5890-35c1-49f6-9e03-68c117aa42e1: Strapi global object is not available 
+2025-03-29 22:13:42 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 22:16:14 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:16:14 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:16:14 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:16:15 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: a9d54d44-3126-4bd5-9c6b-c37572f9947b: Request failed with status code 403 
+2025-03-29 22:16:16 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 22:21:39 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:21:39 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:21:39 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:21:39 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 109e5fd4-714e-406d-97fa-c7fd85bb6a37: Request failed with status code 403 
+2025-03-29 22:21:41 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: eef59400-c8ef-47c2-9d05-a3cc53d88403: Inline node must be Text or Link 
+2025-03-29 22:21:43 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:21:43 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:21:43 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 026a8373-349d-427d-9b48-ccafa3b8d034: Request failed with status code 403 
+2025-03-29 22:21:43 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:21:43 [CourseController] ERROR: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:27:05 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:27:05 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:27:05 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:27:05 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: ac686691-9ba1-404e-a3e8-49ba7613b9fb: Request failed with status code 403 
+2025-03-29 22:27:06 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 22:28:41 [RabbitMQService] ERROR: RabbitMQ connection error: Unexpected close 

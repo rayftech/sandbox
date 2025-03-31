@@ -1992,3 +1992,1180 @@
 2025-03-20 19:17:40 [CourseService] ERROR: Error updating course: Course validation failed: name: Path `name` is required., code: Path `code` is required., level: Path `level` is required., startDate: Path `startDate` is required., endDate: Path `endDate` is required., country: Path `country` is required. 
 2025-03-20 19:17:40 [CourseController] ERROR: Failed to create course in Strapi: Course validation failed: name: Path `name` is required., code: Path `code` is required., level: Path `level` is required., startDate: Path `startDate` is required., endDate: Path `endDate` is required., country: Path `country` is required. 
 2025-03-20 19:17:40 [app] INFO: [0mPOST /api/courses [32m201[0m 408.439 ms - 302[0m 
+2025-03-29 16:48:28 [UserModel] INFO: Configuring User model 
+2025-03-29 16:48:29 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 16:48:28 [UserModel] INFO: User model initialized 
+2025-03-29 16:48:29 [database] INFO: Connected to MongoDB 
+2025-03-29 16:48:29 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:29 [database] INFO: Database connection established 
+2025-03-29 16:48:29 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:29 [RabbitMQService] INFO: Scheduling reconnection attempt 1 in 5 seconds 
+2025-03-29 16:48:29 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:29 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:29 [RabbitMQService] INFO: Scheduling reconnection attempt 2 in 10 seconds 
+2025-03-29 16:48:29 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Scheduling reconnection attempt 3 in 11 seconds 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Scheduling reconnection attempt 4 in 19 seconds 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Scheduling reconnection attempt 5 in 32 seconds 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Scheduling reconnection attempt 6 in 39 seconds 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Scheduling reconnection attempt 7 in 60 seconds 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Scheduling reconnection attempt 8 in 60 seconds 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Scheduling reconnection attempt 9 in 60 seconds 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Scheduling reconnection attempt 10 in 60 seconds 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 16:48:30 [Server] INFO: Event publisher initialized 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 16:48:30 [Server] INFO: User consumer service initialized 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 16:48:30 [Server] INFO: Request-Response service initialized 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:48:30 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 16:48:30 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 16:48:30 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:48:30 [Server] INFO: Server running on port 3000 
+2025-03-29 16:48:52 [database] INFO: Application termination - closing MongoDB connection 
+2025-03-29 16:48:52 [Server] INFO: Received shutdown signal, starting graceful shutdown 
+2025-03-29 16:49:00 [UserModel] INFO: Configuring User model 
+2025-03-29 16:49:00 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 16:49:00 [UserModel] INFO: User model initialized 
+2025-03-29 16:49:01 [database] INFO: Connected to MongoDB 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [database] INFO: Database connection established 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 1 in 5 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 2 in 8 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 3 in 14 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 4 in 17 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 5 in 30 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 6 in 48 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 7 in 60 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 8 in 60 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 9 in 60 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Scheduling reconnection attempt 10 in 60 seconds 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 16:49:01 [Server] INFO: Event publisher initialized 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 16:49:01 [Server] INFO: User consumer service initialized 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 16:49:01 [Server] INFO: Request-Response service initialized 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:49:01 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Failed to connect to RabbitMQ: Handshake terminated by server: 403 (ACCESS-REFUSED) with message "ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile." 
+2025-03-29 16:49:01 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 16:49:01 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 16:49:01 [Server] INFO: Server running on port 3000 
+2025-03-29 16:49:01 [RabbitMQService] ERROR: Maximum reconnection attempts (10) reached. Giving up. 
+2025-03-29 16:53:11 [database] INFO: Application termination - closing MongoDB connection 
+2025-03-29 16:53:11 [Server] INFO: Received shutdown signal, starting graceful shutdown 
+2025-03-29 16:56:53 [UserModel] INFO: Configuring User model 
+2025-03-29 16:56:53 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 16:56:53 [UserModel] INFO: User model initialized 
+2025-03-29 16:56:54 [database] INFO: Connected to MongoDB 
+2025-03-29 16:56:54 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 16:56:54 [database] INFO: Database connection established 
+2025-03-29 16:56:54 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-29 16:56:54 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 16:56:54 [Server] INFO: Event publisher initialized 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-PIw9Lqcw-e_t1pzZMnS4xw' 
+2025-03-29 16:56:54 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 16:56:54 [Server] INFO: User consumer service initialized 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' bound to exchange 'strapi_responses' with routing key 'strapi.response' 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_responses' with tag 'amq.ctag-K5mmzV4Vxf6maSWDuHy-Ow' 
+2025-03-29 16:56:54 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 16:56:54 [Server] INFO: Request-Response service initialized 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] INFO: Consumer registered for queue 'strapi_events' with tag 'amq.ctag-J-NHQ5HaziaMmxsh0oWlkA' 
+2025-03-29 16:56:54 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 16:56:54 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 16:56:54 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_requests' with tag 'amq.ctag-rZL0XsLx6jM9zw3lx8B-Sg' 
+2025-03-29 16:56:54 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 16:56:54 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 16:56:54 [Server] INFO: Server running on port 3000 
+2025-03-29 16:59:15 [app] DEBUG: API Request: [POST] /api/auth/sync 
+2025-03-29 16:59:15 [UserService] INFO: New user created: d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 16:59:15 [UserService] ERROR: Error creating/updating user: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "raymondf0123@gmail.com" } 
+2025-03-29 16:59:15 [AuthController] ERROR: Error synchronizing user data: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "raymondf0123@gmail.com" } 
+2025-03-29 16:59:15 [ErrorMiddleware] WARN: 409 - Duplicate field value entered - /api/auth/sync - POST 
+2025-03-29 16:59:15 [app] INFO: [0mPOST /api/auth/sync [33m409[0m 94.178 ms - 826[0m 
+2025-03-29 17:01:00 [app] DEBUG: API Request: [POST] /api/auth/sync 
+2025-03-29 17:01:00 [UserService] INFO: New user created: d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 17:01:00 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'user.created' successfully 
+2025-03-29 17:01:00 [EventPublisher] INFO: Published user event: user.created, ID: d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 17:01:00 [AuthController] INFO: User d95e64d8-0091-70e1-e5d2-1d8686200f45 successfully synchronized 
+2025-03-29 17:01:00 [app] INFO: [0mPOST /api/auth/sync [32m200[0m 90.226 ms - 194[0m 
+2025-03-29 17:56:30 [database] WARN: MongoDB disconnected 
+2025-03-29 17:56:30 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-29 17:56:30 [database] INFO: Connected to MongoDB 
+2025-03-29 17:56:35 [database] INFO: Using existing database connection 
+2025-03-29 18:07:20 [database] WARN: MongoDB disconnected 
+2025-03-29 18:07:20 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-29 18:07:20 [database] INFO: Connected to MongoDB 
+2025-03-29 18:07:25 [database] INFO: Using existing database connection 
+2025-03-29 19:12:08 [database] WARN: MongoDB disconnected 
+2025-03-29 19:12:08 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-29 19:12:08 [database] INFO: Connected to MongoDB 
+2025-03-29 19:12:13 [database] INFO: Using existing database connection 
+2025-03-29 19:26:54 [database] WARN: MongoDB disconnected 
+2025-03-29 19:26:54 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-29 19:26:54 [database] INFO: Connected to MongoDB 
+2025-03-29 19:26:59 [database] INFO: Using existing database connection 
+2025-03-29 19:34:21 [database] WARN: MongoDB disconnected 
+2025-03-29 19:34:21 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-29 19:34:21 [database] INFO: Connected to MongoDB 
+2025-03-29 19:34:26 [database] INFO: Using existing database connection 
+2025-03-29 19:42:09 [database] WARN: MongoDB disconnected 
+2025-03-29 19:42:09 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-29 19:42:09 [database] INFO: Connected to MongoDB 
+2025-03-29 19:42:14 [database] INFO: Using existing database connection 
+2025-03-29 19:55:48 [database] WARN: MongoDB disconnected 
+2025-03-29 19:55:48 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-29 19:55:48 [database] INFO: Connected to MongoDB 
+2025-03-29 19:55:53 [database] INFO: Using existing database connection 
+2025-03-29 19:56:24 [UserModel] INFO: Configuring User model 
+2025-03-29 19:56:25 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 19:56:24 [UserModel] INFO: User model initialized 
+2025-03-29 19:56:25 [database] INFO: Connected to MongoDB 
+2025-03-29 19:56:25 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 19:56:25 [database] INFO: Database connection established 
+2025-03-29 19:56:25 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-29 19:56:25 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 19:56:25 [Server] INFO: Event publisher initialized 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-VF3aB-yA3kBXq2rUqBUk4A' 
+2025-03-29 19:56:25 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 19:56:25 [Server] INFO: User consumer service initialized 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' bound to exchange 'strapi_responses' with routing key 'strapi.response' 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_responses' with tag 'amq.ctag-nVowae5lhlunFR1C9_cJrg' 
+2025-03-29 19:56:25 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 19:56:25 [Server] INFO: Request-Response service initialized 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] INFO: Consumer registered for queue 'strapi_events' with tag 'amq.ctag-3BBN7JEvk1ATvUlYBbL-IQ' 
+2025-03-29 19:56:25 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 19:56:25 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 19:56:25 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_requests' with tag 'amq.ctag-N6VXW6S3Y40CYGL7JCDJ3A' 
+2025-03-29 19:56:25 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 19:56:25 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 19:56:25 [Server] INFO: Server running on port 3000 
+2025-03-29 19:56:31 [database] INFO: Application termination - closing MongoDB connection 
+2025-03-29 19:56:31 [Server] INFO: Received shutdown signal, starting graceful shutdown 
+2025-03-29 21:15:18 [UserModel] INFO: Configuring User model 
+2025-03-29 21:15:18 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 21:15:18 [UserModel] INFO: User model initialized 
+2025-03-29 21:15:19 [database] INFO: Connected to MongoDB 
+2025-03-29 21:15:19 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 21:15:19 [database] INFO: Database connection established 
+2025-03-29 21:15:19 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-29 21:15:19 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 21:15:19 [Server] INFO: Event publisher initialized 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-XW_8KedfNHkgWFfmWcbRwQ' 
+2025-03-29 21:15:19 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 21:15:19 [Server] INFO: User consumer service initialized 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' bound to exchange 'strapi_responses' with routing key 'strapi.response' 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_responses' with tag 'amq.ctag-7HKwkVb4r_ZQ0kKublsgnQ' 
+2025-03-29 21:15:19 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 21:15:19 [Server] INFO: Request-Response service initialized 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] INFO: Consumer registered for queue 'strapi_events' with tag 'amq.ctag-hAlTEj71SGOCBX-W6ou5_Q' 
+2025-03-29 21:15:19 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:15:19 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:15:19 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_requests' with tag 'amq.ctag-MXp_aAl2ori2IEee2cjKxw' 
+2025-03-29 21:15:19 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 21:15:19 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 21:15:19 [Server] INFO: Server running on port 3000 
+2025-03-29 21:21:09 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 21:21:09 [AuthMiddleware] WARN: Authentication failed: User with ID 09dec458-a0a1-7018-c31e-1523468b6959 not found 
+2025-03-29 21:21:09 [ErrorMiddleware] WARN: 401 - Invalid user authentication. - /api/courses - POST 
+2025-03-29 21:21:09 [app] INFO: [0mPOST /api/courses [33m401[0m 40.567 ms - 323[0m 
+2025-03-29 21:24:00 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 21:24:00 [CourseService] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-29 21:24:00 [CourseController] ERROR: Error creating course: Course validation failed: strapiId: Path `strapiId` is required. 
+2025-03-29 21:24:00 [ErrorMiddleware] WARN: 400 - Course validation failed: strapiId: Path `strapiId` is required. - /api/courses - POST 
+2025-03-29 21:24:00 [app] INFO: [0mPOST /api/courses [33m400[0m 85.643 ms - 600[0m 
+2025-03-29 21:35:00 [database] WARN: MongoDB disconnected 
+2025-03-29 21:35:00 [database] INFO: Retrying connection in 5000ms (attempt 1/5) 
+2025-03-29 21:35:00 [database] INFO: Connected to MongoDB 
+2025-03-29 21:35:05 [database] INFO: Using existing database connection 
+2025-03-29 21:36:21 [UserModel] INFO: Configuring User model 
+2025-03-29 21:36:22 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 21:36:21 [UserModel] INFO: User model initialized 
+2025-03-29 21:36:22 [database] INFO: Connected to MongoDB 
+2025-03-29 21:36:22 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 21:36:22 [database] INFO: Database connection established 
+2025-03-29 21:36:22 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-29 21:36:22 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 21:36:22 [Server] INFO: Event publisher initialized 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-h6h44uEGErSDoEtWPv2Yug' 
+2025-03-29 21:36:22 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 21:36:22 [Server] INFO: User consumer service initialized 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' bound to exchange 'strapi_responses' with routing key 'strapi.response' 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_responses' with tag 'amq.ctag-MZRPg0pp-PPgsUA1z3lXpw' 
+2025-03-29 21:36:22 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 21:36:22 [Server] INFO: Request-Response service initialized 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] INFO: Consumer registered for queue 'strapi_events' with tag 'amq.ctag-WXRMoEzxIqnDI6Ot-gA85A' 
+2025-03-29 21:36:22 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:36:22 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:36:22 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_requests' with tag 'amq.ctag-s3krTFIR6u5QvKVMXrpUWA' 
+2025-03-29 21:36:22 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 21:36:22 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 21:36:22 [Server] INFO: Server running on port 3000 
+2025-03-29 21:38:23 [UserModel] INFO: Configuring User model 
+2025-03-29 21:38:24 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 21:38:23 [UserModel] INFO: User model initialized 
+2025-03-29 21:38:24 [database] INFO: Connected to MongoDB 
+2025-03-29 21:38:24 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 21:38:24 [database] INFO: Database connection established 
+2025-03-29 21:38:24 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-29 21:38:24 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 21:38:24 [Server] INFO: Event publisher initialized 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-A-NedtPmtzOWwfILyuF6PA' 
+2025-03-29 21:38:24 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 21:38:24 [Server] INFO: User consumer service initialized 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' bound to exchange 'strapi_responses' with routing key 'strapi.response' 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_responses' with tag 'amq.ctag-DNZ2ikpRdDjNJnUwaPI5-A' 
+2025-03-29 21:38:24 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 21:38:24 [Server] INFO: Request-Response service initialized 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] INFO: Consumer registered for queue 'strapi_events' with tag 'amq.ctag-vGyLBxaj0VkFaVOtuPeX4w' 
+2025-03-29 21:38:24 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:38:24 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:38:24 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_requests' with tag 'amq.ctag-W2SPAynvBV8HN68KnetAJg' 
+2025-03-29 21:38:24 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 21:38:24 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 21:38:24 [Server] INFO: Server running on port 3000 
+2025-03-29 21:42:28 [UserModel] INFO: Configuring User model 
+2025-03-29 21:42:29 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 21:42:28 [UserModel] INFO: User model initialized 
+2025-03-29 21:42:29 [database] INFO: Connected to MongoDB 
+2025-03-29 21:42:29 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 21:42:29 [database] INFO: Database connection established 
+2025-03-29 21:42:29 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-29 21:42:29 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 21:42:29 [Server] INFO: Event publisher initialized 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-PRmF2vnYV0m9QWDrHU7pRA' 
+2025-03-29 21:42:29 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 21:42:29 [Server] INFO: User consumer service initialized 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' bound to exchange 'strapi_responses' with routing key 'strapi.response' 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_responses' with tag 'amq.ctag-jLYc-AHIy7tF9fPPNaNfrg' 
+2025-03-29 21:42:29 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 21:42:29 [Server] INFO: Request-Response service initialized 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] INFO: Consumer registered for queue 'strapi_events' with tag 'amq.ctag-2i6sqov-T0vmDKX16-u4Cw' 
+2025-03-29 21:42:29 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:42:29 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:42:29 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_requests' with tag 'amq.ctag-SVbLvTiRUaR0eWjLS_eCNg' 
+2025-03-29 21:42:29 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 21:42:29 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 21:42:29 [Server] INFO: Server running on port 3000 
+2025-03-29 21:44:03 [UserModel] INFO: Configuring User model 
+2025-03-29 21:44:04 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 21:44:03 [UserModel] INFO: User model initialized 
+2025-03-29 21:44:04 [database] INFO: Connected to MongoDB 
+2025-03-29 21:44:04 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 21:44:04 [database] INFO: Database connection established 
+2025-03-29 21:44:04 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-29 21:44:04 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 21:44:04 [Server] INFO: Event publisher initialized 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-uu2ekeSpSIZBJk1rg84shg' 
+2025-03-29 21:44:04 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 21:44:04 [Server] INFO: User consumer service initialized 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' bound to exchange 'strapi_responses' with routing key 'strapi.response' 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_responses' with tag 'amq.ctag-jqCvVTAWZuYTl7AnoMJV2w' 
+2025-03-29 21:44:04 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 21:44:04 [Server] INFO: Request-Response service initialized 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] INFO: Consumer registered for queue 'strapi_events' with tag 'amq.ctag-ehx8Iq4JjGYai8v0Hp5Kiw' 
+2025-03-29 21:44:04 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:44:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:44:04 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_requests' with tag 'amq.ctag-RhXj0mwFsA8dBTGzsHaJuQ' 
+2025-03-29 21:44:04 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 21:44:04 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 21:44:04 [Server] INFO: Server running on port 3000 
+2025-03-29 21:47:11 [UserModel] INFO: Configuring User model 
+2025-03-29 21:47:12 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 21:47:11 [UserModel] INFO: User model initialized 
+2025-03-29 21:47:12 [database] INFO: Connected to MongoDB 
+2025-03-29 21:47:12 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 21:47:12 [database] INFO: Database connection established 
+2025-03-29 21:47:12 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-29 21:47:12 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 21:47:12 [Server] INFO: Event publisher initialized 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-9T0PDjngPPMEgaGXwjsIiA' 
+2025-03-29 21:47:12 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 21:47:12 [Server] INFO: User consumer service initialized 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' bound to exchange 'strapi_responses' with routing key 'strapi.response' 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_responses' with tag 'amq.ctag-jxrdDBYb00gx7axxIUFv3g' 
+2025-03-29 21:47:12 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 21:47:12 [Server] INFO: Request-Response service initialized 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] INFO: Consumer registered for queue 'strapi_events' with tag 'amq.ctag-LBEdpzYUVqouC1YWqJqY-Q' 
+2025-03-29 21:47:12 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 21:47:12 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 21:47:12 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_requests' with tag 'amq.ctag-Ca1qLCftoDvX_pJ8_Blqjw' 
+2025-03-29 21:47:12 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 21:47:12 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 21:47:12 [Server] INFO: Server running on port 3000 
+2025-03-29 21:48:10 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 21:48:10 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 21:48:10 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:48:10 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 21:48:10 [CourseService] INFO: Using temporary strapiId: temp-67e7cfea7bf733123388306d 
+2025-03-29 21:48:10 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 21:48:10 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 21:48:10 [EventPublisher] INFO: Published course event: course.created, ID: 67e7cfea7bf733123388306e 
+2025-03-29 21:48:10 [CourseService] INFO: Published COURSE_CREATED event for course 67e7cfea7bf733123388306e 
+2025-03-29 21:48:11 [CourseService] INFO: New course created in MongoDB: 67e7cfea7bf733123388306e by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 21:48:11 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 1db98ba9-a00a-482d-b2cb-d0da703a8b09 
+2025-03-29 21:48:11 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:48:11 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: 1db98ba9-a00a-482d-b2cb-d0da703a8b09 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 21:48:11 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:48:11 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:48:11 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 21:48:11 [RequestResponseService] DEBUG: Received response for correlationId: 1db98ba9-a00a-482d-b2cb-d0da703a8b09 
+2025-03-29 21:48:11 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 21:48:11 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 1db98ba9-a00a-482d-b2cb-d0da703a8b09: Request failed with status code 403 
+2025-03-29 21:48:11 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 21:48:11 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 21:48:12 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: f0afc868-eb83-4ed7-9dc3-5c0d824dc76b 
+2025-03-29 21:48:12 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:48:12 [RequestResponseService] DEBUG: Received response for correlationId: f0afc868-eb83-4ed7-9dc3-5c0d824dc76b 
+2025-03-29 21:48:12 [RetryUtility] WARN: Retry attempt 2/3 failed. Retrying in 2 seconds. 
+2025-03-29 21:48:12 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: f0afc868-eb83-4ed7-9dc3-5c0d824dc76b: targetIndustryPartnership must be one of the following values: Financial Services, Technology Consulting, Cybersecurity, Digital Transformation, Data Analytics, Enterprise Software, Healthcare Information Systems, Government & Public Sector, Retail Technology, Supply Chain & Logistics, Fintech, Education Technology, Manufacturing Systems, Professional Services, Business Process Outsourcing, Cloud Services, E-commerce, Telecommunications, Intellectual Property & Digital Assets, Business Intelligence,  
+2025-03-29 21:48:12 [RequestResponseService] WARN: Retry 2 for CREATE_COURSE: targetIndustryPartnership must be one of the following values: Financial Services, Technology Consulting, Cybersecurity, Digital Transformation, Data Analytics, Enterprise Software, Healthcare Information Systems, Government & Public Sector, Retail Technology, Supply Chain & Logistics, Fintech, Education Technology, Manufacturing Systems, Professional Services, Business Process Outsourcing, Cloud Services, E-commerce, Telecommunications, Intellectual Property & Digital Assets, Business Intelligence,  
+2025-03-29 21:48:12 [RetryUtility] DEBUG: Error: targetIndustryPartnership must be one of the following values: Financial Services, Technology Consulting, Cybersecurity, Digital Transformation, Data Analytics, Enterprise Software, Healthcare Information Systems, Government & Public Sector, Retail Technology, Supply Chain & Logistics, Fintech, Education Technology, Manufacturing Systems, Professional Services, Business Process Outsourcing, Cloud Services, E-commerce, Telecommunications, Intellectual Property & Digital Assets, Business Intelligence,  
+2025-03-29 21:48:14 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 28f0d9c4-4819-4409-a86d-d5d957f98dd4 
+2025-03-29 21:48:14 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:48:14 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: 28f0d9c4-4819-4409-a86d-d5d957f98dd4 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 21:48:14 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:48:14 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:48:14 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 21:48:14 [RequestResponseService] DEBUG: Received response for correlationId: 28f0d9c4-4819-4409-a86d-d5d957f98dd4 
+2025-03-29 21:48:14 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 21:48:14 [CourseController] ERROR: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 21:48:14 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 21:48:14 [EventPublisher] INFO: Published course event: course.created, ID: 67e7cfea7bf733123388306e 
+2025-03-29 21:48:14 [app] INFO: [0mPOST /api/courses [32m201[0m 3531.514 ms - 371[0m 
+2025-03-29 21:48:14 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 28f0d9c4-4819-4409-a86d-d5d957f98dd4: Request failed with status code 403 
+2025-03-29 21:48:14 [CourseController] INFO: Published COURSE_CREATED event for course 67e7cfea7bf733123388306e 
+2025-03-29 21:52:46 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 21:52:46 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 21:52:46 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:52:46 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 21:52:46 [CourseService] INFO: Using temporary strapiId: temp-67e7d0fe7bf7331233883073 
+2025-03-29 21:52:46 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 21:52:46 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 21:52:46 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d0fe7bf7331233883074 
+2025-03-29 21:52:46 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d0fe7bf7331233883074 
+2025-03-29 21:52:46 [CourseService] INFO: New course created in MongoDB: 67e7d0fe7bf7331233883074 by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 21:52:46 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: b2f7c745-a44f-4511-9c07-5ea080e44d50 
+2025-03-29 21:52:46 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:52:46 [RequestResponseService] DEBUG: Received response for correlationId: b2f7c745-a44f-4511-9c07-5ea080e44d50 
+2025-03-29 21:52:46 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 21:52:46 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: b2f7c745-a44f-4511-9c07-5ea080e44d50: Invalid target industry partnership: Education Technology 
+2025-03-29 21:52:46 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Invalid target industry partnership: Education Technology 
+2025-03-29 21:52:46 [RetryUtility] DEBUG: Error: Invalid target industry partnership: Education Technology 
+2025-03-29 21:52:47 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 5ce0c68a-e07f-42a4-8dff-0f01ae6eefa8 
+2025-03-29 21:52:47 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:52:47 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: 5ce0c68a-e07f-42a4-8dff-0f01ae6eefa8 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 21:52:47 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:52:47 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:52:47 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 21:52:47 [RequestResponseService] DEBUG: Received response for correlationId: 5ce0c68a-e07f-42a4-8dff-0f01ae6eefa8 
+2025-03-29 21:52:47 [RetryUtility] WARN: Retry attempt 2/3 failed. Retrying in 2 seconds. 
+2025-03-29 21:52:47 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 5ce0c68a-e07f-42a4-8dff-0f01ae6eefa8: Request failed with status code 403 
+2025-03-29 21:52:47 [RequestResponseService] WARN: Retry 2 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 21:52:47 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 21:52:50 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: d34a3fed-d62d-4157-9339-f9958e0ddff9 
+2025-03-29 21:52:50 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:52:50 [RequestResponseService] DEBUG: Received response for correlationId: d34a3fed-d62d-4157-9339-f9958e0ddff9 
+2025-03-29 21:52:50 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 21:52:50 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: Education Technology 
+2025-03-29 21:52:50 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 21:52:50 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d0fe7bf7331233883074 
+2025-03-29 21:52:50 [app] INFO: [0mPOST /api/courses [32m201[0m 4037.626 ms - 371[0m 
+2025-03-29 21:52:50 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: d34a3fed-d62d-4157-9339-f9958e0ddff9: Invalid target industry partnership: Education Technology 
+2025-03-29 21:52:50 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d0fe7bf7331233883074 
+2025-03-29 21:55:54 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 21:55:54 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 21:55:54 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:55:54 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 21:55:54 [CourseService] INFO: Using temporary strapiId: temp-67e7d1ba7bf7331233883079 
+2025-03-29 21:55:54 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 21:55:54 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 21:55:54 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d1ba7bf733123388307a 
+2025-03-29 21:55:54 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d1ba7bf733123388307a 
+2025-03-29 21:55:54 [CourseService] INFO: New course created in MongoDB: 67e7d1ba7bf733123388307a by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 21:55:54 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 840c0c9c-9454-4d02-8256-bf3c60776330 
+2025-03-29 21:55:54 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:55:54 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: 840c0c9c-9454-4d02-8256-bf3c60776330 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 21:55:54 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:55:54 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:55:54 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 21:55:54 [RequestResponseService] DEBUG: Received response for correlationId: 840c0c9c-9454-4d02-8256-bf3c60776330 
+2025-03-29 21:55:54 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 21:55:54 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 840c0c9c-9454-4d02-8256-bf3c60776330: Request failed with status code 403 
+2025-03-29 21:55:54 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 21:55:54 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 21:55:56 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 3ec5f229-1848-4478-be5b-beb9035a8816 
+2025-03-29 21:55:56 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:55:56 [RequestResponseService] DEBUG: Received response for correlationId: 3ec5f229-1848-4478-be5b-beb9035a8816 
+2025-03-29 21:55:56 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 21:55:56 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 21:55:56 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d1ba7bf733123388307a 
+2025-03-29 21:55:56 [app] INFO: [0mPOST /api/courses [32m201[0m 1291.284 ms - 371[0m 
+2025-03-29 21:55:56 [RequestResponseService] INFO: Operation CREATE_COURSE completed successfully for correlationId: 3ec5f229-1848-4478-be5b-beb9035a8816 
+2025-03-29 21:55:56 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d1ba7bf733123388307a 
+2025-03-29 21:58:20 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 21:58:20 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 21:58:20 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:58:20 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 21:58:20 [CourseService] INFO: Using temporary strapiId: temp-67e7d24c7bf733123388307f 
+2025-03-29 21:58:20 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 21:58:20 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 21:58:20 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d24c7bf7331233883080 
+2025-03-29 21:58:20 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d24c7bf7331233883080 
+2025-03-29 21:58:20 [CourseService] INFO: New course created in MongoDB: 67e7d24c7bf7331233883080 by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 21:58:20 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: c02fd25f-df65-4236-9d47-b35001452167 
+2025-03-29 21:58:20 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:58:20 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: c02fd25f-df65-4236-9d47-b35001452167 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 21:58:20 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 21:58:20 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 21:58:20 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 21:58:20 [RequestResponseService] DEBUG: Received response for correlationId: c02fd25f-df65-4236-9d47-b35001452167 
+2025-03-29 21:58:20 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 21:58:20 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: c02fd25f-df65-4236-9d47-b35001452167: Request failed with status code 403 
+2025-03-29 21:58:20 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 21:58:20 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 21:58:21 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: dd18aba1-c71c-450b-8ba5-e50244e9659c 
+2025-03-29 21:58:21 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:58:21 [RequestResponseService] DEBUG: Received response for correlationId: dd18aba1-c71c-450b-8ba5-e50244e9659c 
+2025-03-29 21:58:21 [RetryUtility] WARN: Retry attempt 2/3 failed. Retrying in 2 seconds. 
+2025-03-29 21:58:21 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: dd18aba1-c71c-450b-8ba5-e50244e9659c: Strapi global object is not available 
+2025-03-29 21:58:21 [RequestResponseService] WARN: Retry 2 for CREATE_COURSE: Strapi global object is not available 
+2025-03-29 21:58:21 [RetryUtility] DEBUG: Error: Strapi global object is not available 
+2025-03-29 21:58:24 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 2155aac0-0811-498d-a8a8-73a769de28d9 
+2025-03-29 21:58:24 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 21:58:24 [RequestResponseService] DEBUG: Received response for correlationId: 2155aac0-0811-498d-a8a8-73a769de28d9 
+2025-03-29 21:58:24 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 21:58:24 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 21:58:24 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d24c7bf7331233883080 
+2025-03-29 21:58:24 [app] INFO: [0mPOST /api/courses [32m201[0m 3568.803 ms - 371[0m 
+2025-03-29 21:58:24 [RequestResponseService] INFO: Operation CREATE_COURSE completed successfully for correlationId: 2155aac0-0811-498d-a8a8-73a769de28d9 
+2025-03-29 21:58:24 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d24c7bf7331233883080 
+2025-03-29 22:00:31 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 22:00:31 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 22:00:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:00:31 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:00:31 [CourseService] INFO: Using temporary strapiId: temp-67e7d2cf7bf7331233883085 
+2025-03-29 22:00:31 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:00:31 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:00:31 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d2cf7bf7331233883086 
+2025-03-29 22:00:31 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d2cf7bf7331233883086 
+2025-03-29 22:00:31 [CourseService] INFO: New course created in MongoDB: 67e7d2cf7bf7331233883086 by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 22:00:31 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 9d840603-4a58-42d3-967e-0b74fb94800a 
+2025-03-29 22:00:31 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:00:31 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: 9d840603-4a58-42d3-967e-0b74fb94800a and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:00:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:00:31 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:00:31 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 22:00:31 [RequestResponseService] DEBUG: Received response for correlationId: 9d840603-4a58-42d3-967e-0b74fb94800a 
+2025-03-29 22:00:31 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 22:00:31 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 9d840603-4a58-42d3-967e-0b74fb94800a: Request failed with status code 403 
+2025-03-29 22:00:31 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 22:00:31 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 22:00:32 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 05092d7f-98e6-40b5-beff-779ee226f5da 
+2025-03-29 22:00:32 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:00:32 [RequestResponseService] DEBUG: Received response for correlationId: 05092d7f-98e6-40b5-beff-779ee226f5da 
+2025-03-29 22:00:32 [RetryUtility] WARN: Retry attempt 2/3 failed. Retrying in 2 seconds. 
+2025-03-29 22:00:32 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 05092d7f-98e6-40b5-beff-779ee226f5da: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:00:32 [RequestResponseService] WARN: Retry 2 for CREATE_COURSE: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:00:32 [RetryUtility] DEBUG: Error: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:00:34 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: b99306e3-0b4a-4f0a-9cb4-f3c88b49ed08 
+2025-03-29 22:00:34 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:00:34 [RequestResponseService] DEBUG: Received response for correlationId: b99306e3-0b4a-4f0a-9cb4-f3c88b49ed08 
+2025-03-29 22:00:34 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:00:34 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:00:34 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:00:34 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d2cf7bf7331233883086 
+2025-03-29 22:00:34 [app] INFO: [0mPOST /api/courses [32m201[0m 3281.058 ms - 371[0m 
+2025-03-29 22:00:34 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: b99306e3-0b4a-4f0a-9cb4-f3c88b49ed08: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:00:34 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d2cf7bf7331233883086 
+2025-03-29 22:02:19 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 22:02:19 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 22:02:19 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:02:19 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:02:19 [CourseService] INFO: Using temporary strapiId: temp-67e7d33b7bf733123388308b 
+2025-03-29 22:02:19 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:02:19 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:02:19 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d33b7bf733123388308c 
+2025-03-29 22:02:19 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d33b7bf733123388308c 
+2025-03-29 22:02:19 [CourseService] INFO: New course created in MongoDB: 67e7d33b7bf733123388308c by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 22:02:19 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: d89a40b2-3799-4bff-8c6c-5b0ffc861ec2 
+2025-03-29 22:02:19 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:02:19 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: d89a40b2-3799-4bff-8c6c-5b0ffc861ec2 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:02:19 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:02:19 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:02:19 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 22:02:19 [RequestResponseService] DEBUG: Received response for correlationId: d89a40b2-3799-4bff-8c6c-5b0ffc861ec2 
+2025-03-29 22:02:19 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 22:02:19 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: d89a40b2-3799-4bff-8c6c-5b0ffc861ec2: Request failed with status code 403 
+2025-03-29 22:02:19 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 22:02:19 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 22:02:20 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: ad813c60-0a9b-4721-a8d2-387ed941f7da 
+2025-03-29 22:02:20 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:02:20 [RequestResponseService] DEBUG: Received response for correlationId: ad813c60-0a9b-4721-a8d2-387ed941f7da 
+2025-03-29 22:02:20 [RetryUtility] WARN: Retry attempt 2/3 failed. Retrying in 2 seconds. 
+2025-03-29 22:02:20 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: ad813c60-0a9b-4721-a8d2-387ed941f7da: Invalid target industry partnership: HealthcareInformationSystems 
+2025-03-29 22:02:20 [RequestResponseService] WARN: Retry 2 for CREATE_COURSE: Invalid target industry partnership: HealthcareInformationSystems 
+2025-03-29 22:02:20 [RetryUtility] DEBUG: Error: Invalid target industry partnership: HealthcareInformationSystems 
+2025-03-29 22:02:23 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 825f0c06-eaa0-441b-a4ea-3779256c21a8 
+2025-03-29 22:02:23 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:02:23 [RequestResponseService] DEBUG: Received response for correlationId: 825f0c06-eaa0-441b-a4ea-3779256c21a8 
+2025-03-29 22:02:23 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:02:23 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: HealthcareInformationSystems 
+2025-03-29 22:02:23 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:02:23 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d33b7bf733123388308c 
+2025-03-29 22:02:23 [app] INFO: [0mPOST /api/courses [32m201[0m 3664.704 ms - 371[0m 
+2025-03-29 22:02:23 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 825f0c06-eaa0-441b-a4ea-3779256c21a8: Invalid target industry partnership: HealthcareInformationSystems 
+2025-03-29 22:02:23 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d33b7bf733123388308c 
+2025-03-29 22:05:31 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 22:05:31 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 22:05:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:05:31 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:05:31 [CourseService] INFO: Using temporary strapiId: temp-67e7d3fb7bf7331233883091 
+2025-03-29 22:05:31 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:05:31 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:05:31 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d3fb7bf7331233883092 
+2025-03-29 22:05:31 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d3fb7bf7331233883092 
+2025-03-29 22:05:31 [CourseService] INFO: New course created in MongoDB: 67e7d3fb7bf7331233883092 by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 22:05:31 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 982bcae2-a429-46cd-b879-217ba23989af 
+2025-03-29 22:05:31 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:05:31 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: 982bcae2-a429-46cd-b879-217ba23989af and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:05:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:05:31 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:05:31 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 22:05:31 [RequestResponseService] DEBUG: Received response for correlationId: 982bcae2-a429-46cd-b879-217ba23989af 
+2025-03-29 22:05:31 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 22:05:31 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 982bcae2-a429-46cd-b879-217ba23989af: Request failed with status code 403 
+2025-03-29 22:05:31 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 22:05:31 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 22:05:33 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: d4e71ef1-af32-44a2-bba6-922dc2b114bb 
+2025-03-29 22:05:33 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:05:33 [RequestResponseService] DEBUG: Received response for correlationId: d4e71ef1-af32-44a2-bba6-922dc2b114bb 
+2025-03-29 22:05:33 [RetryUtility] WARN: Retry attempt 2/3 failed. Retrying in 2 seconds. 
+2025-03-29 22:05:33 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: d4e71ef1-af32-44a2-bba6-922dc2b114bb: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:05:33 [RequestResponseService] WARN: Retry 2 for CREATE_COURSE: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:05:33 [RetryUtility] DEBUG: Error: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:05:35 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 99ecd700-c03e-45bd-9898-a0563d2985e8 
+2025-03-29 22:05:35 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:05:35 [RequestResponseService] DEBUG: Received response for correlationId: 99ecd700-c03e-45bd-9898-a0563d2985e8 
+2025-03-29 22:05:35 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:05:35 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:05:35 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:05:35 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d3fb7bf7331233883092 
+2025-03-29 22:05:35 [app] INFO: [0mPOST /api/courses [32m201[0m 3537.737 ms - 371[0m 
+2025-03-29 22:05:35 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 99ecd700-c03e-45bd-9898-a0563d2985e8: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:05:35 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d3fb7bf7331233883092 
+2025-03-29 22:06:31 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 22:06:31 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 22:06:31 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:06:31 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:06:31 [CourseService] INFO: Using temporary strapiId: temp-67e7d4377bf7331233883097 
+2025-03-29 22:06:31 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:06:31 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:06:31 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d4377bf7331233883098 
+2025-03-29 22:06:31 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d4377bf7331233883098 
+2025-03-29 22:06:31 [CourseService] INFO: New course created in MongoDB: 67e7d4377bf7331233883098 by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 22:06:31 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: e44f5594-889f-4885-95be-2f29aeffdef6 
+2025-03-29 22:06:31 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:06:31 [RequestResponseService] DEBUG: Received response for correlationId: e44f5594-889f-4885-95be-2f29aeffdef6 
+2025-03-29 22:06:31 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 22:06:31 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: e44f5594-889f-4885-95be-2f29aeffdef6: Strapi global object is not available 
+2025-03-29 22:06:31 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Strapi global object is not available 
+2025-03-29 22:06:31 [RetryUtility] DEBUG: Error: Strapi global object is not available 
+2025-03-29 22:06:32 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 2ba26965-6f83-4fef-b0e2-46726d3ebc55 
+2025-03-29 22:06:32 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:06:32 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: 2ba26965-6f83-4fef-b0e2-46726d3ebc55 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:06:32 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:06:32 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:06:32 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 22:06:32 [RequestResponseService] DEBUG: Received response for correlationId: 2ba26965-6f83-4fef-b0e2-46726d3ebc55 
+2025-03-29 22:06:32 [RetryUtility] WARN: Retry attempt 2/3 failed. Retrying in 2 seconds. 
+2025-03-29 22:06:32 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 2ba26965-6f83-4fef-b0e2-46726d3ebc55: Request failed with status code 403 
+2025-03-29 22:06:32 [RequestResponseService] WARN: Retry 2 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 22:06:32 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 22:06:34 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 1541ef5e-2793-41c6-8d09-82a0f3fe3323 
+2025-03-29 22:06:34 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:06:34 [RequestResponseService] DEBUG: Received response for correlationId: 1541ef5e-2793-41c6-8d09-82a0f3fe3323 
+2025-03-29 22:06:34 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:06:34 [CourseController] ERROR: Failed to create course in Strapi: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:06:34 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:06:34 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d4377bf7331233883098 
+2025-03-29 22:06:34 [app] INFO: [0mPOST /api/courses [32m201[0m 3611.324 ms - 371[0m 
+2025-03-29 22:06:34 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 1541ef5e-2793-41c6-8d09-82a0f3fe3323: Invalid target industry partnership: Healthcare Information Systems 
+2025-03-29 22:06:34 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d4377bf7331233883098 
+2025-03-29 22:08:57 [database] INFO: Application termination - closing MongoDB connection 
+2025-03-29 22:08:57 [Server] INFO: Received shutdown signal, starting graceful shutdown 
+2025-03-29 22:09:03 [UserModel] INFO: Configuring User model 
+2025-03-29 22:09:04 [SwaggerConfig] INFO: Swagger documentation initialized at /api-docs 
+2025-03-29 22:09:03 [UserModel] INFO: User model initialized 
+2025-03-29 22:09:04 [database] INFO: Connected to MongoDB 
+2025-03-29 22:09:04 [RabbitMQService] INFO: Connecting to RabbitMQ at localhost:5672 
+2025-03-29 22:09:04 [database] INFO: Database connection established 
+2025-03-29 22:09:04 [RabbitMQService] INFO: Successfully connected to RabbitMQ 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Exchange 'events' of type 'topic' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Exchange 'notifications' of type 'direct' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'notification' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'partnership_request' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'analytics' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'email' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'notification' bound to exchange 'events' with routing key 'notification.#' 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'partnership_request' bound to exchange 'events' with routing key 'partnership.#' 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'analytics' bound to exchange 'events' with routing key '#' 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'email' bound to exchange 'notifications' with routing key 'email' 
+2025-03-29 22:09:04 [EventPublisher] INFO: Event publisher initialized successfully 
+2025-03-29 22:09:04 [Server] INFO: Event publisher initialized 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'user_sync' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] INFO: Consumer registered for queue 'user_sync' with tag 'amq.ctag-7BWVmgn1r5fS7Yzdd3DUIg' 
+2025-03-29 22:09:04 [UserConsumerService] INFO: User consumer service initialized successfully 
+2025-03-29 22:09:04 [Server] INFO: User consumer service initialized 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' bound to exchange 'strapi_responses' with routing key 'strapi.response' 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_responses' with tag 'amq.ctag-OuwEmW1Y0j2FODP_-aHT6A' 
+2025-03-29 22:09:04 [RequestResponseService] INFO: Request-Response service initialized successfully 
+2025-03-29 22:09:04 [Server] INFO: Request-Response service initialized 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_events' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] INFO: Consumer registered for queue 'strapi_events' with tag 'amq.ctag--0OFZ4Myr-rDCsMHADQaJQ' 
+2025-03-29 22:09:04 [StrapiSyncService] INFO: Strapi Sync Service initialized successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Exchange 'strapi_requests' of type 'direct' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Exchange 'strapi_responses' of type 'direct' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_responses' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' bound to exchange 'strapi_requests' with routing key 'strapi.request' 
+2025-03-29 22:09:04 [RabbitMQService] DEBUG: Queue 'strapi_operation_requests' asserted successfully 
+2025-03-29 22:09:04 [RabbitMQService] INFO: Consumer registered for queue 'strapi_operation_requests' with tag 'amq.ctag-fRHVQCDzLwDVFsL8Ker9Lw' 
+2025-03-29 22:09:04 [StrapiConsumerService] INFO: Strapi consumer service initialized successfully 
+2025-03-29 22:09:04 [Server] INFO: Strapi consumer service initialized 
+2025-03-29 22:09:04 [Server] INFO: Server running on port 3000 
+2025-03-29 22:10:10 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 22:10:10 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 22:10:11 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:10:11 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:10:11 [CourseService] INFO: Using temporary strapiId: temp-67e7d5132c85157e8217cc9a 
+2025-03-29 22:10:11 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:10:11 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:10:11 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d5132c85157e8217cc9b 
+2025-03-29 22:10:11 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d5132c85157e8217cc9b 
+2025-03-29 22:10:11 [CourseService] INFO: New course created in MongoDB: 67e7d5132c85157e8217cc9b by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 22:10:11 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: ea0a527d-64c2-47e9-99f1-7db252b2074f 
+2025-03-29 22:10:11 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:10:11 [RequestResponseService] DEBUG: Received response for correlationId: ea0a527d-64c2-47e9-99f1-7db252b2074f 
+2025-03-29 22:10:11 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 22:10:11 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:10:11 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d5132c85157e8217cc9b 
+2025-03-29 22:10:11 [app] INFO: [0mPOST /api/courses [32m201[0m 257.790 ms - 371[0m 
+2025-03-29 22:10:11 [RequestResponseService] INFO: Operation CREATE_COURSE completed successfully for correlationId: ea0a527d-64c2-47e9-99f1-7db252b2074f 
+2025-03-29 22:10:11 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d5132c85157e8217cc9b 
+2025-03-29 22:13:38 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 22:13:39 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 22:13:39 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:13:39 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:13:39 [CourseService] INFO: Using temporary strapiId: temp-67e7d5e32c85157e8217cca0 
+2025-03-29 22:13:39 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:13:39 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:13:39 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d5e32c85157e8217cca1 
+2025-03-29 22:13:39 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d5e32c85157e8217cca1 
+2025-03-29 22:13:39 [CourseService] INFO: New course created in MongoDB: 67e7d5e32c85157e8217cca1 by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 22:13:39 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: f0903212-1eac-43dc-865f-2ba3dce1b787 
+2025-03-29 22:13:39 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:13:39 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: f0903212-1eac-43dc-865f-2ba3dce1b787 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:13:39 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:13:39 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:13:39 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 22:13:39 [RequestResponseService] DEBUG: Received response for correlationId: f0903212-1eac-43dc-865f-2ba3dce1b787 
+2025-03-29 22:13:39 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 22:13:39 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: f0903212-1eac-43dc-865f-2ba3dce1b787: Request failed with status code 403 
+2025-03-29 22:13:39 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 22:13:39 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 22:13:40 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 8daa5890-35c1-49f6-9e03-68c117aa42e1 
+2025-03-29 22:13:40 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:13:40 [RequestResponseService] DEBUG: Received response for correlationId: 8daa5890-35c1-49f6-9e03-68c117aa42e1 
+2025-03-29 22:13:40 [RetryUtility] WARN: Retry attempt 2/3 failed. Retrying in 2 seconds. 
+2025-03-29 22:13:40 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 8daa5890-35c1-49f6-9e03-68c117aa42e1: Strapi global object is not available 
+2025-03-29 22:13:40 [RequestResponseService] WARN: Retry 2 for CREATE_COURSE: Strapi global object is not available 
+2025-03-29 22:13:40 [RetryUtility] DEBUG: Error: Strapi global object is not available 
+2025-03-29 22:13:42 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 36026425-c3fe-4d5a-965f-bbd81d3c88d4 
+2025-03-29 22:13:42 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:13:42 [RequestResponseService] DEBUG: Received response for correlationId: 36026425-c3fe-4d5a-965f-bbd81d3c88d4 
+2025-03-29 22:13:42 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 22:13:42 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:13:42 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d5e32c85157e8217cca1 
+2025-03-29 22:13:42 [app] INFO: [0mPOST /api/courses [32m201[0m 3705.849 ms - 371[0m 
+2025-03-29 22:13:42 [RequestResponseService] INFO: Operation CREATE_COURSE completed successfully for correlationId: 36026425-c3fe-4d5a-965f-bbd81d3c88d4 
+2025-03-29 22:13:42 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d5e32c85157e8217cca1 
+2025-03-29 22:16:14 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 22:16:14 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 22:16:14 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:16:14 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:16:14 [CourseService] INFO: Using temporary strapiId: temp-67e7d67e2c85157e8217cca6 
+2025-03-29 22:16:14 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:16:14 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:16:14 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d67e2c85157e8217cca7 
+2025-03-29 22:16:14 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d67e2c85157e8217cca7 
+2025-03-29 22:16:14 [CourseService] INFO: New course created in MongoDB: 67e7d67e2c85157e8217cca7 by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 22:16:14 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: a9d54d44-3126-4bd5-9c6b-c37572f9947b 
+2025-03-29 22:16:14 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:16:14 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: a9d54d44-3126-4bd5-9c6b-c37572f9947b and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:16:14 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:16:14 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:16:14 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 22:16:15 [RequestResponseService] DEBUG: Received response for correlationId: a9d54d44-3126-4bd5-9c6b-c37572f9947b 
+2025-03-29 22:16:15 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 22:16:15 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: a9d54d44-3126-4bd5-9c6b-c37572f9947b: Request failed with status code 403 
+2025-03-29 22:16:15 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 22:16:15 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 22:16:16 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: d7974764-e946-4c54-a2f3-47465d72501f 
+2025-03-29 22:16:16 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:16:16 [RequestResponseService] DEBUG: Received response for correlationId: d7974764-e946-4c54-a2f3-47465d72501f 
+2025-03-29 22:16:16 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 22:16:16 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:16:16 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d67e2c85157e8217cca7 
+2025-03-29 22:16:16 [app] INFO: [0mPOST /api/courses [32m201[0m 1285.360 ms - 371[0m 
+2025-03-29 22:16:16 [RequestResponseService] INFO: Operation CREATE_COURSE completed successfully for correlationId: d7974764-e946-4c54-a2f3-47465d72501f 
+2025-03-29 22:16:16 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d67e2c85157e8217cca7 
+2025-03-29 22:21:39 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 22:21:39 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 22:21:39 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:21:39 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:21:39 [CourseService] INFO: Using temporary strapiId: temp-67e7d7c32c85157e8217ccac 
+2025-03-29 22:21:39 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:21:39 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:21:39 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d7c32c85157e8217ccad 
+2025-03-29 22:21:39 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d7c32c85157e8217ccad 
+2025-03-29 22:21:39 [CourseService] INFO: New course created in MongoDB: 67e7d7c32c85157e8217ccad by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 22:21:39 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 109e5fd4-714e-406d-97fa-c7fd85bb6a37 
+2025-03-29 22:21:39 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:21:39 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: 109e5fd4-714e-406d-97fa-c7fd85bb6a37 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:21:39 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:21:39 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:21:39 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 22:21:39 [RequestResponseService] DEBUG: Received response for correlationId: 109e5fd4-714e-406d-97fa-c7fd85bb6a37 
+2025-03-29 22:21:39 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 22:21:39 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 109e5fd4-714e-406d-97fa-c7fd85bb6a37: Request failed with status code 403 
+2025-03-29 22:21:39 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 22:21:39 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 22:21:41 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: eef59400-c8ef-47c2-9d05-a3cc53d88403 
+2025-03-29 22:21:41 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:21:41 [RequestResponseService] DEBUG: Received response for correlationId: eef59400-c8ef-47c2-9d05-a3cc53d88403 
+2025-03-29 22:21:41 [RetryUtility] WARN: Retry attempt 2/3 failed. Retrying in 2 seconds. 
+2025-03-29 22:21:41 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: eef59400-c8ef-47c2-9d05-a3cc53d88403: Inline node must be Text or Link 
+2025-03-29 22:21:41 [RequestResponseService] WARN: Retry 2 for CREATE_COURSE: Inline node must be Text or Link 
+2025-03-29 22:21:41 [RetryUtility] DEBUG: Error: Inline node must be Text or Link 
+2025-03-29 22:21:43 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: 026a8373-349d-427d-9b48-ccafa3b8d034 
+2025-03-29 22:21:43 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:21:43 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: 026a8373-349d-427d-9b48-ccafa3b8d034 and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:21:43 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:21:43 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:21:43 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 22:21:43 [RequestResponseService] DEBUG: Received response for correlationId: 026a8373-349d-427d-9b48-ccafa3b8d034 
+2025-03-29 22:21:43 [RetryUtility] ERROR: All retry attempts failed (3/3) 
+2025-03-29 22:21:43 [CourseController] ERROR: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:21:43 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:21:43 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d7c32c85157e8217ccad 
+2025-03-29 22:21:43 [app] INFO: [0mPOST /api/courses [32m201[0m 3810.542 ms - 371[0m 
+2025-03-29 22:21:43 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: 026a8373-349d-427d-9b48-ccafa3b8d034: Request failed with status code 403 
+2025-03-29 22:21:43 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d7c32c85157e8217ccad 
+2025-03-29 22:27:05 [app] DEBUG: API Request: [POST] /api/courses 
+2025-03-29 22:27:05 [CourseService] INFO: Creating course in Strapi first: Introduction to Computer Science 
+2025-03-29 22:27:05 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:27:05 [CourseService] WARN: Failed to create course in Strapi: Request failed with status code 403 
+2025-03-29 22:27:05 [CourseService] INFO: Using temporary strapiId: temp-67e7d9092c85157e8217ccb2 
+2025-03-29 22:27:05 [CourseService] INFO: Incremented totalCoursesCreated by 1 for user d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:27:05 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:27:05 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d9092c85157e8217ccb3 
+2025-03-29 22:27:05 [CourseService] INFO: Published COURSE_CREATED event for course 67e7d9092c85157e8217ccb3 
+2025-03-29 22:27:05 [CourseService] INFO: New course created in MongoDB: 67e7d9092c85157e8217ccb3 by user d95e64d8-0091-70e1-e5d2-1d8686200f45 from Australia, organisation: university of new south wales 
+2025-03-29 22:27:05 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: ac686691-9ba1-404e-a3e8-49ba7613b9fb 
+2025-03-29 22:27:05 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:27:05 [StrapiConsumerService] INFO: Processing CREATE_COURSE request with correlationId: ac686691-9ba1-404e-a3e8-49ba7613b9fb and the userid is d95e64d8-0091-70e1-e5d2-1d8686200f45 
+2025-03-29 22:27:05 [StrapiSyncService] ERROR: Error creating course in Strapi: Request failed with status code 403 
+2025-03-29 22:27:05 [StrapiConsumerService] ERROR: Error processing CREATE_COURSE request: Request failed with status code 403 
+2025-03-29 22:27:05 [RabbitMQService] DEBUG: Message published to exchange 'strapi_responses' with routing key 'strapi.response' successfully 
+2025-03-29 22:27:05 [RequestResponseService] DEBUG: Received response for correlationId: ac686691-9ba1-404e-a3e8-49ba7613b9fb 
+2025-03-29 22:27:05 [RetryUtility] WARN: Retry attempt 1/3 failed. Retrying in 1 seconds. 
+2025-03-29 22:27:05 [RequestResponseService] ERROR: Operation CREATE_COURSE failed for correlationId: ac686691-9ba1-404e-a3e8-49ba7613b9fb: Request failed with status code 403 
+2025-03-29 22:27:05 [RequestResponseService] WARN: Retry 1 for CREATE_COURSE: Request failed with status code 403 
+2025-03-29 22:27:05 [RetryUtility] DEBUG: Error: Request failed with status code 403 
+2025-03-29 22:27:06 [RequestResponseService] INFO: Sending CREATE_COURSE request with correlationId: eeb1594b-eab3-4cd2-ac9c-beb3a4bab528 
+2025-03-29 22:27:06 [RabbitMQService] DEBUG: Message published to exchange 'strapi_requests' with routing key 'strapi.request' successfully 
+2025-03-29 22:27:06 [RequestResponseService] DEBUG: Received response for correlationId: eeb1594b-eab3-4cd2-ac9c-beb3a4bab528 
+2025-03-29 22:27:06 [CourseController] ERROR: Failed to create course in Strapi: No strapiId returned for created course 
+2025-03-29 22:27:06 [RabbitMQService] DEBUG: Message published to exchange 'events' with routing key 'course.created' successfully 
+2025-03-29 22:27:06 [EventPublisher] INFO: Published course event: course.created, ID: 67e7d9092c85157e8217ccb3 
+2025-03-29 22:27:06 [app] INFO: [0mPOST /api/courses [32m201[0m 1356.002 ms - 371[0m 
+2025-03-29 22:27:06 [RequestResponseService] INFO: Operation CREATE_COURSE completed successfully for correlationId: eeb1594b-eab3-4cd2-ac9c-beb3a4bab528 
+2025-03-29 22:27:06 [CourseController] INFO: Published COURSE_CREATED event for course 67e7d9092c85157e8217ccb3 
+2025-03-29 22:28:41 [RabbitMQService] ERROR: RabbitMQ connection error: Unexpected close 
+2025-03-29 22:28:41 [RabbitMQService] INFO: Scheduling reconnection attempt 1 in 6 seconds 
+2025-03-29 22:28:41 [RabbitMQService] WARN: RabbitMQ channel closed 
+2025-03-29 22:28:41 [RabbitMQService] WARN: RabbitMQ connection closed 
+2025-03-29 22:28:41 [RabbitMQService] INFO: Scheduling reconnection attempt 2 in 9 seconds 

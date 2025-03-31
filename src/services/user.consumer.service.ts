@@ -4,7 +4,7 @@ import { UserService } from './user.service';
 import { createLogger } from '../config/logger';
 import { EventPublisher } from './event.publisher';
 import { EventType } from '../models/events.model';
-import { IAmplifyUserData } from './user.service';
+import { IAmplifyUserData } from '../models/user.model'; // Fixed import path
 
 const logger = createLogger('UserConsumerService');
 
@@ -100,12 +100,13 @@ export class UserConsumerService {
       const userData: IAmplifyUserData = {
         userId: content.userId,
         email: content.email,
-        country: content.country || '',
         firstName: content.firstName || '',
         lastName: content.lastName || '',
         userType: content.userType || 'academic',
-        isAdmin: content.isAdmin || false
-
+        isAdmin: content.isAdmin || false,
+        country: content.country || '',
+        organisation: content.organisation || undefined,
+        fieldOfExpertise: content.fieldOfExpertise || undefined
       };
       
       // Create or update user
@@ -115,13 +116,16 @@ export class UserConsumerService {
       const isNewUser = user.createdAt.getTime() === user.updatedAt.getTime();
       const eventType = isNewUser ? EventType.USER_CREATED : EventType.USER_UPDATED;
       
-      // Publish user event
+      // Publish user event - include all relevant user fields
       await this.eventPublisher.publishUserEvent(eventType, {
         userId: user.userId,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        userType: user.userType
+        userType: user.userType,
+        country: user.country,
+        organisation: user.organisation,
+        fieldOfExpertise: user.fieldOfExpertise
       });
       
       logger.info(`User ${user.userId} successfully synchronized from message`);

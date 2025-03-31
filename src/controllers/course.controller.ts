@@ -1,8 +1,9 @@
-// src/controllers/course.controller.ts
+// src/controllers/course.controller.ts - Complete implementation
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import { asyncHandler } from '../middlewares/error.middleware';
 import { CourseService, ICourseUpdateData } from '../services/course.service';
+// import { Course } from '../models/course.model';
 import { createLogger } from '../config/logger';
 import { EventPublisher } from '../services/event.publisher';
 import { EventType } from '../models/events.model';
@@ -44,17 +45,11 @@ export class CourseController {
     try {
       // Add creator ID to course data
       courseData.creatorUserId = userId;
-  
-      // Create in MongoDB WITHOUT requiring strapiId
-      const course = await CourseService.createCourse({
-        ...courseData,
-        // Explicitly set initial synchronization status
-        strapiId: null,
-        strapiCreatedAt: null,
-        strapiUpdatedAt: null
-      });
-  
-      // Prepare data for Strapi 
+
+      // First create in MongoDB (our source of truth)
+      const course = await CourseService.createCourse(courseData);
+
+      // Prepare data for Strapi (keeping only what Strapi needs)
       const strapiCourseData = {
         name: course.name,
         code: course.code,
@@ -64,38 +59,53 @@ export class CourseController {
         endDate: course.endDate,
         isActive: course.isActive,
         country: course.country || 'Unknown',
+        organisation: course.organisation || '',
         description: courseData.description || '',
         expectedEnrollment: courseData.expectedEnrollment,
         targetIndustryPartnership: courseData.targetIndustryPartnership,
         preferredPartnerRepresentative: courseData.preferredPartnerRepresentative
       };
-  
+
       // Use the request-response pattern to create in Strapi 
+      // This could be implemented as a fire-and-forget approach, but here we wait for confirmation
       try {
         const strapiId = await CourseController.requestResponseService.createCourse(
           strapiCourseData, 
           userId
         );
-  
+
         // Update MongoDB with the Strapi ID
         if (strapiId) {
-          const updateData: ICourseUpdateData = { 
-            strapiId,
-            strapiCreatedAt: new Date(),
-            strapiUpdatedAt: new Date()
-          };
+          const updateData: ICourseUpdateData = { strapiId };
           await CourseService.updateCourse(course._id.toString(), updateData, userId);
           logger.info(`Updated course ${course._id} with Strapi ID ${strapiId}`);
-          
-          // Update the course object with Strapi ID for response
-          course.strapiId = strapiId;
         }
       } catch (strapiError) {
-        // Log the error, but still return the course created in MongoDB
+        // If Strapi operation fails, we still have the MongoDB record
+        // We could consider adding this to a retry queue
         logger.error(`Failed to create course in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
       }
-  
-      // Return success response
+
+      // Publish course creation event to RabbitMQ asynchronously
+      try {
+        await CourseController.eventPublisher.publishCourseEvent(
+          EventType.COURSE_CREATED,
+          {
+            courseId: course._id.toString(),
+            name: course.name,
+            code: course.code,
+            level: course.level,
+            creatorUserId: userId,
+            startDate: course.startDate,
+            endDate: course.endDate
+          }
+        );
+        logger.info(`Published COURSE_CREATED event for course ${course._id}`);
+      } catch (eventError) {
+        logger.error(`Error publishing course creation event: ${eventError instanceof Error ? eventError.message : String(eventError)}`);
+      }
+
+      // Return success response immediately
       return res.status(201).json({
         status: 'success',
         data: {
@@ -106,8 +116,9 @@ export class CourseController {
             level: course.level,
             startDate: course.startDate,
             endDate: course.endDate,
+            country: course.country,
+            organisation: course.organisation,
             isActive: course.isActive,
-            strapiId: course.strapiId, // Include strapiId in response
             createdAt: course.createdAt
           }
         }
@@ -119,7 +130,45 @@ export class CourseController {
   });
 
   /**
-   * Update course by ID
+   * Get a course by ID
+   * @route GET /api/courses/:courseId
+   */
+  public static getCourseById = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { courseId } = req.params;
+
+    if (!courseId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Course ID is required'
+      });
+    }
+
+    try {
+      const course = await CourseService.getCourseById(courseId);
+
+      if (!course) {
+        return res.status(404).json({
+          status: 'error',
+          message: `Course with ID ${courseId} not found`
+        });
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          course
+        }
+      });
+    } catch (error) {
+      logger.error(`Error getting course: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+
+  
+
+  /**
+   * Update a course
    * @route PUT /api/courses/:courseId
    */
   public static updateCourse = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
@@ -155,35 +204,36 @@ export class CourseController {
       // Update in MongoDB first (our source of truth)
       const updatedCourse = await CourseService.updateCourse(courseId, updateData, userId);
 
-      // If course has a Strapi ID, update in Strapi using request-response pattern
+      // If course has a Strapi ID, update in Strapi
       if (updatedCourse.strapiId) {
         try {
-          // Prepare data for Strapi update
-          const strapiUpdateData = {
+          // Prepare data for Strapi update - define with an index signature
+          const strapiUpdateData: Record<string, any> = {
             name: updatedCourse.name,
             code: updatedCourse.code,
             courseLevel: updatedCourse.level,
             startDate: updatedCourse.startDate,
             endDate: updatedCourse.endDate,
             isActive: updatedCourse.isActive,
-            country: updatedCourse.country || 'Unknown'
+            country: updatedCourse.country || 'Unknown',
+            organisation: updatedCourse.organisation || ''
           };
 
-        //   // Add optional fields if present in the update
-        //   if ('description' in updateData) {
-        //     strapiUpdateData.description = updateData.description;
-        //   }
-        //   if ('expectedEnrollment' in updateData) {
-        //     strapiUpdateData.expectedEnrollment = updateData.expectedEnrollment;
-        //   }
-        //   if ('targetIndustryPartnership' in updateData) {
-        //     strapiUpdateData.targetIndustryPartnership = updateData.targetIndustryPartnership;
-        //   }
-        //   if ('preferredPartnerRepresentative' in updateData) {
-        //     strapiUpdateData.preferredPartnerRepresentative = updateData.preferredPartnerRepresentative;
-        //   }
+          // Add optional fields if present in the update
+          if ('description' in updateData) {
+            strapiUpdateData.description = updateData.description;
+          }
+          if ('expectedEnrollment' in updateData) {
+            strapiUpdateData.expectedEnrollment = updateData.expectedEnrollment;
+          }
+          if ('targetIndustryPartnership' in updateData) {
+            strapiUpdateData.targetIndustryPartnership = updateData.targetIndustryPartnership;
+          }
+          if ('preferredPartnerRepresentative' in updateData) {
+            strapiUpdateData.preferredPartnerRepresentative = updateData.preferredPartnerRepresentative;
+          }
 
-          // Update in Strapi without blocking response
+          // Update in Strapi
           await CourseController.requestResponseService.updateCourse(
             updatedCourse.strapiId,
             strapiUpdateData,
@@ -193,10 +243,7 @@ export class CourseController {
           logger.info(`Updated course in Strapi with ID ${updatedCourse.strapiId}`);
         } catch (strapiError) {
           logger.error(`Failed to update course in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
-          // Consider adding to a retry queue
         }
-      } else {
-        logger.warn(`Course ${courseId} has no Strapi ID, skipping Strapi update`);
       }
 
       // Publish course update event asynchronously
@@ -237,7 +284,7 @@ export class CourseController {
   });
 
   /**
-   * Delete course by ID
+   * Delete a course
    * @route DELETE /api/courses/:courseId
    */
   public static deleteCourse = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
@@ -269,7 +316,7 @@ export class CourseController {
         });
       }
 
-      // Delete from MongoDB
+      // Delete from MongoDB first
       const result = await CourseService.deleteCourse(courseId, userId);
 
       if (!result) {
@@ -279,14 +326,13 @@ export class CourseController {
         });
       }
 
-      // If course has a Strapi ID, delete from Strapi using request-response pattern
+      // If course has a Strapi ID, delete from Strapi
       if (course.strapiId) {
         try {
           await CourseController.requestResponseService.deleteCourse(course.strapiId, userId);
           logger.info(`Deleted course from Strapi with ID ${course.strapiId}`);
         } catch (strapiError) {
           logger.error(`Failed to delete course in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
-          // Consider adding to a cleanup queue for orphaned Strapi entries
         }
       }
 
@@ -326,11 +372,220 @@ export class CourseController {
   });
 
   /**
-   * Get all courses or filter by query parameters
+   * Get courses by organisation
+   * @route GET /api/courses/organisation/:organisation
+   */
+  public static getCoursesByOrganisation = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { organisation } = req.params;
+
+    if (!organisation) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Organisation parameter is required'
+      });
+    }
+
+    try {
+      const courses = await CourseService.getCoursesByOrganisation(organisation);
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          courses,
+          count: courses.length,
+          organisation
+        }
+      });
+    } catch (error) {
+      logger.error(`Error fetching courses by organisation: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+
+  /**
+   * Get course stats by organisation
+   * @route GET /api/courses/stats/organisation
+   */
+  public static getCourseStatsByOrganisation = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    try {
+      const stats = await CourseService.getCourseStatsByOrganisation();
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          stats,
+          count: stats.length
+        }
+      });
+    } catch (error) {
+      logger.error(`Error fetching organisation statistics: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+
+  /**
+   * Get courses by country
+   * @route GET /api/courses/country/:country
+   */
+  public static getCoursesByCountry = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { country } = req.params;
+
+    if (!country) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Country parameter is required'
+      });
+    }
+
+    try {
+      const courses = await CourseService.getCoursesByCountry(country);
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          courses,
+          count: courses.length,
+          country
+        }
+      });
+    } catch (error) {
+      logger.error(`Error fetching courses by country: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+
+  /**
+   * Get courses by creator
+   * @route GET /api/courses/user/:userId
+   */
+  public static getCoursesByCreator = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'User ID is required'
+      });
+    }
+
+    try {
+      const courses = await CourseService.getCoursesByCreator(userId);
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          courses,
+          count: courses.length,
+          userId
+        }
+      });
+    } catch (error) {
+      logger.error(`Error fetching courses by creator: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+
+  /**
+   * Get course statistics by academic period
+   * @route GET /api/courses/stats/academic
+   */
+  public static getCourseStatsByAcademicPeriod = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    try {
+      const stats = await CourseService.getCourseStatsByAcademicPeriod();
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          stats,
+          count: stats.length
+        }
+      });
+    } catch (error) {
+      logger.error(`Error fetching course statistics by academic period: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+
+  /**
+   * Get course statistics by country
+   * @route GET /api/courses/stats/country
+   */
+  public static getCourseStatsByCountry = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    try {
+      const stats = await CourseService.getCourseStatsByCountry();
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          stats,
+          count: stats.length
+        }
+      });
+    } catch (error) {
+      logger.error(`Error fetching course statistics by country: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+
+  /**
+   * Enhanced search courses method to handle country and organisation filtering
+   * @route GET /api/courses/search
+   */
+  public static searchCourses = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { q, country, organisation, limit } = req.query;
+    
+    // Ensure at least one search parameter is provided
+    if (!q && !country && !organisation) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'At least one search parameter (q, country, or organisation) is required'
+      });
+    }
+
+    const limitNum = limit ? parseInt(limit as string, 10) : 10;
+    
+    try {
+      // Create filter object based on provided parameters
+      const filters: any = {};
+      
+      if (country) {
+        filters.country = country;
+      }
+      
+      if (organisation) {
+        filters.organisation = organisation;
+      }
+      
+      // Use text search if q parameter is provided, otherwise use filters
+      let courses;
+      if (q) {
+        courses = await CourseService.searchCourses(q as string, limitNum, filters);
+      } else {
+        // Use service method instead of direct model access for better encapsulation
+        courses = await CourseService.getPaginatedCourses(1, limitNum, filters);
+        courses = courses.courses; // Extract the courses array from the result
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          courses,
+          count: courses.length,
+          searchParams: { q, country, organisation }
+        }
+      });
+    } catch (error) {
+      logger.error(`Error searching courses: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+
+  /**
+   * Get all courses with optional filtering
    * @route GET /api/courses
    */
   public static getCourses = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const { level, active, country, page, limit } = req.query;
+    const { level, active, country, organisation, page, limit } = req.query;
     const filters: any = {};
 
     // Build filters based on query parameters
@@ -344,6 +599,10 @@ export class CourseController {
 
     if (country) {
       filters.country = country;
+    }
+    
+    if (organisation) {
+      filters.organisation = organisation;
     }
 
     // Parse pagination parameters
@@ -368,11 +627,13 @@ export class CourseController {
   });
 
   /**
-   * Get course by ID
-   * @route GET /api/courses/:courseId
+   * Update course active status
+   * @route PATCH /api/courses/:courseId/status
    */
-  public static getCourseById = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+  public static setCourseActiveStatus = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { courseId } = req.params;
+    const { isActive } = req.body;
+    const { userId } = req.user; // From auth middleware
 
     if (!courseId) {
       return res.status(400).json({
@@ -381,111 +642,6 @@ export class CourseController {
       });
     }
 
-    const course = await CourseService.getCourseById(courseId);
-
-    if (!course) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Course not found'
-      });
-    }
-
-    return res.status(200).json({
-      status: 'success',
-      data: {
-        course
-      }
-    });
-  });
-
-  /**
-   * Get courses by creator ID
-   * @route GET /api/courses/user/:userId
-   */
-  public static getCoursesByCreator = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const { userId } = req.params;
-
-    if (!userId) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'User ID is required'
-      });
-    }
-
-    const courses = await CourseService.getCoursesByCreator(userId);
-
-    return res.status(200).json({
-      status: 'success',
-      data: {
-        courses
-      }
-    });
-  });
-
-  /**
-   * Search courses by name, code, or description
-   * @route GET /api/courses/search
-   */
-  public static searchCourses = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const { q, limit } = req.query;
-
-    if (!q) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'Search query is required'
-      });
-    }
-
-    const limitNum = limit ? parseInt(limit as string, 10) : 10;
-    const courses = await CourseService.searchCourses(q as string, limitNum);
-
-    return res.status(200).json({
-      status: 'success',
-      data: {
-        courses
-      }
-    });
-  });
-
-  /**
-   * Get course stats by academic period
-   * @route GET /api/courses/stats/academic
-   */
-  public static getCourseStatsByAcademicPeriod = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const stats = await CourseService.getCourseStatsByAcademicPeriod();
-
-    return res.status(200).json({
-      status: 'success',
-      data: {
-        stats
-      }
-    });
-  });
-
-  /**
-   * Get course stats by country
-   * @route GET /api/courses/stats/country
-   */
-  public static getCourseStatsByCountry = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const stats = await CourseService.getCourseStatsByCountry();
-
-    return res.status(200).json({
-      status: 'success',
-      data: {
-        stats
-      }
-    });
-  });
-
-  /**
-   * Set course active status
-   * @route PATCH /api/courses/:courseId/status
-   */
-  public static setCourseActiveStatus = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const { courseId } = req.params;
-    const { isActive } = req.body;
-    const { userId } = req.user; // From auth middleware
-
     if (isActive === undefined) {
       return res.status(400).json({
         status: 'error',
@@ -493,32 +649,38 @@ export class CourseController {
       });
     }
 
-    const updatedCourse = await CourseService.setCourseActiveStatus(courseId, isActive, userId);
+    try {
+      // Update course status
+      const updatedCourse = await CourseService.setCourseActiveStatus(courseId, isActive, userId);
 
-    // Update in Strapi using request-response pattern
-    if (updatedCourse.strapiId) {
-      try {
-        await CourseController.requestResponseService.updateCourse(
-          updatedCourse.strapiId, 
-          { isActive }, 
-          userId
-        );
-        logger.info(`Updated course status in Strapi with ID ${updatedCourse.strapiId}`);
-      } catch (strapiError) {
-        logger.error(`Failed to update course status in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
+      // Update in Strapi
+      if (updatedCourse.strapiId) {
+        try {
+          await CourseController.requestResponseService.updateCourse(
+            updatedCourse.strapiId,
+            { isActive },
+            userId
+          );
+          logger.info(`Updated course status in Strapi with ID ${updatedCourse.strapiId}`);
+        } catch (strapiError) {
+          logger.error(`Failed to update course status in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
+        }
       }
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          course: updatedCourse
+        }
+      });
+    } catch (error) {
+      logger.error(`Error updating course status: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
-
-    return res.status(200).json({
-      status: 'success',
-      data: {
-        course: updatedCourse
-      }
-    });
   });
 
   /**
-   * Manually synchronize a course with Strapi
+   * Synchronize course with Strapi
    * @route POST /api/courses/:courseId/sync
    */
   public static syncCourseWithStrapi = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
@@ -539,17 +701,17 @@ export class CourseController {
       });
     }
 
-    // Get the course to sync
-    const course = await CourseService.getCourseById(courseId);
-    
-    if (!course) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Course not found'
-      });
-    }
-
     try {
+      // Get the course to sync
+      const course = await CourseService.getCourseById(courseId);
+      
+      if (!course) {
+        return res.status(404).json({
+          status: 'error',
+          message: 'Course not found'
+        });
+      }
+
       // Prepare Strapi data
       const strapiData = {
         name: course.name,
@@ -559,7 +721,8 @@ export class CourseController {
         startDate: course.startDate,
         endDate: course.endDate,
         isActive: course.isActive,
-        country: course.country || 'Unknown'
+        country: course.country || 'Unknown',
+        organisation: course.organisation || ''
       };
 
       let strapiId = course.strapiId;
