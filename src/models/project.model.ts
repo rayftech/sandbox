@@ -34,6 +34,7 @@ interface IProjectDocument extends Document {
   startDate: Date;                       // For determining lifecycle and partnerships
   endDate: Date;                         // For determining lifecycle and partnerships
   country: string;                       // For geographic filtering
+  organisation: string;                  // Organization offering the project
   targetAcademicPartnership?:string;
   
   // Status fields
@@ -46,6 +47,7 @@ interface IProjectDocument extends Document {
   
   // Methods
   updateStatus(): boolean;               // Update status based on dates and return if it changed
+  setTimeAnalyticsDimensions(): void;    // For calculating analytics dimensions
 }
 
 /**
@@ -108,6 +110,16 @@ const ProjectSchema = new Schema<IProjectDocument>(
       required: true,
       index: true,
     },
+    organisation: {
+      type: String,
+      required: false,
+      index: true,
+      default: '',
+    },
+    targetAcademicPartnership: {
+      type: String,
+      index: true,
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -146,6 +158,19 @@ ProjectSchema.methods.updateStatus = function(this: IProjectDocument): boolean {
   return false;
 };
 
+// Add method to set time analytics dimensions
+ProjectSchema.methods.setTimeAnalyticsDimensions = function(this: IProjectDocument) {
+  // Implementation based on your analytics needs
+  // This is a placeholder based on your existing code
+  const requestDate = this.createdAt || new Date();
+  
+  // You can add properties like year, quarter, month etc. as needed
+  // Example:
+  // this.year = requestDate.getFullYear();
+  // this.month = requestDate.getMonth() + 1; // Convert from 0-11 to 1-12
+  // this.quarter = Math.floor((requestDate.getMonth()) / 3) + 1; // Convert to quarter 1-4
+};
+
 // Validation middleware with proper type handling
 ProjectSchema.pre('save', function(this: IProjectDocument, next) {
   try {
@@ -170,6 +195,7 @@ ProjectSchema.index({ creatorUserId: 1, studentLevel: 1 });
 ProjectSchema.index({ startDate: 1, endDate: 1 });
 ProjectSchema.index({ country: 1, studentLevel: 1 });
 ProjectSchema.index({ status: 1, isActive: 1 });
+ProjectSchema.index({ organisation: 1, country: 1 });
 
 // Create and export the model with proper type information
 export const Project = mongoose.model<IProjectDocument, IProjectModel>('Project', ProjectSchema);

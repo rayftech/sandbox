@@ -246,45 +246,49 @@ export class EventPublisher {
     }
   }
 
-  /**
-   * Publish a project event
-   * @param eventType Project event type
-   * @param data Project event data
-   * @returns Promise resolving to true if successful
-   */
-  public async publishProjectEvent(
-    eventType: EventType,
-    data: Omit<ProjectEvent, 'id' | 'type' | 'timestamp' | 'correlationId' | 'source'>
-  ): Promise<boolean> {
-    await this.initialize();
+// Update to event.publisher.ts to ensure publishProjectEvent includes organisation
 
-    const event: ProjectEvent = {
-      ...this.createBaseEvent(eventType, 'project-service'),
-      ...data
-    };
+/**
+ * Publish a project event
+ * @param eventType Project event type
+ * @param data Project event data
+ * @returns Promise resolving to true if successful
+ */
+public async publishProjectEvent(
+  eventType: EventType,
+  data: Omit<ProjectEvent, 'id' | 'type' | 'timestamp' | 'correlationId' | 'source'>
+): Promise<boolean> {
+  await this.initialize();
 
-    // Determine routing key from event type
-    const routingKey = eventType;
+  const event: ProjectEvent = {
+    ...this.createBaseEvent(eventType, 'project-service'),
+    ...data
+  };
 
-    try {
-      const published = await this.rabbitMQService.publish(
-        EXCHANGE_EVENTS,
-        routingKey,
-        event
-      );
+  // Determine routing key from event type
+  const routingKey = eventType;
 
-      if (published) {
-        logger.info(`Published project event: ${eventType}, ID: ${event.projectId}`);
-      } else {
-        logger.warn(`Publishing project event was buffered: ${eventType}, ID: ${event.projectId}`);
-      }
+  try {
+    const published = await this.rabbitMQService.publish(
+      EXCHANGE_EVENTS,
+      routingKey,
+      event
+    );
 
-      return published;
-    } catch (error) {
-      logger.error(`Failed to publish project event: ${error instanceof Error ? error.message : String(error)}`);
-      return false;
+    if (published) {
+      // Include organisation in log message if available
+      const orgInfo = event.organisation ? `, Organisation: ${event.organisation}` : '';
+      logger.info(`Published project event: ${eventType}, ID: ${event.projectId}, Title: ${event.title}${orgInfo}`);
+    } else {
+      logger.warn(`Publishing project event was buffered: ${eventType}, ID: ${event.projectId}`);
     }
+
+    return published;
+  } catch (error) {
+    logger.error(`Failed to publish project event: ${error instanceof Error ? error.message : String(error)}`);
+    return false;
   }
+}
 
   /**
    * Publish an email notification event

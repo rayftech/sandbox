@@ -105,6 +105,8 @@ export interface ProjectEvent extends BaseEvent {
   studentLevel: StudentLevelType; // Using the common type
   startDate: Date;
   endDate: Date;
+  country: string;  // Add country field (this was missing)
+  organisation?: string;  // Add organisation field
 }
 
 /**

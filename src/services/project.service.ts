@@ -20,7 +20,8 @@ export interface IProjectCreationData {
   additionalInformation?: string;
   targetAcademicPartnership?: string;
   studentLevel?: CourseLevel;
-  country?:string;
+  country: string;
+  organisation?: string;
   startDate: Date;
   endDate: Date;
 }
@@ -37,7 +38,8 @@ export interface IProjectUpdateData {
   additionalInformation?: string;
   targetAcademicPartnership?: string;
   studentLevel?: CourseLevel;
-  country?:string;
+  country?: string;
+  organisation?: string;
   startDate?: Date;
   endDate?: Date;
   isActive?: boolean;
@@ -69,7 +71,6 @@ export class ProjectService {
         throw new Error(`Creator with userId ${projectData.creator} not found`);
       }
 
-
       // Create new project
       const project = new Project({
         creator: user._id, // Use the MongoDB _id, not the userId
@@ -82,6 +83,7 @@ export class ProjectService {
         targetAcademicPartnership: projectData.targetAcademicPartnership,
         studentLevel: projectData.studentLevel,
         country: projectData.country,
+        organisation: projectData.organisation,
         startDate: projectData.startDate,
         endDate: projectData.endDate,
         isActive: true
@@ -101,7 +103,7 @@ export class ProjectService {
       );
       
       await session.commitTransaction();
-      logger.info(`New project created: ${savedProject._id} by user ${projectData.creator} from ${projectData.country || 'missing country input'}`);
+      logger.info(`New project created: ${savedProject._id} by user ${projectData.creator} from ${projectData.country}, organisation: ${projectData.organisation || 'not specified'}`);
       
       return savedProject;
     } catch (error) {
@@ -158,6 +160,8 @@ export class ProjectService {
     isActive?: boolean;
     startDate?: { $gte?: Date, $lte?: Date };
     endDate?: { $gte?: Date, $lte?: Date };
+    country?: string;
+    organisation?: string;
   }): Promise<IProject[]> {
     try {
       return await Project.find(filters)
@@ -234,7 +238,7 @@ export class ProjectService {
         await updatedProject.save();
       }
 
-      logger.info(`Project ${projectId} updated by user ${userId}${updateData.country ? `, country set to: ${updateData.country}` : ''}`);
+      logger.info(`Project ${projectId} updated by user ${userId}${updateData.country ? `, country set to: ${updateData.country}` : ''}${updateData.organisation ? `, organisation set to: ${updateData.organisation}` : ''}`);
       return updatedProject;
     } catch (error) {
       logger.error(`Error updating project: ${error instanceof Error ? error.message : String(error)}`);
@@ -362,7 +366,6 @@ export class ProjectService {
     }
   }
 
-
   /**
    * Check if a project has any active partnerships
    * @param projectId The MongoDB ID of the project
@@ -380,17 +383,88 @@ export class ProjectService {
    * @param country The country to filter by
    * @returns Array of matching project documents
    */
-    static async getProjectsByCountry(country: string): Promise<IProject[]> {
-      try {
-        return await Project.find({ country })
-          .sort({ createdAt: -1 });
-      } catch (error) {
-        logger.error(`Error getting projects by country: ${error instanceof Error ? error.message : String(error)}`);
-        throw error;
-      }
+  static async getProjectsByCountry(country: string): Promise<IProject[]> {
+    try {
+      return await Project.find({ country })
+        .sort({ createdAt: -1 });
+    } catch (error) {
+      logger.error(`Error getting projects by country: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
+  }
 
+  /**
+   * Get projects by organisation
+   * @param organisation The organisation to filter by
+   * @returns Array of matching project documents
+   */
+  static async getProjectsByOrganisation(organisation: string): Promise<IProject[]> {
+    try {
+      return await Project.find({ organisation })
+        .sort({ createdAt: -1 });
+    } catch (error) {
+      logger.error(`Error getting projects by organisation: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
 
+  /**
+   * Get project statistics by organisation
+   * @returns Array of statistical groupings by organisation
+   */
+  static async getProjectStatsByOrganisation(): Promise<any[]> {
+    try {
+      return await Project.aggregate([
+        {
+          $match: {
+            organisation: { $exists: true, $ne: '' }
+          }
+        },
+        {
+          $group: {
+            _id: { organisation: '$organisation' },
+            count: { $sum: 1 },
+            organisations: { $addToSet: '$organisation' }
+          }
+        },
+        {
+          $sort: { count: -1 }
+        }
+      ]);
+    } catch (error) {
+      logger.error(`Error getting project statistics by organisation: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Get project statistics by country
+   * @returns Array of statistical groupings by country
+   */
+  static async getProjectStatsByCountry(): Promise<any[]> {
+    try {
+      return await Project.aggregate([
+        {
+          $match: {
+            country: { $exists: true, $ne: '' }
+          }
+        },
+        {
+          $group: {
+            _id: { country: '$country' },
+            count: { $sum: 1 },
+            countries: { $addToSet: '$country' }
+          }
+        },
+        {
+          $sort: { count: -1 }
+        }
+      ]);
+    } catch (error) {
+      logger.error(`Error getting project statistics by country: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
 
   /**
    * Get projects with pagination
@@ -438,29 +512,47 @@ export class ProjectService {
    * Search projects by title or description
    * @param searchQuery The search string
    * @param limit Maximum number of results to return
+   * @param filters Additional filters to apply (country, organisation, etc.)
    * @returns Array of matching project documents
    */
-  static async searchProjects(searchQuery: string, limit: number = 10): Promise<IProject[]> {
+  static async searchProjects(
+    searchQuery: string, 
+    limit: number = 10,
+    filters: any = {}
+  ): Promise<IProject[]> {
     try {
-      // Create text index if it doesn't exist yet (ideally this would be in schema)
+      // Create text index if it doesn't exist yet
       const collection = Project.collection;
       const indexes = await collection.indexes();
       
       const hasTextIndex = indexes.some(index => 
-        index.name === 'title_text_shortDescription_text_detailedDescription_text'
+        index.name === 'title_text_shortDescription_text_detailedDescription_text_organisation_text'
       );
       
       if (!hasTextIndex) {
         await collection.createIndex({ 
           title: 'text', 
           shortDescription: 'text',
-          detailedDescription: 'text' 
+          detailedDescription: 'text',
+          organisation: 'text'
         });
       }
 
+      // Combine text search with additional filters
+      const query: any = {
+        $text: { $search: searchQuery }
+      };
+      
+      // Add additional filters
+      Object.keys(filters).forEach(key => {
+        if (filters[key]) {
+          query[key] = filters[key];
+        }
+      });
+
       // Perform text search
       return await Project.find(
-        { $text: { $search: searchQuery } },
+        query,
         { score: { $meta: 'textScore' } }
       )
         .sort({ score: { $meta: 'textScore' } })
@@ -506,4 +598,5 @@ export class ProjectService {
       throw error;
     }
   }
+
 }

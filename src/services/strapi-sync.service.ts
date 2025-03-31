@@ -35,8 +35,9 @@ interface IStrapiCourse {
   };
 }
 
+// Make sure this interface is properly defined in the file:
 /**
- * Interface for Strapi challenge data
+ * Interface for Strapi challenge/project data
  */
 interface IStrapiChallenge {
   id: number;
@@ -48,8 +49,9 @@ interface IStrapiChallenge {
     startDate: string;
     endDate: string;
     isActive: boolean;
-    challengeStatus: string;
+    projectStatus: string;
     country: string;
+    organisation?: string;
     targetAcademicPartnership?: string;
     createdAt: string;
     updatedAt: string;
@@ -350,92 +352,99 @@ export class StrapiSyncService {
     }
   }
 
-  /**
-   * Sync project (challenge) data from Strapi to MongoDB
-   */
-  private async syncProject(strapiChallenge: IStrapiChallenge): Promise<IProject> {
-    try {
-      const strapiId = strapiChallenge.id.toString();
-      const { attributes } = strapiChallenge;
+// Update to the syncProject method to properly handle the organisation field
+
+private async syncProject(strapiChallenge: IStrapiChallenge): Promise<IProject> {
+  try {
+    const strapiId = strapiChallenge.id.toString();
+    const { attributes } = strapiChallenge;
+    
+    // Find existing project or create new one
+    let project = await Project.findOne({ strapiId });
+    
+    if (project) {
+      // Update existing project
+      project.title = attributes.name;
+      // Use as any to avoid type issues with studentLevel
+      project.studentLevel = attributes.studentLevel as any;
+      project.startDate = new Date(attributes.startDate);
+      project.endDate = new Date(attributes.endDate);
+      project.country = attributes.country;
+      project.isActive = attributes.isActive;
       
-      // Find existing project or create new one
-      let project = await Project.findOne({ strapiId });
-      
-      if (project) {
-        // Update existing project
-        project.title = attributes.name;
-        // Use as any to avoid type issues with studentLevel
-        project.studentLevel = attributes.studentLevel as any;
-        project.startDate = new Date(attributes.startDate);
-        project.endDate = new Date(attributes.endDate);
-        project.country = attributes.country;
-        project.isActive = attributes.isActive;
-        
-        // Safe property access with type assertion
-        if (attributes.targetAcademicPartnership) {
-          (project as any).targetAcademicPartnership = attributes.targetAcademicPartnership;
-        }
-        
-        project.strapiUpdatedAt = new Date(attributes.updatedAt);
-        
-        // Update status if method exists
-        if (typeof project.updateStatus === 'function') {
-          project.updateStatus();
-        }
-        
-        await project.save();
-        logger.info(`Updated MongoDB project ${strapiId} from Strapi`);
-      } else {
-        // Create new project with proper typing
-        const projectData: any = {
-          creatorUserId: attributes.userId,
-          strapiId,
-          strapiCreatedAt: new Date(attributes.createdAt),
-          strapiUpdatedAt: new Date(attributes.updatedAt),
-          title: attributes.name,
-          studentLevel: attributes.studentLevel as StudentLevel,
-          startDate: new Date(attributes.startDate),
-          endDate: new Date(attributes.endDate),
-          country: attributes.country,
-          isActive: attributes.isActive
-        };
-        
-        // Add optional fields if present
-        if (attributes.targetAcademicPartnership) {
-          projectData.targetAcademicPartnership = attributes.targetAcademicPartnership;
-        }
-        
-        project = new Project(projectData);
-        
-        await project.save();
-        logger.info(`Created new MongoDB project ${strapiId} from Strapi`);
-        
-        // Get the MongoDB document ID as a string - handle with type safety
-        const projectId = project._id ? project._id.toString() : '';
-        
-        if (projectId) {
-          // Publish project creation event with string-based StudentLevel
-          await this.eventPublisher.publishProjectEvent(
-            EventType.PROJECT_CREATED,
-            {
-              projectId: projectId,
-              title: project.title,
-              shortDescription: attributes.shortDescription || '',
-              creatorUserId: project.creatorUserId,
-              studentLevel: project.studentLevel as string, // Cast to string to match event type
-              startDate: project.startDate,
-              endDate: project.endDate
-            }
-          );
-        }
+      // Update organisation if provided
+      if (attributes.organisation) {
+        project.organisation = attributes.organisation;
       }
       
-      return project;
-    } catch (error) {
-      logger.error(`Error syncing project from Strapi: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
+      // Safe property access with type assertion
+      if (attributes.targetAcademicPartnership) {
+        (project as any).targetAcademicPartnership = attributes.targetAcademicPartnership;
+      }
+      
+      project.strapiUpdatedAt = new Date(attributes.updatedAt);
+      
+      // Update status if method exists
+      if (typeof project.updateStatus === 'function') {
+        project.updateStatus();
+      }
+      
+      await project.save();
+      logger.info(`Updated MongoDB project ${strapiId} from Strapi`);
+    } else {
+      // Create new project with proper typing
+      const projectData: any = {
+        creatorUserId: attributes.userId,
+        strapiId,
+        strapiCreatedAt: new Date(attributes.createdAt),
+        strapiUpdatedAt: new Date(attributes.updatedAt),
+        title: attributes.name,
+        studentLevel: attributes.studentLevel as StudentLevel,
+        startDate: new Date(attributes.startDate),
+        endDate: new Date(attributes.endDate),
+        country: attributes.country,
+        organisation: attributes.organisation || '', // Ensure organisation is included
+        isActive: attributes.isActive
+      };
+      
+      // Add optional fields if present
+      if (attributes.targetAcademicPartnership) {
+        projectData.targetAcademicPartnership = attributes.targetAcademicPartnership;
+      }
+      
+      project = new Project(projectData);
+      
+      await project.save();
+      logger.info(`Created new MongoDB project ${strapiId} from Strapi (${project.country}, ${project.organisation || 'no organisation'})`);
+      
+      // Get the MongoDB document ID as a string - handle with type safety
+      const projectId = project._id ? project._id.toString() : '';
+      
+      if (projectId) {
+        // Publish project creation event with string-based StudentLevel and include organisation
+        await this.eventPublisher.publishProjectEvent(
+          EventType.PROJECT_CREATED,
+          {
+            projectId: projectId,
+            title: project.title,
+            shortDescription: attributes.shortDescription || '',
+            creatorUserId: project.creatorUserId,
+            studentLevel: project.studentLevel as string, // Cast to string to match event type
+            startDate: project.startDate,
+            endDate: project.endDate,
+            country: project.country,
+            organisation: project.organisation // Include organisation in the event
+          }
+        );
+      }
     }
+    
+    return project;
+  } catch (error) {
+    logger.error(`Error syncing project from Strapi: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
   }
+}
 
   /**
    * Synchronize all courses and projects from Strapi (for initial sync)
