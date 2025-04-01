@@ -4,7 +4,7 @@ import { logger } from '../config/logger';
 import authRoutes from './auth.routes';
 import userRoutes from './user.routes';
 import courseRoutes from './course.routes';
-// Import other routes as needed
+import userSaveRoutes from './user-save.routes'; 
 
 // Create main router
 const router = Router();
@@ -18,7 +18,8 @@ router.use((req, _res, next) => {
 // Register route modules
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
-router.use('/courses', courseRoutes); // Add our new course routes
+router.use('/courses', courseRoutes);
+router.use('/', userSaveRoutes); 
 
 /**
  * @swagger

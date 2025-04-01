@@ -20,6 +20,20 @@ export interface IAmplifyUserData {
 }
 
 /**
+ * Interface for saved item reference
+ */
+export interface ISavedItem {
+  itemId: mongoose.Types.ObjectId;
+  itemType: 'course' | 'project';
+  savedAt: Date;
+  notes?: string;
+}
+
+export interface ISavedItemDocument extends ISavedItem, Document {
+  toObject(options?: any): ISavedItem;
+}
+
+/**
  * Interface for User attributes (without mongoose Document properties)
  */
 export interface IUserAttributes extends IAmplifyUserData {
@@ -36,6 +50,8 @@ export interface IUserAttributes extends IAmplifyUserData {
     allowFriendRequests: boolean;
     emailNotifications: boolean;
   };
+  // Watch/Save feature
+  savedItems: ISavedItem[]; // Array of saved/watched courses and projects
   // Analytics fields for snowflake schema
   totalCoursesCreated?: number;
   totalProjectsCreated?: number;
@@ -54,6 +70,11 @@ interface IUserDocument extends Document, IUserAttributes {
   
   // Define any methods here
   logUserCreation(): void;
+  
+  // Methods for saved items
+  saveItem(itemId: mongoose.Types.ObjectId | string, itemType: 'course' | 'project', notes?: string): Promise<ISavedItem>;
+  unsaveItem(itemId: mongoose.Types.ObjectId | string, itemType: 'course' | 'project'): Promise<boolean>;
+  isSaved(itemId: mongoose.Types.ObjectId | string, itemType: 'course' | 'project'): boolean;
 }
 
 /**
@@ -132,6 +153,28 @@ const UserSchema = new Schema<IUserDocument>(
         ref: 'User',
       }],
     },
+    
+    // Watch/Save feature - New addition
+    savedItems: [{
+      itemId: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        refPath: 'savedItems.itemType' // Dynamic reference based on itemType
+      },
+      itemType: {
+        type: String,
+        required: true,
+        enum: ['course', 'project']
+      },
+      savedAt: {
+        type: Date,
+        default: Date.now
+      },
+      notes: {
+        type: String,
+        trim: true
+      }
+    }],
     
     // User preferences and activity tracking
     lastLogin: {
@@ -212,6 +255,91 @@ UserSchema.methods.logUserCreation = function() {
   logger.info(`New user created: ${this.userId} (${this.email})`);
 };
 
+// Method to save an item (course or project)
+UserSchema.methods.saveItem = async function(
+  itemId: mongoose.Types.ObjectId | string,
+  itemType: 'course' | 'project',
+  notes?: string
+): Promise<ISavedItem> {
+  // Convert string ID to ObjectId if needed
+  const objectId = typeof itemId === 'string' ? new mongoose.Types.ObjectId(itemId) : itemId;
+  
+  // Check if item is already saved
+  const alreadySaved = this.savedItems.some((item: ISavedItem) => 
+    item.itemId.equals(objectId) && item.itemType === itemType
+  );
+  
+  if (alreadySaved) {
+    // If it's already saved, update the notes and savedAt time
+    const savedItem = this.savedItems.find((item: ISavedItem) => 
+      item.itemId.equals(objectId) && item.itemType === itemType
+    );
+    
+    if (savedItem) {
+      savedItem.savedAt = new Date();
+      if (notes !== undefined) {
+        savedItem.notes = notes;
+      }
+      
+      await this.save();
+      return savedItem;
+    }
+  }
+  
+  // If not saved, add it to savedItems
+  const newSavedItem: ISavedItem = {
+    itemId: objectId,
+    itemType,
+    savedAt: new Date(),
+    notes
+  };
+  
+  this.savedItems.push(newSavedItem);
+  await this.save();
+  
+  logger.info(`User ${this.userId} saved ${itemType} ${itemId}`);
+  return newSavedItem;
+};
+
+// Method to unsave an item
+UserSchema.methods.unsaveItem = async function(
+  itemId: mongoose.Types.ObjectId | string,
+  itemType: 'course' | 'project'
+): Promise<boolean> {
+  // Convert string ID to ObjectId if needed
+  const objectId = typeof itemId === 'string' ? new mongoose.Types.ObjectId(itemId) : itemId;
+  
+  // Get initial count of saved items
+  const initialCount = this.savedItems.length;
+  
+  // Filter out the item to unsave
+  this.savedItems = this.savedItems.filter((item: ISavedItem) => 
+    !(item.itemId.equals(objectId) && item.itemType === itemType)
+  );
+  
+  // Check if any item was removed
+  if (this.savedItems.length < initialCount) {
+    await this.save();
+    logger.info(`User ${this.userId} unsaved ${itemType} ${itemId}`);
+    return true;
+  }
+  
+  return false; // Item wasn't in saved items
+};
+
+// Method to check if an item is saved
+UserSchema.methods.isSaved = function(
+  itemId: mongoose.Types.ObjectId | string,
+  itemType: 'course' | 'project'
+): boolean {
+  // Convert string ID to ObjectId if needed
+  const objectId = typeof itemId === 'string' ? new mongoose.Types.ObjectId(itemId) : itemId;
+  
+  return this.savedItems.some((item: ISavedItem) => 
+    item.itemId.equals(objectId) && item.itemType === itemType
+  );
+};
+
 // Static method to log model initialization
 UserSchema.statics.logModelInitialization = function() {
   logger.info('User model initialized');
@@ -224,6 +352,9 @@ UserSchema.index({ 'friendRequests.accepted': 1 });
 UserSchema.index({ 'friendRequests.sent': 1 });
 UserSchema.index({ 'friendRequests.received': 1 });
 UserSchema.index({ country: 1, organisation: 1 });
+// Add index for the new savedItems feature
+UserSchema.index({ 'savedItems.itemType': 1, 'savedItems.itemId': 1 });
+UserSchema.index({ 'savedItems.savedAt': -1 }); // For sorting by most recently saved
 
 // Log model initialization
 logger.info('Configuring User model');
