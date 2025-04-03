@@ -45,17 +45,47 @@ export class RabbitMQService {
   // Store message handlers by queue name
   private consumers: Map<string, MessageHandler> = new Map();
   
-  // Connection properties from environment variables
-  private readonly host: string = process.env.RABBITMQ_HOST || 'localhost';
-  private readonly port: number = parseInt(process.env.RABBITMQ_PORT || '5672', 10);
-  private readonly user: string = process.env.RABBITMQ_USER || 'guest';
-  private readonly password: string = process.env.RABBITMQ_PASS || 'guest';
-  private readonly vhost: string = process.env.RABBITMQ_VHOST || '/';
+  // Improved host selection with fallback capability
+  private readonly isDockerEnv: boolean;
+  private readonly host: string;
+  private readonly port: number;
+  private readonly user: string;
+  private readonly password: string;
+  private readonly vhost: string;
 
   /**
    * Private constructor to prevent direct instantiation
    */
-  private constructor() {}
+  private constructor() {
+    // Determine if running in Docker environment
+    this.isDockerEnv = process.env.DOCKER_ENV === 'true';
+    
+    // Get environment variables with fallbacks
+    const configuredHost = process.env.RABBITMQ_HOST;
+    const nodeEnv = process.env.NODE_ENV || 'development';
+    
+    // Log the environment details for debugging
+    console.log('RabbitMQ Environment Details:', {
+      DOCKER_ENV: this.isDockerEnv,
+      NODE_ENV: nodeEnv,
+      RABBITMQ_HOST: configuredHost
+    });
+    
+    // Determine the host based on environment
+    if (this.isDockerEnv) {
+      this.host = 'rabbitmq'; // Use container name inside Docker
+    } else if (configuredHost) {
+      this.host = configuredHost; // Use explicitly configured host
+    } else {
+      this.host = 'localhost'; // Default to localhost
+    }
+    
+    // Set other connection properties
+    this.port = parseInt(process.env.RABBITMQ_PORT || '5672', 10);
+    this.user = process.env.RABBITMQ_USER || 'admin';
+    this.password = process.env.RABBITMQ_PASS || 'password';
+    this.vhost = process.env.RABBITMQ_VHOST || '/';
+  }
 
   /**
    * Get the singleton instance of RabbitMQService
@@ -69,7 +99,7 @@ export class RabbitMQService {
   }
 
   /**
-   * Connect to RabbitMQ server
+   * Connect to RabbitMQ server with fallback capability
    * @returns Promise resolving to the Channel or null
    */
   public async connect(): Promise<any> {
@@ -82,58 +112,88 @@ export class RabbitMQService {
       return null;
     }
 
+    // Log all connection details for debugging
+    logger.info('RabbitMQ Connection Details:', {
+      host: this.host,
+      port: this.port,
+      user: this.user,
+      vhost: this.vhost,
+      dockerEnv: this.isDockerEnv
+    });
+
     this.connecting = true;
     
-    try {
-      logger.info(`Connecting to RabbitMQ at ${this.host}:${this.port}`);
-      const connectionString = `amqp://${this.user}:${this.password}@${this.host}:${this.port}${this.vhost}`;
-      
-      // Connect to RabbitMQ - using any type to bypass TypeScript checks
-      this.connection = await amqplib.connect(connectionString);
-      
-      // Set up connection event handlers
-      this.connection.on('error', (err: Error) => {
-        logger.error(`RabbitMQ connection error: ${err.message}`);
-        this.resetConnection();
-        this.scheduleReconnect();
-      });
-      
-      this.connection.on('close', () => {
-        logger.warn('RabbitMQ connection closed');
-        this.resetConnection();
-        this.scheduleReconnect();
-      });
-      
-      // Create a channel - using any type to bypass TypeScript checks
-      this.channel = await this.connection.createChannel();
-      
-      // Set up channel event handlers
-      this.channel.on('error', (err: Error) => {
-        logger.error(`RabbitMQ channel error: ${err.message}`);
-      });
-      
-      this.channel.on('close', () => {
-        logger.warn('RabbitMQ channel closed');
-        this.channel = null;
-      });
-      
-      this.connecting = false;
-      this.connectionAttempts = 0;
-      logger.info('Successfully connected to RabbitMQ');
-      
-      // Re-register consumers if any were registered before
-      if (this.consumers.size > 0) {
-        await this.reregisterConsumers();
-      }
-      
-      return this.channel;
-    } catch (error) {
-      this.connecting = false;
-      logger.error(`Failed to connect to RabbitMQ: ${error instanceof Error ? error.message : String(error)}`);
-      this.resetConnection();
-      this.scheduleReconnect();
-      return null;
+    // Define hosts to try in order of preference
+    const hostsToTry = [this.host];
+    
+    // Add fallback hosts if primary isn't already one of them
+    if (this.isDockerEnv && this.host !== 'rabbitmq') {
+      hostsToTry.push('rabbitmq');
     }
+    
+    if (!hostsToTry.includes('localhost')) {
+      hostsToTry.push('localhost');
+    }
+    
+    // Try each host in order
+    for (const hostToTry of hostsToTry) {
+      try {
+        logger.info(`Connecting to RabbitMQ at ${hostToTry}:${this.port}`);
+        const connectionString = `amqp://${this.user}:${this.password}@${hostToTry}:${this.port}${this.vhost}`;
+        logger.info(`Attempting connection with string: ${connectionString.replace(this.password, '****')}`);
+        
+        // Connect to RabbitMQ
+        this.connection = await amqplib.connect(connectionString);
+        
+        // Set up connection event handlers
+        this.connection.on('error', (err: Error) => {
+          logger.error(`RabbitMQ connection error: ${err.message}`);
+          this.resetConnection();
+          this.scheduleReconnect();
+        });
+        
+        this.connection.on('close', () => {
+          logger.warn('RabbitMQ connection closed');
+          this.resetConnection();
+          this.scheduleReconnect();
+        });
+        
+        // Create a channel
+        this.channel = await this.connection.createChannel();
+        
+        // Set up channel event handlers
+        this.channel.on('error', (err: Error) => {
+          logger.error(`RabbitMQ channel error: ${err.message}`);
+        });
+        
+        this.channel.on('close', () => {
+          logger.warn('RabbitMQ channel closed');
+          this.channel = null;
+        });
+        
+        // Connection successful
+        this.connecting = false;
+        this.connectionAttempts = 0;
+        logger.info(`Successfully connected to RabbitMQ at ${hostToTry}`);
+        
+        // Re-register consumers if any were registered before
+        if (this.consumers.size > 0) {
+          await this.reregisterConsumers();
+        }
+        
+        return this.channel;
+      } catch (error) {
+        logger.error(`Failed to connect to RabbitMQ at ${hostToTry}: ${error instanceof Error ? error.message : String(error)}`);
+        // Continue to the next host
+      }
+    }
+    
+    // If we get here, all connection attempts failed
+    this.connecting = false;
+    logger.error('All RabbitMQ connection attempts failed');
+    this.resetConnection();
+    this.scheduleReconnect();
+    return null;
   }
 
   /**

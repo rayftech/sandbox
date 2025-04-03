@@ -2,10 +2,10 @@
 import { Request, Response, NextFunction } from 'express';
 import { asyncHandler } from '../middlewares/error.middleware';
 import { UserSaveService } from '../services/user-save.service';
-import { createLogger } from '../config/logger';
+// import { createLogger } from '../config/logger';
 import { ApiError } from '../middlewares/error.middleware';
 
-const logger = createLogger('UserSaveController');
+// const logger = createLogger('UserSaveController');
 
 export class UserSaveController {
   /**
@@ -41,6 +41,7 @@ export class UserSaveController {
       }
     });
   });
+
 
   /**
    * Unsave an item for a user

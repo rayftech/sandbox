@@ -7,8 +7,11 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install
 
-# Copy tsconfig and source code
-COPY tsconfig.json ./
+# Copy entire project
+COPY . .
+
+# Explicitly set Docker environment
+ENV DOCKER_ENV=true
 
 # Expose the application port
 EXPOSE 5050

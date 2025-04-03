@@ -16,7 +16,14 @@ services:
     depends_on:
       - rabbitmq
     networks:
-      - app-network
+      app-network:
+        aliases:
+          - backend
+    environment:
+      - DOCKER_ENV=true
+
+
+
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -31,7 +38,14 @@ services:
       - RABBITMQ_DEFAULT_PASS=password
     restart: unless-stopped
     networks:
-      - app-network
+      app-network:
+        aliases:
+          - rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   node_modules:

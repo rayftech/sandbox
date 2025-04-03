@@ -158,17 +158,17 @@ ProjectSchema.methods.updateStatus = function(this: IProjectDocument): boolean {
   return false;
 };
 
-// Add method to set time analytics dimensions
 ProjectSchema.methods.setTimeAnalyticsDimensions = function(this: IProjectDocument) {
-  // Implementation based on your analytics needs
-  // This is a placeholder based on your existing code
-  const requestDate = this.createdAt || new Date();
+  // Use the creation date from this document
+  const creationDate = this.createdAt || new Date();
+  console.log(creationDate)
+  // You can add properties to store time dimensions like:
+  // this.creationYear = creationDate.getFullYear();
+  // this.creationMonth = creationDate.getMonth() + 1; // 1-12
+  // this.creationQuarter = Math.floor(creationDate.getMonth() / 3) + 1; // 1-4
   
-  // You can add properties like year, quarter, month etc. as needed
-  // Example:
-  // this.year = requestDate.getFullYear();
-  // this.month = requestDate.getMonth() + 1; // Convert from 0-11 to 1-12
-  // this.quarter = Math.floor((requestDate.getMonth()) / 3) + 1; // Convert to quarter 1-4
+  // For now, just log that dimensions were set
+  logger.debug(`Time analytics dimensions set for project ${this._id}`);
 };
 
 // Validation middleware with proper type handling
