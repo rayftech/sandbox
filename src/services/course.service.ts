@@ -82,6 +82,12 @@ export class CourseService {
       if (courseData.endDate <= courseData.startDate) {
         throw new Error('End date must be after start date');
       }
+      if (typeof courseData.startDate === 'string') {
+        courseData.startDate = new Date(courseData.startDate);
+      }
+      if (typeof courseData.endDate === 'string') {
+        courseData.endDate = new Date(courseData.endDate);
+      }
 
       // Verify user exists
       const user = await User.findOne({ userId: courseData.creatorUserId });
@@ -95,15 +101,32 @@ export class CourseService {
         code: courseData.code,
         userId: courseData.creatorUserId,
         courseLevel: courseData.level,
-        startDate: courseData.startDate,
-        endDate: courseData.endDate,
+        startDate: courseData.startDate.toISOString().split('T')[0],
+        endDate: courseData.endDate.toISOString().split('T')[0],
         isActive: true,
         country: courseData.country || 'Unknown',
         organisation: courseData.organisation || '',
-        description: courseData.description || '',
-        expectedEnrollment: courseData.expectedEnrollment,
-        targetIndustryPartnership: courseData.targetIndustryPartnership,
-        preferredPartnerRepresentative: courseData.preferredPartnerRepresentative
+        expectedEnrollment: courseData.expectedEnrollment || null,
+        preferredPartnerRepresentative: courseData.preferredPartnerRepresentative || '',
+
+        description: courseData.description 
+        ? [{ 
+            type: 'paragraph', 
+            children: [{ text: courseData.description }] 
+          }] 
+        : [],
+
+        assessmentRedesign: courseData.assessmentRedesign 
+        ? [{ 
+            type: 'paragraph', 
+            children: [{ text: courseData.assessmentRedesign }] 
+          }] 
+        : [],
+
+        // Validate targetIndustryPartnership against schema enum
+        targetIndustryPartnership: this.validateIndustryPartnership(
+          courseData.targetIndustryPartnership
+        ),
       };
 
       logger.info(`Creating course in Strapi first: ${courseData.name}`);
@@ -187,6 +210,19 @@ export class CourseService {
     } finally {
       session.endSession();
     }
+  }
+
+  // validate for industry partnership 
+  // Validation method for industry partnership
+  private static validateIndustryPartnership(partnership?: string): string | null {
+    const validPartnerships = [
+      'Financial Services', 'Technology Consulting', 'Cybersecurity', 
+      // ... other valid values from schema
+    ];
+    
+    return partnership && validPartnerships.includes(partnership) 
+      ? partnership 
+      : null;
   }
 
   /**

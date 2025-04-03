@@ -1,11 +1,12 @@
 // src/services/strapi-sync.service.ts
-import axios, { AxiosInstance } from 'axios';
 import { Course, ICourse, CourseLevel } from '../models/course.model';
 import { Project, IProject, StudentLevel } from '../models/project.model';
 import { createLogger } from '../config/logger';
 import { EventPublisher } from './event.publisher';
 import { EventType } from '../models/events.model';
 import { RabbitMQService, } from './rabbitmq.service';
+import { StrapiAuthService } from './strapi-auth.service';
+
 // import mongoose from 'mongoose';
 
 const logger = createLogger('StrapiSyncService');
@@ -65,31 +66,21 @@ interface IStrapiChallenge {
  */
 export class StrapiSyncService {
   private static instance: StrapiSyncService;
-  private strapiClient: AxiosInstance;
+  private strapiAuthService: StrapiAuthService;
   private rabbitMQService: RabbitMQService;
   private eventPublisher: EventPublisher;
   private initialized: boolean = false;
-  private strapiBaseUrl: string;
-  private strapiApiToken: string;
 
   /**
    * Private constructor to enforce singleton pattern
    */
+
   private constructor() {
-    this.strapiBaseUrl = process.env.STRAPI_BASE_URL || 'http://localhost:1337';
-    this.strapiApiToken = process.env.STRAPI_API_TOKEN || '';
-    
-    // Create Axios instance for Strapi API
-    this.strapiClient = axios.create({
-      baseURL: this.strapiBaseUrl,
-      headers: {
-        'Authorization': `Bearer ${this.strapiApiToken}`,
-        'Content-Type': 'application/json'
-      }
-    });
-    
+    // Add StrapiAuthService
+    this.strapiAuthService = StrapiAuthService.getInstance();
     this.rabbitMQService = RabbitMQService.getInstance();
     this.eventPublisher = EventPublisher.getInstance();
+    
   }
 
   /**
@@ -452,18 +443,22 @@ private async syncProject(strapiChallenge: IStrapiChallenge): Promise<IProject> 
   public async syncAll(): Promise<{ courses: number; projects: number }> {
     try {
       // Sync all courses
-      const coursesResponse = await this.strapiClient.get('/api/courses?populate=*');
-      const strapiCourses = coursesResponse.data.data as IStrapiCourse[];
+    // Replace direct axios calls with StrapiAuthService methods
+    const coursesResponse = await this.strapiAuthService.get('/courses', { 
+      populate: '*'
+    });
+    const strapiCourses = coursesResponse.data as IStrapiCourse[];
+    
+    const challengesResponse = await this.strapiAuthService.get('/challenges', { 
+      populate: '*'
+    });
+    const strapiChallenges = challengesResponse.data as IStrapiChallenge[];
       
       let courseCount = 0;
       for (const course of strapiCourses) {
         await this.syncCourse(course);
         courseCount++;
       }
-      
-      // Sync all challenges (projects)
-      const challengesResponse = await this.strapiClient.get('/api/challenges?populate=*');
-      const strapiChallenges = challengesResponse.data.data as IStrapiChallenge[];
       
       let projectCount = 0;
       for (const challenge of strapiChallenges) {
@@ -486,7 +481,7 @@ private async syncProject(strapiChallenge: IStrapiChallenge): Promise<IProject> 
  */
 public async getCourseBystrapiId(strapiId: string): Promise<any> {
   try {
-    const response = await this.strapiClient.get(`/api/courses/${strapiId}`);
+    const response = await this.strapiAuthService.get(`/api/courses/${strapiId}`);
     return response.data?.data;
   } catch (error) {
     logger.error(`Error fetching course from Strapi: ${error instanceof Error ? error.message : String(error)}`);
@@ -502,7 +497,7 @@ public async getCourseBystrapiId(strapiId: string): Promise<any> {
  */
 public async searchCourses(query: string, limit: number = 10): Promise<any[]> {
   try {
-    const response = await this.strapiClient.get(`/api/courses`, {
+    const response = await this.strapiAuthService.get(`/api/courses`, {
       params: {
         _q: query,
         _limit: limit
@@ -522,7 +517,8 @@ public async searchCourses(query: string, limit: number = 10): Promise<any[]> {
    */
   public async createCourseInStrapi(courseData: any): Promise<string> {
     try {
-      const response = await this.strapiClient.post('/api/courses', {
+      // Replace this.strapiClient.post with this.strapiAuthService.post
+      const response = await this.strapiAuthService.post('/courses', {
         data: courseData
       });
       
@@ -543,7 +539,7 @@ public async searchCourses(query: string, limit: number = 10): Promise<any[]> {
  */
 public async updateCourseInStrapi(strapiId: string, updateData: any): Promise<boolean> {
   try {
-    await this.strapiClient.put(
+    await this.strapiAuthService.put(
       `/api/courses/${strapiId}`,
       { data: updateData }
     );
@@ -563,7 +559,7 @@ public async updateCourseInStrapi(strapiId: string, updateData: any): Promise<bo
  */
 public async deleteCourseInStrapi(strapiId: string): Promise<boolean> {
   try {
-    await this.strapiClient.delete(`/api/courses/${strapiId}`);
+    await this.strapiAuthService.delete(`/api/courses/${strapiId}`);
     
     logger.info(`Deleted course in Strapi with ID ${strapiId}`);
     return true;
@@ -580,7 +576,7 @@ public async deleteCourseInStrapi(strapiId: string): Promise<boolean> {
    */
   public async createProjectInStrapi(projectData: any): Promise<string> {
     try {
-      const response = await this.strapiClient.post('/api/challenges', {
+      const response = await this.strapiAuthService.post('/api/challenges', {
         data: projectData
       });
       
@@ -601,7 +597,7 @@ public async deleteCourseInStrapi(strapiId: string): Promise<boolean> {
  */
 public async updateProjectInStrapi(strapiId: string, updateData: any): Promise<boolean> {
   try {
-    await this.strapiClient.put(
+    await this.strapiAuthService.put(
       `/api/challenges/${strapiId}`,
       { data: updateData }
     );
@@ -621,7 +617,7 @@ public async updateProjectInStrapi(strapiId: string, updateData: any): Promise<b
  */
 public async deleteProjectInStrapi(strapiId: string): Promise<boolean> {
   try {
-    await this.strapiClient.delete(`/api/challenges/${strapiId}`);
+    await this.strapiAuthService.delete(`/api/challenges/${strapiId}`);
     
     logger.info(`Deleted project in Strapi with ID ${strapiId}`);
     return true;
@@ -638,7 +634,7 @@ public async deleteProjectInStrapi(strapiId: string): Promise<boolean> {
  */
 public async getProjectBystrapiId(strapiId: string): Promise<any> {
   try {
-    const response = await this.strapiClient.get(`/api/challenges/${strapiId}`);
+    const response = await this.strapiAuthService.get(`/api/challenges/${strapiId}`);
     return response.data?.data;
   } catch (error) {
     logger.error(`Error fetching challenge from Strapi: ${error instanceof Error ? error.message : String(error)}`);
@@ -654,7 +650,7 @@ public async getProjectBystrapiId(strapiId: string): Promise<any> {
    */
   public async searchProjects(query: string, limit: number = 10): Promise<any[]> {
     try {
-      const response = await this.strapiClient.get(`/api/challenges`, {
+      const response = await this.strapiAuthService.get(`/api/challenges`, {
         params: {
           _q: query,
           _limit: limit
@@ -665,7 +661,5 @@ public async getProjectBystrapiId(strapiId: string): Promise<any> {
       logger.error(`Error searching challenge in Strapi: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
     }
-
-
   }
 }
