@@ -6,6 +6,8 @@
 .env.development
 .env.test
 .env.production
+.env.docker
+.env.backup
 
 # Node modules
 node_modules/
