@@ -6,6 +6,7 @@ import { EventPublisher } from './event.publisher';
 import { EventType } from '../models/events.model';
 import { RabbitMQService, } from './rabbitmq.service';
 import { StrapiAuthService } from './strapi-auth.service';
+import {RichTextFormatter} from '../utils/rich-text-formatter'
 
 // import mongoose from 'mongoose';
 
@@ -17,6 +18,9 @@ const logger = createLogger('StrapiSyncService');
 interface IStrapiCourse {
   id: number;
   attributes: {
+    isPartnered?: boolean; 
+    assessmentRedesign?: string; 
+    organisation?: string;
     name: string;
     code: string;
     userId: string;
@@ -246,6 +250,15 @@ export class StrapiSyncService {
     }
   }
 
+  private validateIndustryPartnership(partnership?: string): string | null {
+    const validPartnerships = [
+      'Financial Services', 'Technology Consulting', 'Cybersecurity',
+      'Digital Transformation', 'Data Analytics', 'Enterprise Software',
+      // ... add other valid partnerships from your schema ...
+    ];
+    return partnership && validPartnerships.includes(partnership) ? partnership : null;
+  }
+
   /**
    * Sync course data from Strapi to MongoDB
    */
@@ -287,19 +300,28 @@ export class StrapiSyncService {
         logger.info(`Updated MongoDB course ${strapiId} from Strapi`);
       } else {
         // Create new course with proper typing
-        const courseData: any = {
-          creatorUserId: attributes.userId,
-          strapiId,
-          strapiCreatedAt: new Date(attributes.createdAt),
-          strapiUpdatedAt: new Date(attributes.updatedAt),
-          name: attributes.name,
-          code: attributes.code,
-          level: attributes.courseLevel as CourseLevel,
-          startDate: new Date(attributes.startDate),
-          endDate: new Date(attributes.endDate),
-          country: attributes.country,
-          isActive: attributes.isActive
-        };
+    // Format the data for MongoDB
+      const courseData: any = {
+        creatorUserId: attributes.userId,
+        strapiId,
+        strapiCreatedAt: new Date(attributes.createdAt),
+        strapiUpdatedAt: new Date(attributes.updatedAt),
+        name: attributes.name,
+        code: attributes.code,
+        level: attributes.courseLevel as CourseLevel,
+        startDate: new Date(attributes.startDate),
+        endDate: new Date(attributes.endDate),
+        country: attributes.country,
+        organisation: attributes.organisation || '',
+        isActive: attributes.isActive,
+        description: attributes.description ? RichTextFormatter.toLexical(attributes.description) : null,
+        assessmentRedesign: attributes.assessmentRedesign ? RichTextFormatter.toLexical(attributes.assessmentRedesign) : null,
+        targetIndustryPartnership: this.validateIndustryPartnership(attributes.targetIndustryPartnership),
+        preferredPartnerRepresentative: attributes.preferredPartnerRepresentative || null,
+        expectedEnrollment: attributes.expectedEnrollment || null,
+        courseStatus: attributes.courseStatus || 'upcoming',
+        isPartnered: attributes.isPartnered || false
+      };
         
         // Add optional fields if present
         if (attributes.targetIndustryPartnership) {
@@ -510,6 +532,16 @@ public async searchCourses(query: string, limit: number = 10): Promise<any[]> {
   }
 }
 
+  // Queue for serializing Strapi course creation requests
+  private static courseCreationQueue: Array<{
+    courseData: any;
+    resolve: (value: string) => void;
+    reject: (reason: any) => void;
+  }> = [];
+  
+  // Flag to track if we're currently processing a course creation request
+  private static isProcessingCourseCreation = false;
+
   /**
    * Create a course in Strapi
    * @param courseData The course data to create
@@ -517,12 +549,42 @@ public async searchCourses(query: string, limit: number = 10): Promise<any[]> {
    */
   public async createCourseInStrapi(courseData: any): Promise<string> {
     try {
-      // Replace this.strapiClient.post with this.strapiAuthService.post
-      const response = await this.strapiAuthService.post('/courses', {
-        data: courseData
+      // Ensure rich text fields are properly formatted
+      const formattedData = {
+        name: courseData.name,
+        code: courseData.code,
+        userId: courseData.userId,
+        courseLevel: courseData.courseLevel,
+        startDate: courseData.startDate,
+        endDate: courseData.endDate,
+        isActive: courseData.isActive,
+        country: courseData.country,
+        organisation: courseData.organisation || '',
+        description: RichTextFormatter.toLexical(courseData.description),
+        assessmentRedesign: RichTextFormatter.toLexical(courseData.assessmentRedesign),
+        targetIndustryPartnership: this.validateIndustryPartnership(courseData.targetIndustryPartnership),
+        preferredPartnerRepresentative: courseData.preferredPartnerRepresentative || '',
+        expectedEnrollment: courseData.expectedEnrollment || null,
+        courseStatus: courseData.courseStatus || 'upcoming',
+        isPartnered: courseData.isPartnered || false
+      };
+      
+      // Format description field if it exists
+      if (formattedData.description !== undefined) {
+        formattedData.description = RichTextFormatter.toLexical(formattedData.description);
+      }
+      
+      // Format assessmentRedesign field if it exists
+      if (formattedData.assessmentRedesign !== undefined) {
+        formattedData.assessmentRedesign = RichTextFormatter.toLexical(formattedData.assessmentRedesign);
+      }
+      
+      // Send the request to Strapi
+      const response = await this.strapiAuthService.post('/api/courses', {
+        data: formattedData
       });
       
-      const strapiId = response.data.data.id.toString();
+      const strapiId = response.data.id.toString();
       logger.info(`Created course in Strapi with ID ${strapiId}`);
       return strapiId;
     } catch (error) {
@@ -530,8 +592,89 @@ public async searchCourses(query: string, limit: number = 10): Promise<any[]> {
       throw error;
     }
   }
-
+  
   /**
+   * Process the course creation queue
+   * This method processes one course creation request at a time
+   */
+  private static async processNextCourseCreationRequest(): Promise<void> {
+    if (StrapiSyncService.isProcessingCourseCreation || StrapiSyncService.courseCreationQueue.length === 0) {
+      return;
+    }
+    
+    // Set flag to indicate we're processing a request
+    StrapiSyncService.isProcessingCourseCreation = true;
+    
+    // Get the next request from the queue
+    const request = StrapiSyncService.courseCreationQueue.shift();
+    
+    if (!request) {
+      StrapiSyncService.isProcessingCourseCreation = false;
+      return;
+    }
+    
+    try {
+      // Process the request
+      const instance = StrapiSyncService.getInstance();
+      const strapiId = await instance.createCourseInStrapi(request.courseData);
+      
+      // Resolve the promise with the Strapi ID
+      request.resolve(strapiId);
+    } catch (error) {
+      // Reject the promise with the error
+      request.reject(error);
+    } finally {
+      // Reset the processing flag and process the next request if any
+      StrapiSyncService.isProcessingCourseCreation = false;
+      StrapiSyncService.processNextCourseCreationRequest();
+    }
+  }
+  
+  /**
+   * Create a course in Strapi using a queue to serialize requests
+   * This method queues the course creation request and processes them one at a time
+   * to prevent concurrent creation issues
+   * 
+   * @param courseData The course data to create
+   * @returns Promise that resolves to the created Strapi course ID
+   */
+  public async createCourseInStrapiQueued(courseData: any): Promise<string> {
+    // First check if a course with this code already exists
+    if (courseData.code) {
+      try {
+        const existingCourses = await this.searchCourses(courseData.code);
+        
+        // Check for exact code match
+        const exactMatch = existingCourses.find((course: any) => 
+          course.attributes && course.attributes.code === courseData.code
+        );
+        
+        if (exactMatch) {
+          logger.info(`Course with code ${courseData.code} already exists in Strapi with ID ${exactMatch.id}`);
+          return exactMatch.id.toString();
+        }
+      } catch (error) {
+        logger.warn(`Error checking for existing course: ${error instanceof Error ? error.message : String(error)}`);
+        // Continue with creation even if check fails
+      }
+    }
+    
+    return new Promise<string>((resolve, reject) => {
+      // Add the request to the queue
+      StrapiSyncService.courseCreationQueue.push({
+        courseData,
+        resolve,
+        reject
+      });
+      
+      logger.info(`Queued course creation request for course ${courseData.name} (${courseData.code})`);
+      
+      // Try to process the next request in the queue
+      setTimeout(() => StrapiSyncService.processNextCourseCreationRequest(), 0);
+    });
+  }
+
+/**
  * Update a course in Strapi
  * @param strapiId The Strapi ID of the course
  * @param updateData The data to update in Strapi
@@ -539,9 +682,23 @@ public async searchCourses(query: string, limit: number = 10): Promise<any[]> {
  */
 public async updateCourseInStrapi(strapiId: string, updateData: any): Promise<boolean> {
   try {
+    // Create a deep copy of the update data to avoid modifying the original
+    const formattedData = { ...updateData };
+    
+    // Format description field if it exists
+    if (formattedData.description !== undefined) {
+      formattedData.description = RichTextFormatter.toLexical(formattedData.description);
+    }
+    
+    // Format assessmentRedesign field if it exists
+    if (formattedData.assessmentRedesign !== undefined) {
+      formattedData.assessmentRedesign = RichTextFormatter.toLexical(formattedData.assessmentRedesign);
+    }
+    
+    // Send the update request to Strapi
     await this.strapiAuthService.put(
       `/api/courses/${strapiId}`,
-      { data: updateData }
+      { data: formattedData }
     );
     
     logger.info(`Updated course in Strapi with ID ${strapiId}`);

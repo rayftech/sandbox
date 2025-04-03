@@ -9,6 +9,7 @@ import { EventPublisher } from '../services/event.publisher';
 import { EventType } from '../models/events.model';
 import { ApiError } from '../middlewares/error.middleware';
 import { RequestResponseService } from '../services/request-response.service';
+import { StrapiSyncService } from '../services/strapi-sync.service';
 
 const logger = createLogger('CourseController');
 
@@ -20,6 +21,7 @@ const logger = createLogger('CourseController');
 export class CourseController {
   private static eventPublisher: EventPublisher = EventPublisher.getInstance();
   private static requestResponseService: RequestResponseService = RequestResponseService.getInstance();
+  private static strapiSyncService: StrapiSyncService = StrapiSyncService.getInstance();
 
   /**
    * Create a new course
@@ -49,41 +51,33 @@ export class CourseController {
       // First create in MongoDB (our source of truth)
       const course = await CourseService.createCourse(courseData);
 
-      // Prepare data for Strapi (keeping only what Strapi needs)
-      const strapiCourseData = {
-        name: course.name,
-        code: course.code,
-        userId: userId,
-        courseLevel: course.level,
-        startDate: course.startDate,
-        endDate: course.endDate,
-        isActive: course.isActive,
-        country: course.country || 'Unknown',
-        organisation: course.organisation || '',
-        description: courseData.description || '',
-        expectedEnrollment: courseData.expectedEnrollment,
-        targetIndustryPartnership: courseData.targetIndustryPartnership,
-        preferredPartnerRepresentative: courseData.preferredPartnerRepresentative
-      };
-
-      // Use the request-response pattern to create in Strapi 
-      // This could be implemented as a fire-and-forget approach, but here we wait for confirmation
-      try {
-        const strapiId = await CourseController.requestResponseService.createCourse(
-          strapiCourseData, 
-          userId
-        );
-
-        // Update MongoDB with the Strapi ID
-        if (strapiId) {
-          const updateData: ICourseUpdateData = { strapiId };
-          await CourseService.updateCourse(course._id.toString(), updateData, userId);
-          logger.info(`Updated course ${course._id} with Strapi ID ${strapiId}`);
-        }
-      } catch (strapiError) {
-        // If Strapi operation fails, we still have the MongoDB record
-        // We could consider adding this to a retry queue
-        logger.error(`Failed to create course in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
+      // Check if course already has a valid Strapi ID (not a temporary one)
+      if (course.strapiId && !course.strapiId.startsWith('temp-')) {
+        logger.info(`Course ${course._id} already has a valid Strapi ID: ${course.strapiId}`);
+      } 
+      // Only attempt to update the Strapi ID if it's a temporary one
+      else if (course.strapiId && course.strapiId.startsWith('temp-')) {
+        // Use a background task to update the Strapi ID without blocking the response
+        // This prevents duplicate messages by not creating a new course in Strapi
+        setTimeout(async () => {
+          try {
+            // Check if course exists in Strapi by code before creating a new one
+            const existingCourses = await CourseController.strapiSyncService.searchCourses(course.code);
+            const exactMatch = existingCourses.find((strapiCourse: any) => 
+              strapiCourse.attributes && strapiCourse.attributes.code === course.code
+            );
+            
+            if (exactMatch) {
+              // If course already exists in Strapi, update MongoDB with the existing Strapi ID
+              const updateData: ICourseUpdateData = { strapiId: exactMatch.id.toString() };
+              await CourseService.updateCourse(course._id.toString(), updateData, userId);
+              logger.info(`Updated course ${course._id} with existing Strapi ID ${exactMatch.id}`);
+            }
+            // We don't need an else clause here since CourseService already attempted to create in Strapi
+          } catch (error) {
+            logger.error(`Background Strapi ID check failed: ${error instanceof Error ? error.message : String(error)}`);
+          }
+        }, 100);
       }
 
       // Publish course creation event to RabbitMQ asynchronously

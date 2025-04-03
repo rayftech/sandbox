@@ -8,6 +8,7 @@ import { RetryUtility } from '../utils/retry.util';
 import { ItemLifecycleStatus } from '../models/status.enum';
 import { EventPublisher } from './event.publisher';
 import { EventType } from '../models/events.model';
+import {RichTextFormatter} from '../utils/rich-text-formatter'
 
 const logger = createLogger('CourseService');
 
@@ -73,144 +74,137 @@ export class CourseService {
    * @param courseData The course data
    * @returns The created course document
    */
-  static async createCourse(courseData: ICourseCreationData): Promise<ICourse> {
-    const session = await mongoose.startSession();
-    session.startTransaction();
 
-    try {
-      // Validate date range
-      if (courseData.endDate <= courseData.startDate) {
-        throw new Error('End date must be after start date');
-      }
-      if (typeof courseData.startDate === 'string') {
-        courseData.startDate = new Date(courseData.startDate);
-      }
-      if (typeof courseData.endDate === 'string') {
-        courseData.endDate = new Date(courseData.endDate);
-      }
+static async createCourse(courseData: ICourseCreationData): Promise<ICourse> {
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-      // Verify user exists
-      const user = await User.findOne({ userId: courseData.creatorUserId });
-      if (!user) {
-        throw new Error(`Creator with userId ${courseData.creatorUserId} not found`);
-      }
-
-      // 1. Create in Strapi first to get strapiId
-      const strapiCourseData = {
-        name: courseData.name,
-        code: courseData.code,
-        userId: courseData.creatorUserId,
-        courseLevel: courseData.level,
-        startDate: courseData.startDate.toISOString().split('T')[0],
-        endDate: courseData.endDate.toISOString().split('T')[0],
-        isActive: true,
-        country: courseData.country || 'Unknown',
-        organisation: courseData.organisation || '',
-        expectedEnrollment: courseData.expectedEnrollment || null,
-        preferredPartnerRepresentative: courseData.preferredPartnerRepresentative || '',
-
-        description: courseData.description 
-        ? [{ 
-            type: 'paragraph', 
-            children: [{ text: courseData.description }] 
-          }] 
-        : [],
-
-        assessmentRedesign: courseData.assessmentRedesign 
-        ? [{ 
-            type: 'paragraph', 
-            children: [{ text: courseData.assessmentRedesign }] 
-          }] 
-        : [],
-
-        // Validate targetIndustryPartnership against schema enum
-        targetIndustryPartnership: this.validateIndustryPartnership(
-          courseData.targetIndustryPartnership
-        ),
-      };
-
-      logger.info(`Creating course in Strapi first: ${courseData.name}`);
-      let strapiId;
-      
-      try {
-        strapiId = await this.strapiSyncService.createCourseInStrapi(strapiCourseData);
-        logger.info(`Successfully created course in Strapi with ID: ${strapiId}`);
-      } catch (strapiError) {
-        logger.warn(`Failed to create course in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
-        // We'll continue with a temporary ID, which we'll update later
-        strapiId = `temp-${new mongoose.Types.ObjectId().toString()}`;
-        logger.info(`Using temporary strapiId: ${strapiId}`);
-      }
-
-      // 2. Now create in MongoDB with the strapiId we got
-      const now = new Date();
-      
-      // Create the new course with the strapiId
-      const course = new Course({
-        creatorUserId: courseData.creatorUserId,
-        name: courseData.name,
-        code: courseData.code,
-        level: courseData.level,
-        startDate: courseData.startDate,
-        endDate: courseData.endDate,
-        country: courseData.country || 'Unknown',
-        organisation: courseData.organisation || '',
-        isActive: true,
-        status: ItemLifecycleStatus.UPCOMING, // Will be updated by pre-save middleware
-        strapiId: strapiId, // Use the ID we got from Strapi or our temporary one
-        strapiCreatedAt: now,
-        strapiUpdatedAt: now
-      });
-
-      // Calculate academic year and semester
-      course.setAcademicYearAndSemester();
-      
-      // Ensure status is set correctly based on dates
-      course.updateStatus();
-
-      // Save the course in MongoDB
-      const savedCourse = await course.save({ session });
-
-      // Increment user course count metric
-      await CourseService.incrementUserMetric(
-        courseData.creatorUserId,
-        'totalCoursesCreated',
-        1,
-        session
-      );
-
-      // Publish course creation event if we have the event publisher
-      try {
-        await this.eventPublisher.publishCourseEvent(
-          EventType.COURSE_CREATED,
-          {
-            courseId: savedCourse._id.toString(),
-            name: savedCourse.name,
-            code: savedCourse.code,
-            level: savedCourse.level,
-            creatorUserId: courseData.creatorUserId,
-            startDate: savedCourse.startDate,
-            endDate: savedCourse.endDate
-          }
-        );
-        logger.info(`Published COURSE_CREATED event for course ${savedCourse._id}`);
-      } catch (eventError) {
-        logger.error(`Error publishing course creation event: ${eventError instanceof Error ? eventError.message : String(eventError)}`);
-        // Continue with transaction even if event publishing fails
-      }
-
-      await session.commitTransaction();
-      logger.info(`New course created in MongoDB: ${savedCourse._id} by user ${courseData.creatorUserId} from ${courseData.country || 'unknown'}, organisation: ${courseData.organisation || 'not specified'}`);
-
-      return savedCourse;
-    } catch (error) {
-      await session.abortTransaction();
-      logger.error(`Error creating course: ${error instanceof Error ? error.message : String(error)}`);
-      throw error;
-    } finally {
-      session.endSession();
+  try {
+    // Validate date range
+    if (courseData.endDate <= courseData.startDate) {
+      throw new Error('End date must be after start date');
     }
+    if (typeof courseData.startDate === 'string') {
+      courseData.startDate = new Date(courseData.startDate);
+    }
+    if (typeof courseData.endDate === 'string') {
+      courseData.endDate = new Date(courseData.endDate);
+    }
+
+    // Verify user exists
+    const user = await User.findOne({ userId: courseData.creatorUserId });
+    if (!user) {
+      throw new Error(`Creator with userId ${courseData.creatorUserId} not found`);
+    }
+
+    // 1. Create in Strapi first to get strapiId
+    const strapiCourseData = {
+      name: courseData.name,
+      code: courseData.code,
+      userId: courseData.creatorUserId,
+      courseLevel: courseData.level,
+      startDate: courseData.startDate.toISOString().split('T')[0],
+      endDate: courseData.endDate.toISOString().split('T')[0],
+      isActive: true,
+      country: courseData.country || 'Unknown',
+      organisation: courseData.organisation || '',
+      expectedEnrollment: courseData.expectedEnrollment || null,
+      preferredPartnerRepresentative: courseData.preferredPartnerRepresentative || '',
+
+      // Use RichTextFormatter for proper Lexical format
+      description: RichTextFormatter.toLexical(courseData.description),
+      assessmentRedesign: RichTextFormatter.toLexical(courseData.assessmentRedesign),
+
+      // Validate targetIndustryPartnership against schema enum
+      targetIndustryPartnership: this.validateIndustryPartnership(
+        courseData.targetIndustryPartnership
+      ),
+    };
+
+    logger.info(`Creating course in Strapi using queue: ${courseData.name} (${courseData.code})`);
+    let strapiId;
+    
+    try {
+      // Use the serialized operation service to ensure we don't have concurrent Strapi calls
+      // This ensures course creation requests to Strapi happen one at a time
+      strapiId = await this.strapiSyncService.createCourseInStrapiQueued(strapiCourseData);
+      logger.info(`Successfully created course in Strapi with ID: ${strapiId}`);
+    } catch (strapiError) {
+      logger.warn(`Failed to create course in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
+      // We'll continue with a temporary ID, which we'll update later
+      strapiId = `temp-${new mongoose.Types.ObjectId().toString()}`;
+      logger.info(`Using temporary strapiId: ${strapiId}`);
+    }
+
+    // 2. Now create in MongoDB with the strapiId we got
+    const now = new Date();
+    
+    // Create the new course with the strapiId
+    const course = new Course({
+      creatorUserId: courseData.creatorUserId,
+      name: courseData.name,
+      code: courseData.code,
+      level: courseData.level,
+      startDate: courseData.startDate,
+      endDate: courseData.endDate,
+      country: courseData.country || 'Unknown',
+      organisation: courseData.organisation || '',
+      isActive: true,
+      status: ItemLifecycleStatus.UPCOMING, // Will be updated by pre-save middleware
+      strapiId: strapiId, // Use the ID we got from Strapi or our temporary one
+      strapiCreatedAt: now,
+      strapiUpdatedAt: now
+    });
+
+    // Calculate academic year and semester
+    course.setAcademicYearAndSemester();
+    
+    // Ensure status is set correctly based on dates
+    course.updateStatus();
+
+    // Save the course in MongoDB
+    const savedCourse = await course.save({ session });
+
+    // Increment user course count metric
+    await CourseService.incrementUserMetric(
+      courseData.creatorUserId,
+      'totalCoursesCreated',
+      1,
+      session
+    );
+
+    // Publish course creation event if we have the event publisher
+    try {
+      await this.eventPublisher.publishCourseEvent(
+        EventType.COURSE_CREATED,
+        {
+          courseId: savedCourse._id.toString(),
+          name: savedCourse.name,
+          code: savedCourse.code,
+          level: savedCourse.level,
+          creatorUserId: courseData.creatorUserId,
+          startDate: savedCourse.startDate,
+          endDate: savedCourse.endDate
+        }
+      );
+      logger.info(`Published COURSE_CREATED event for course ${savedCourse._id}`);
+    } catch (eventError) {
+      logger.error(`Error publishing course creation event: ${eventError instanceof Error ? eventError.message : String(eventError)}`);
+      // Continue with transaction even if event publishing fails
+    }
+
+    await session.commitTransaction();
+    logger.info(`New course created in MongoDB: ${savedCourse._id} by user ${courseData.creatorUserId} from ${courseData.country || 'unknown'}, organisation: ${courseData.organisation || 'not specified'}`);
+
+    return savedCourse;
+  } catch (error) {
+    await session.abortTransaction();
+    logger.error(`Error creating course: ${error instanceof Error ? error.message : String(error)}`);
+    throw error;
+  } finally {
+    session.endSession();
   }
+}
 
   // validate for industry partnership 
   // Validation method for industry partnership

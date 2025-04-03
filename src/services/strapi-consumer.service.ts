@@ -116,8 +116,35 @@ export class StrapiConsumerService {
       
       switch (operationType) {
         case StrapiOperationType.CREATE_COURSE:
-          strapiId = await this.strapiSyncService.createCourseInStrapi(data);
-          result = { strapiId };
+          // Check if a course with this code already exists before creating
+          if (data.code) {
+            try {
+              const existingCourses = await this.strapiSyncService.searchCourses(data.code);
+              const exactMatch = existingCourses.find((course: any) => 
+                course.attributes && course.attributes.code === data.code
+              );
+              
+              if (exactMatch) {
+                // If course already exists, use its ID instead of creating a duplicate
+                logger.info(`Course with code ${data.code} already exists in Strapi with ID ${exactMatch.id}, preventing duplicate creation`);
+                strapiId = exactMatch.id.toString();
+                result = { strapiId };
+              } else {
+                // If no existing course, create a new one
+                strapiId = await this.strapiSyncService.createCourseInStrapi(data);
+                result = { strapiId };
+              }
+            } catch (searchError) {
+              // If search fails, proceed with creation (fallback to original behavior)
+              logger.warn(`Error checking for existing course: ${searchError instanceof Error ? searchError.message : String(searchError)}`);
+              strapiId = await this.strapiSyncService.createCourseInStrapi(data);
+              result = { strapiId };
+            }
+          } else {
+            // If no code is provided, create course as normal
+            strapiId = await this.strapiSyncService.createCourseInStrapi(data);
+            result = { strapiId };
+          }
           break;
           
         case StrapiOperationType.UPDATE_COURSE:

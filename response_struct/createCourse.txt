@@ -1,0 +1,67 @@
+interface CourseCreationPayload {
+  // Required Fields
+  userId: string;       // Unique identifier for the user generated from frontend AWS Amplify
+  name: string;         // Course name
+  code: string;         // Unique course code
+  country: string;      // Country where the course is offered
+
+  // Optional but Structured Fields
+  isActive?: boolean;           // Default: true
+  courseStatus?: 'upcoming' | 'ongoing' | 'complete';  // Default: 'upcoming'
+  
+  // Optional Complex Fields
+  targetIndustryPartnership?: 
+    | 'Financial Services'
+    | 'Technology Consulting'
+    | 'Cybersecurity'
+    | 'Digital Transformation'
+    | 'Data Analytics'
+    | 'Enterprise Software'
+    | 'Healthcare Information Systems'
+    | 'Government & Public Sector'
+    | 'Retail Technology'
+    | 'Supply Chain & Logistics'
+    | 'Fintech'
+    | 'Education Technology'
+    | 'Manufacturing Systems'
+    | 'Professional Services'
+    | 'Business Process Outsourcing'
+    | 'Cloud Services'
+    | 'E-commerce'
+    | 'Telecommunications'
+    | 'Intellectual Property & Digital Assets'
+    | 'Business Intelligence';
+
+  courseLevel?: 
+    | 'Undergraduate 1st & 2nd year'
+    | 'Undergraduate penultimate & final year'
+    | 'Postgraduate'
+    | 'Other';
+
+  // Date-related Fields
+  startDate?: string | Date;    // ISO Date format
+  endDate?: string | Date;      // ISO Date format
+
+  // Additional Optional Fields
+  description?: string;         // Will be converted to blocks
+  expectedEnrollment?: number;
+  organisation?: string;
+  isPartnered?: boolean;        // Default: false
+}
+
+
+example:
+{
+  "userId": "d95e64d8-0091-70e1-e5d2-1d8686200f45",
+  "name": "Advanced Machine Learning",
+  "code": "ML-ADV-2024",
+  "country": "United States",
+  "targetIndustryPartnership": "Data Analytics",
+  "courseLevel": "Postgraduate",
+  "startDate": "2024-09-01",
+  "endDate": "2024-12-15",
+  "description": "A comprehensive course on advanced machine learning techniques.",
+  "expectedEnrollment": 150,
+  "organisation": "Tech University",
+  "isPartnered": false
+}
