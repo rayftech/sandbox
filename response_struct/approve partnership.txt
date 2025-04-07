@@ -1,0 +1,13 @@
+POST http://localhost:3000/api/partnerships/67f34d9984b2a48dc8e99c3f/approve
+
+Package
+{
+"responseMessage": "I approve this partnership"
+}
+
+{
+    "status": "error",
+    "statusCode": 404,
+    "message": "Cannot find /api/partnerships/67f34d9984b2a48dc8e99c3f/approve on this server",
+    "stack": "Error: Cannot find /api/partnerships/67f34d9984b2a48dc8e99c3f/approve on this server\n    at notFoundHandler (/Users/ray/Desktop/sandbox/sandbox_backend/src/middlewares/error.middleware.ts:87:15)\n    at Layer.handle [as handle_request] (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/express/lib/router/layer.js:95:5)\n    at trim_prefix (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/express/lib/router/index.js:328:13)\n    at /Users/ray/Desktop/sandbox/sandbox_backend/node_modules/express/lib/router/index.js:286:9\n    at Function.process_params (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/express/lib/router/index.js:346:12)\n    at next (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/express/lib/router/index.js:280:10)\n    at /Users/ray/Desktop/sandbox/sandbox_backend/node_modules/express/lib/router/index.js:646:15\n    at next (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/express/lib/router/index.js:265:14)\n    at /Users/ray/Desktop/sandbox/sandbox_backend/node_modules/express/lib/router/index.js:646:15\n    at next (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/express/lib/router/index.js:265:14)"
+}

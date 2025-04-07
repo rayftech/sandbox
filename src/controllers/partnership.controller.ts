@@ -1,19 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
 import { PartnershipService } from '../services/partnership.service';
 import { PartnershipStatus } from '../models/partnership.model';
-import { EventPublisher } from '../services/event.publisher';
 import { createLogger } from '../config/logger';
+
+// Define the extended Request type with user property
+export interface AuthenticatedRequest extends Request {
+  user: {
+    userId: string;
+    [key: string]: any; // Allow other user properties
+  };
+}
 
 const logger = createLogger('PartnershipController');
 
 export class PartnershipController {
-  private partnershipService: PartnershipService;
-  
-  constructor() {
-    // Initialize the EventPublisher and PartnershipService
-    const eventPublisher = new EventPublisher();
-    this.partnershipService = new PartnershipService(eventPublisher);
-  }
 
   /**
    * Create a new partnership request
@@ -21,29 +22,69 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async createPartnershipRequest = async (req: Request, res: Response, next: NextFunction) => {
+  async createPartnershipRequest(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
-      const { courseId, projectId, requestedToUserId, requestMessage, startDate, endDate } = req.body;
+      const { courseId, projectId, requestMessage, } = req.body;
       const requestedByUserId = req.user.userId;
       
       // Validate required fields
-      if (!courseId || !projectId || !requestedToUserId) {
+      if (!courseId || !projectId) {
         return res.status(400).json({
           success: false,
-          message: 'Required fields missing: courseId, projectId, and requestedToUserId are required'
+          message: 'Required fields missing: courseId and projectId are required'
         });
       }
       
-      // Create the partnership request
-      const partnership = await this.partnershipService.createPartnership({
+      // Get the requestedToUserId from either the course or project
+      let requestedToUserId: string;
+      try {
+        // Try to get owner of project first
+        const Project = mongoose.model('Project');
+        const project = await Project.findById(projectId);
+        
+        if (project) {
+          // If requester is project owner, get course owner
+          if (project.userId === requestedByUserId) {
+            const Course = mongoose.model('Course'); 
+            const course = await Course.findById(courseId);
+            
+            if (!course) {
+              return res.status(404).json({
+                success: false,
+                message: `Course with ID ${courseId} not found`
+              });
+            }
+            
+            requestedToUserId = course.creatorUserId;
+          } else {
+            // Requester is not project owner, so recipient is project owner
+            requestedToUserId = project.userId;
+          }
+        } else {
+          return res.status(404).json({
+            success: false,
+            message: `Project with ID ${projectId} not found`
+          });
+        }
+      } catch (error) {
+        logger.error(`Error determining requestedToUserId: ${error instanceof Error ? error.message : String(error)}`);
+        return res.status(500).json({
+          success: false,
+          message: 'Error determining partnership recipient'
+        });
+      }
+      
+      // Create the partnership request with correct data structure
+      const partnershipData = {
         courseId,
         projectId,
         requestedByUserId,
         requestedToUserId,
-        requestMessage,
-        startDate: startDate ? new Date(startDate) : undefined,
-        endDate: endDate ? new Date(endDate) : undefined
-      });
+        requestMessage
+      };
+      
+      // Call the static method from the service
+      const partnership = await PartnershipService.createPartnership(partnershipData);
       
       return res.status(201).json({
         success: true,
@@ -53,6 +94,7 @@ export class PartnershipController {
     } catch (error) {
       logger.error(`Error creating partnership request: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -62,10 +104,10 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async respondToPartnershipRequest = async (req: Request, res: Response, next: NextFunction) => {
+  async respondToPartnershipRequest(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const { partnershipId } = req.params;
-      const { responseType, responseMessage, startDate, endDate } = req.body;
+      const { responseType, responseMessage,} = req.body;
       const userId = req.user.userId;
       
       // Validate required fields
@@ -93,18 +135,13 @@ export class PartnershipController {
       }
       
       // Update the partnership
-      const updateData: any = {
+      const updateData = {
         status,
         responseMessage
       };
       
-      // Add dates if provided and approved
-      if (status === PartnershipStatus.APPROVED) {
-        if (startDate) updateData.startDate = new Date(startDate);
-        if (endDate) updateData.endDate = new Date(endDate);
-      }
-      
-      const partnership = await this.partnershipService.updatePartnership(
+      // Call the static method from the service
+      const partnership = await PartnershipService.updatePartnership(
         partnershipId,
         updateData,
         userId
@@ -118,6 +155,7 @@ export class PartnershipController {
     } catch (error) {
       logger.error(`Error responding to partnership request: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -127,7 +165,7 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async cancelPartnershipRequest = async (req: Request, res: Response, next: NextFunction) => {
+  async cancelPartnershipRequest(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const { partnershipId } = req.params;
       const userId = req.user.userId;
@@ -141,9 +179,8 @@ export class PartnershipController {
       }
       
       // Cancel the partnership
-      const partnership = await this.partnershipService.updatePartnership(
+      const partnership = await PartnershipService.cancelPartnership(
         partnershipId,
-        { status: PartnershipStatus.CANCELED },
         userId
       );
       
@@ -155,6 +192,7 @@ export class PartnershipController {
     } catch (error) {
       logger.error(`Error canceling partnership request: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -164,10 +202,10 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async completePartnership = async (req: Request, res: Response, next: NextFunction) => {
+  async completePartnership(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const { partnershipId } = req.params;
-      const { successMetrics } = req.body;
+      // const { successMetrics } = req.body;
       const userId = req.user.userId;
       
       // Validate required fields
@@ -179,10 +217,9 @@ export class PartnershipController {
       }
       
       // Complete the partnership
-      const partnership = await this.partnershipService.completePartnership(
+      const partnership = await PartnershipService.completePartnership(
         partnershipId,
-        userId,
-        successMetrics
+        userId
       );
       
       return res.status(200).json({
@@ -193,6 +230,7 @@ export class PartnershipController {
     } catch (error) {
       logger.error(`Error completing partnership: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -202,11 +240,11 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async sendPartnershipMessage = async (req: Request, res: Response, next: NextFunction) => {
+  async sendPartnershipMessage(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const { partnershipId } = req.params;
       const { message } = req.body;
-      const userId = req.user.userId;
+      // const userId = req.user.userId;
       
       // Validate required fields
       if (!partnershipId || !message) {
@@ -216,21 +254,15 @@ export class PartnershipController {
         });
       }
       
-      // Add the message
-      const partnership = await this.partnershipService.addMessage(
-        partnershipId,
-        userId,
-        message
-      );
-      
-      return res.status(200).json({
-        success: true,
-        message: 'Message sent successfully',
-        data: partnership
+      // Currently not implemented in service, would need to be added
+      return res.status(501).json({
+        success: false,
+        message: 'Message functionality not yet implemented'
       });
     } catch (error) {
       logger.error(`Error sending partnership message: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -240,7 +272,7 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async getPartnershipConversation = async (req: Request, res: Response, next: NextFunction) => {
+  async getPartnershipConversation(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const { partnershipId } = req.params;
       const userId = req.user.userId;
@@ -253,34 +285,42 @@ export class PartnershipController {
         });
       }
       
-      // Get the partnership
-      const partnership = await this.partnershipService.getPartnershipById(partnershipId);
-      
-      // Verify user is authorized to view this conversation
-      const isRequester = partnership.requestedByUserId === userId;
-      const isRecipient = partnership.requestedToUserId === userId;
-      
-      if (!isRequester && !isRecipient) {
-        return res.status(403).json({
-          success: false,
-          message: 'You are not authorized to view this conversation'
-        });
-      }
-      
-      // Return the messages
-      return res.status(200).json({
-        success: true,
-        data: {
-          partnershipId: partnership._id,
-          courseId: partnership.courseId,
-          projectId: partnership.projectId,
-          status: partnership.status,
-          messages: partnership.messages || []
+      try {
+        // Get the partnership with permission check
+        const partnership = await PartnershipService.getPartnershipById(partnershipId, userId);
+        
+        if (!partnership) {
+          return res.status(404).json({
+            success: false,
+            message: `Partnership with ID ${partnershipId} not found`
+          });
         }
-      });
+        
+        // Return the messages
+        return res.status(200).json({
+          success: true,
+          data: {
+            partnershipId: partnership._id,
+            courseId: partnership.courseId,
+            projectId: partnership.projectId,
+            status: partnership.status,
+            messages: partnership.messages || []
+          }
+        });
+      } catch (accessError) {
+        // Handle access denied errors
+        if (accessError instanceof Error && accessError.message.includes('Access denied')) {
+          return res.status(403).json({
+            success: false,
+            message: accessError.message
+          });
+        }
+        throw accessError;
+      }
     } catch (error) {
       logger.error(`Error getting partnership conversation: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -290,11 +330,11 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async updatePartnershipDates = async (req: Request, res: Response, next: NextFunction) => {
+  async updatePartnershipDates(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const { partnershipId } = req.params;
       const { startDate, endDate } = req.body;
-      const userId = req.user.userId;
+      // const userId = req.user.userId;
       
       // Validate required fields
       if (!partnershipId || !startDate || !endDate) {
@@ -303,23 +343,16 @@ export class PartnershipController {
           message: 'Required fields missing: partnershipId, startDate, and endDate are required'
         });
       }
-      
-      // Update the partnership dates
-      const partnership = await this.partnershipService.updatePartnershipDates(
-        partnershipId,
-        new Date(startDate),
-        new Date(endDate),
-        userId
-      );
-      
-      return res.status(200).json({
-        success: true,
-        message: 'Partnership dates updated successfully',
-        data: partnership
+
+      // This functionality would need to be added to the service
+      return res.status(501).json({
+        success: false,
+        message: 'Date update functionality not yet implemented'
       });
     } catch (error) {
       logger.error(`Error updating partnership dates: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -329,12 +362,12 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async getPendingPartnershipRequests = async (req: Request, res: Response, next: NextFunction) => {
+  async getPendingPartnershipRequests(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const userId = req.user.userId;
       
-      // Get pending partnerships
-      const partnerships = await this.partnershipService.getPendingPartnershipRequests(userId);
+      // Get partnerships by recipient and status PENDING
+      const partnerships = await PartnershipService.getPartnershipsByRecipient(userId, PartnershipStatus.PENDING);
       
       return res.status(200).json({
         success: true,
@@ -344,6 +377,7 @@ export class PartnershipController {
     } catch (error) {
       logger.error(`Error getting pending partnership requests: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -353,7 +387,7 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async getPartnershipsByStatus = async (req: Request, res: Response, next: NextFunction) => {
+  async getPartnershipsByStatus(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const userId = req.user.userId;
       const { status } = req.params;
@@ -366,11 +400,19 @@ export class PartnershipController {
         });
       }
       
-      // Get partnerships by status
-      const partnerships = await this.partnershipService.getPartnershipsByStatus(
-        userId,
+      // Get partnerships by requestor or recipient and status
+      const partnershipsByRequestor = await PartnershipService.getPartnershipsByRequestor(
+        userId, 
         status as PartnershipStatus
       );
+      
+      const partnershipsByRecipient = await PartnershipService.getPartnershipsByRecipient(
+        userId, 
+        status as PartnershipStatus
+      );
+      
+      // Combine results
+      const partnerships = [...partnershipsByRequestor, ...partnershipsByRecipient];
       
       return res.status(200).json({
         success: true,
@@ -380,6 +422,7 @@ export class PartnershipController {
     } catch (error) {
       logger.error(`Error getting partnerships by status: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -389,12 +432,23 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async getActivePartnerships = async (req: Request, res: Response, next: NextFunction) => {
+  async getActivePartnerships(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const userId = req.user.userId;
       
-      // Get active partnerships
-      const partnerships = await this.partnershipService.getActivePartnerships(userId);
+      // Get active partnerships by combining approved partnerships from both requestor and recipient
+      const partnershipsByRequestor = await PartnershipService.getPartnershipsByRequestor(
+        userId, 
+        PartnershipStatus.APPROVED
+      );
+      
+      const partnershipsByRecipient = await PartnershipService.getPartnershipsByRecipient(
+        userId, 
+        PartnershipStatus.APPROVED
+      );
+      
+      // Combine results
+      const partnerships = [...partnershipsByRequestor, ...partnershipsByRecipient];
       
       return res.status(200).json({
         success: true,
@@ -404,6 +458,7 @@ export class PartnershipController {
     } catch (error) {
       logger.error(`Error getting active partnerships: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 
@@ -413,28 +468,34 @@ export class PartnershipController {
    * @param res Express response
    * @param next Express next function
    */
-  async getPartnershipAnalytics = async (req: Request, res: Response, next: NextFunction) => {
+  async getPartnershipAnalytics(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
     try {
       const userId = req.user.userId;
-      const { year, quarter } = req.query;
       
-      // Parse filters
-      const filters: any = {};
-      if (year) filters.year = parseInt(year as string);
-      if (quarter) filters.quarter = parseInt(quarter as string);
-      
-      // Get analytics
-      const analytics = await this.partnershipService.getPartnershipAnalytics(userId, filters);
+      // Call the static method from the service with user ID for access control
+      const analytics = await PartnershipService.getPartnershipAnalytics(userId);
       
       return res.status(200).json({
         success: true,
         data: analytics
       });
     } catch (error) {
+      // Check for access denied error specifically
+      if (error instanceof Error && error.message.includes('Access denied')) {
+        return res.status(403).json({
+          success: false,
+          message: error.message
+        });
+      }
+      
       logger.error(`Error getting partnership analytics: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
+      return undefined;
     }
   };
 }
 
-export default new PartnershipController();
+// Create controller instance
+const controller = new PartnershipController();
+
+export default controller;

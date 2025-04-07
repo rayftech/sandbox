@@ -86,12 +86,41 @@ export class CourseService {
   private static eventPublisher = EventPublisher.getInstance();
 
   /**
+   * Ensure strapiId index is removed from courses collection
+   * This is a temporary fix to handle the legacy Strapi integration
+   * @returns Promise<void>
+   */
+  static async ensureStrapiIdIndexRemoved(): Promise<void> {
+    try {
+      if (mongoose.connection.db) {
+        // First check if the index exists
+        const indexes = await mongoose.connection.db.collection('courses').indexes();
+        const hasIndex = indexes.some(index => index.name === 'strapiId_1');
+        
+        if (hasIndex) {
+          await mongoose.connection.db.collection('courses').dropIndex('strapiId_1');
+          logger.info('Successfully dropped strapiId_1 index from courses collection');
+        } else {
+          logger.info('No strapiId_1 index found on courses collection');
+        }
+      } else {
+        logger.warn('Cannot check strapiId_1 index: db connection not fully initialized');
+      }
+    } catch (error) {
+      logger.warn(`Error handling strapiId_1 index: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  /**
    * Create a new course in MongoDB with all course data stored directly
    * 
    * @param courseData The course data
    * @returns The created course document
    */
   static async createCourse(courseData: ICourseCreationData): Promise<ICourse> {
+    // Ensure the strapiId index is removed before creating a course
+    await CourseService.ensureStrapiIdIndexRemoved();
+    
     const session = await mongoose.startSession();
     session.startTransaction();
 

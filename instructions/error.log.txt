@@ -1,0 +1,143 @@
+
+(base) ray@Rays-MacBook-Air-2 sandbox_backend % yarn dev
+yarn run v1.22.22
+warning package.json: No license field
+$ nodemon --exec ts-node -r dotenv/config index.ts
+[nodemon] 3.1.9
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: ts,json
+[nodemon] starting `ts-node -r dotenv/config index.ts`
+info: Configuring User model {"service":"UserModel","timestamp":"2025-04-07 13:44:15"}
+info: User model initialized {"service":"UserModel","timestamp":"2025-04-07 13:44:15"}
+RabbitMQ Environment Details: {
+  DOCKER_ENV: false,
+  NODE_ENV: 'development',
+  RABBITMQ_HOST: 'localhost'
+}
+/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/controllers/partnership.controller.ts:17:9 - error TS7030: Not all code paths return a value.
+
+17   async createPartnershipRequest(req: Request, res: Response, next: NextFunction) {
+           ~~~~~~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:19:52 - error TS6133: 'startDate' is declared but its value is never read.
+
+19       const { courseId, projectId, requestMessage, startDate, endDate } = req.body;
+                                                      ~~~~~~~~~
+src/controllers/partnership.controller.ts:19:63 - error TS6133: 'endDate' is declared but its value is never read.
+
+19       const { courseId, projectId, requestMessage, startDate, endDate } = req.body;
+                                                                 ~~~~~~~
+src/controllers/partnership.controller.ts:98:9 - error TS7030: Not all code paths return a value.
+
+98   async respondToPartnershipRequest(req: Request, res: Response, next: NextFunction) {
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:101:46 - error TS6133: 'startDate' is declared but its value is never read.
+
+101       const { responseType, responseMessage, startDate, endDate } = req.body;
+                                                 ~~~~~~~~~
+src/controllers/partnership.controller.ts:101:57 - error TS6133: 'endDate' is declared but its value is never read.
+
+101       const { responseType, responseMessage, startDate, endDate } = req.body;
+                                                            ~~~~~~~
+src/controllers/partnership.controller.ts:158:9 - error TS7030: Not all code paths return a value.
+
+158   async cancelPartnershipRequest(req: Request, res: Response, next: NextFunction) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:194:9 - error TS7030: Not all code paths return a value.
+
+194   async completePartnership(req: Request, res: Response, next: NextFunction) {
+            ~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:197:13 - error TS6133: 'successMetrics' is declared but its value is never read.
+
+197       const { successMetrics } = req.body;
+                ~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:231:9 - error TS7030: Not all code paths return a value.
+
+231   async sendPartnershipMessage(req: Request, res: Response, next: NextFunction) {
+            ~~~~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:235:13 - error TS6133: 'userId' is declared but its value is never read.
+
+235       const userId = req.user.userId;
+                ~~~~~~
+src/controllers/partnership.controller.ts:262:9 - error TS7030: Not all code paths return a value.
+
+262   async getPartnershipConversation(req: Request, res: Response, next: NextFunction) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:279:27 - error TS18047: 'partnership' is possibly 'null'.
+
+279       const isRequester = partnership.requestedByUserId === userId;
+                              ~~~~~~~~~~~
+src/controllers/partnership.controller.ts:280:27 - error TS18047: 'partnership' is possibly 'null'.
+
+280       const isRecipient = partnership.requestedToUserId === userId;
+                              ~~~~~~~~~~~
+src/controllers/partnership.controller.ts:293:26 - error TS18047: 'partnership' is possibly 'null'.
+
+293           partnershipId: partnership._id,
+                             ~~~~~~~~~~~
+src/controllers/partnership.controller.ts:294:21 - error TS18047: 'partnership' is possibly 'null'.
+
+294           courseId: partnership.courseId,
+                        ~~~~~~~~~~~
+src/controllers/partnership.controller.ts:295:22 - error TS18047: 'partnership' is possibly 'null'.
+
+295           projectId: partnership.projectId,
+                         ~~~~~~~~~~~
+src/controllers/partnership.controller.ts:296:19 - error TS18047: 'partnership' is possibly 'null'.
+
+296           status: partnership.status,
+                      ~~~~~~~~~~~
+src/controllers/partnership.controller.ts:297:21 - error TS18047: 'partnership' is possibly 'null'.
+
+297           messages: partnership.messages || []
+                        ~~~~~~~~~~~
+src/controllers/partnership.controller.ts:312:9 - error TS7030: Not all code paths return a value.
+
+312   async updatePartnershipDates(req: Request, res: Response, next: NextFunction) {
+            ~~~~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:316:13 - error TS6133: 'userId' is declared but its value is never read.
+
+316       const userId = req.user.userId;
+                ~~~~~~
+src/controllers/partnership.controller.ts:343:9 - error TS7030: Not all code paths return a value.
+
+343   async getPendingPartnershipRequests(req: Request, res: Response, next: NextFunction) {
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:367:9 - error TS7030: Not all code paths return a value.
+
+367   async getPartnershipsByStatus(req: Request, res: Response, next: NextFunction) {
+            ~~~~~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:411:9 - error TS7030: Not all code paths return a value.
+
+411   async getActivePartnerships(req: Request, res: Response, next: NextFunction) {
+            ~~~~~~~~~~~~~~~~~~~~~
+src/controllers/partnership.controller.ts:446:9 - error TS7030: Not all code paths return a value.
+
+446   async getPartnershipAnalytics(req: Request, res: Response, next: NextFunction) {
+            ~~~~~~~~~~~~~~~~~~~~~~~
+
+    at createTSError (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1295:10)
+    at Object.require.extensions.<computed> [as .ts] (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1091:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:938:12)
+    at Module.require (node:internal/modules/cjs/loader:1115:19) {
+  diagnosticCodes: [
+     7030,  6133,  6133,  7030,
+     6133,  6133,  7030,  7030,
+     6133,  7030,  6133,  7030,
+    18047, 18047, 18047, 18047,
+    18047, 18047, 18047,  7030,
+     6133,  7030,  7030,  7030,
+     7030
+  ]
+}
+[nodemon] app crashed - waiting for file changes before starting...

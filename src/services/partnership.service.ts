@@ -150,15 +150,32 @@ export class PartnershipService {
    * @param partnershipId The MongoDB ID of the partnership
    * @returns The partnership document or null if not found
    */
-  static async getPartnershipById(partnershipId: string): Promise<IPartnership | null> {
+  static async getPartnershipById(partnershipId: string, userId?: string): Promise<IPartnership | null> {
     try {
       if (!mongoose.isValidObjectId(partnershipId)) {
         throw new Error('Invalid partnership ID format');
       }
       
-      return await Partnership.findById(partnershipId)
-        .populate('courseId', 'name code level startDate endDate')
-        .populate('projectId', 'title shortDescription studentLevel startDate endDate');
+      const partnership = await Partnership.findById(partnershipId)
+        .populate('courseId', 'name code level startDate endDate creatorUserId')
+        .populate('projectId', 'title shortDescription studentLevel startDate endDate userId');
+      
+      // If userId is provided, check if the user is a participant or admin
+      if (userId && partnership) {
+        const isParticipant = 
+          partnership.requestedByUserId === userId || 
+          partnership.requestedToUserId === userId;
+        
+        if (!isParticipant) {
+          // Check if user is an admin
+          const user = await User.findOne({ userId });
+          if (!user || !user.isAdmin) {
+            throw new Error('Access denied: You are not a participant in this partnership');
+          }
+        }
+      }
+      
+      return partnership;
     } catch (error) {
       logger.error(`Error getting partnership: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
@@ -438,18 +455,41 @@ export class PartnershipService {
    * @param page The page number (1-based)
    * @param limit The number of items per page
    * @param filters Additional filters to apply
+   * @param userId The user ID of the requester (for access control)
    * @returns Object containing paginated results and metadata
    */
   static async getPaginatedPartnerships(
     page: number = 1,
     limit: number = 10,
-    filters: any = {}
+    filters: any = {},
+    userId?: string
   ): Promise<{ partnerships: IPartnership[], total: number, pages: number }> {
     try {
       // Ensure valid pagination parameters
       const validPage = Math.max(1, page);
       const validLimit = Math.min(50, Math.max(1, limit)); // Limit between 1 and 50
       const skip = (validPage - 1) * validLimit;
+
+      // Apply user-based access control if userId is provided
+      if (userId) {
+        // Check if user is admin
+        const user = await User.findOne({ userId });
+        const isAdmin = user?.isAdmin === true;
+        
+        // If not admin, restrict to only partnerships where user is a participant
+        if (!isAdmin) {
+          // Override any existing filters that might try to access other users' partnerships
+          filters = {
+            ...filters,
+            $or: [
+              { requestedByUserId: userId },
+              { requestedToUserId: userId }
+            ]
+          };
+          
+          logger.info(`User ${userId} is not admin, restricting partnership access to their own partnerships`);
+        }
+      }
 
       // Count total matching documents for pagination metadata
       const total = await Partnership.countDocuments(filters);
@@ -478,10 +518,22 @@ export class PartnershipService {
 
   /**
    * Get partnership analytics by time period
+   * @param userId The userId of the user requesting analytics
    * @returns Array of statistical groupings
+   * @throws Error if user is not an admin or has no access
    */
-  static async getPartnershipAnalytics(): Promise<any[]> {
+  static async getPartnershipAnalytics(userId: string): Promise<any[]> {
     try {
+      // Check if user is an admin or has analytics access
+      const user = await User.findOne({ userId });
+      if (!user) {
+        throw new Error(`User with userId ${userId} not found`);
+      }
+      
+      if (!user.isAdmin) {
+        throw new Error('Access denied: Only admin users can access partnership analytics');
+      }
+      
       return await Partnership.aggregate([
         {
           $group: {

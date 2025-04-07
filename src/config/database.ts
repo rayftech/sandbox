@@ -55,6 +55,19 @@ class DatabaseConnection {
         // It's okay if the index doesn't exist
         logger.info('Note: strapiId_1 index may not exist or was already removed');
       }
+
+      // Drop the strapiId index from courses collection
+      try {
+        if (mongoose.connection.db) {
+          await mongoose.connection.db.collection('courses').dropIndex('strapiId_1');
+          logger.info('Successfully dropped strapiId_1 index from courses collection');
+        } else {
+          logger.warn('Cannot drop strapiId_1 index: db connection not fully initialized');
+        }
+      } catch (error) {
+        // It's okay if the index doesn't exist
+        logger.info(`Note: strapiId_1 index may not exist or was already removed from courses collection: ${error instanceof Error ? error.message : String(error)}`);
+      }
     });
 
     mongoose.connection.on('error', (err) => {
