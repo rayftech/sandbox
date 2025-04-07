@@ -189,7 +189,7 @@ static async getSavedItems(
             const project = await Project.findById(item.itemId).lean();
             if (project) {
               enhancedItem.details = {
-                title: project.title,
+                title: project.name,
                 studentLevel: project.studentLevel,
                 startDate: project.startDate,
                 endDate: project.endDate,
@@ -357,7 +357,7 @@ static async getSavedItems(
             const project = await Project.findById(item.itemId);
             if (project) {
               item.details = {
-                title: project.title,
+                title: project.name,
                 studentLevel: project.studentLevel,
                 country: project.country,
                 organisation: project.organisation

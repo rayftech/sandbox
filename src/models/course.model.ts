@@ -6,7 +6,7 @@ import { ItemLifecycleStatus, determineItemStatus } from './status.enum';
 const logger = createLogger('CourseModel');
 
 /**
- * Enum for course level (should match Strapi schema)
+ * Enum for course level
  */
 export enum CourseLevel {
   UNDERGRAD_EARLY = 'Undergraduate 1st & 2nd year',
@@ -16,26 +16,60 @@ export enum CourseLevel {
 }
 
 /**
+ * Interface for multimedia file
+ */
+interface IMultimediaFile {
+  fileId: string;
+  type: 'image' | 'file' | 'video' | 'audio';
+  url: string;
+  name: string;
+  size: number;
+  mimeType: string;
+}
+
+/**
+ * Interface for localization content
+ */
+interface ILocalizationContent {
+  name: string;
+  description: string;
+  targetIndustryPartnership: string[] | string;
+  preferredPartnerRepresentative: string;
+}
+
+/**
  * Interface for Course document with methods
- * This is a lightweight version that references Strapi content
+ * Self-contained model with all course data in MongoDB
  */
 interface ICourseDocument extends Document {
   // Identifiers
   _id: mongoose.Types.ObjectId;
   creatorUserId: string;                  // Amplify userId of the creator
-  strapiId: string;                       // ID of the corresponding Strapi course
-  strapiCreatedAt: Date;                  // When the content was created in Strapi
-  strapiUpdatedAt: Date;                  // When the content was last updated in Strapi
   
   // Essential data needed for relationship management and searching
-  name: string;                          // Name of the course (from Strapi)
-  code: string;                          // Course code (from Strapi)
-  level: CourseLevel;                     // Required for matching with projects
+  name: string;                          // Name of the course
+  code: string;                          // Course code
+  level: CourseLevel;                    // Required for matching with projects
   startDate: Date;                       // For determining lifecycle and partnerships
   endDate: Date;                         // For determining lifecycle and partnerships
   country: string;                       // For geographic filtering
   organisation: string;                  // Academic/educational organisation offering the course
-  targetIndustryPartnership?: string;    // Target industry field for partnership
+  
+  // text input fields
+  description: string;                   // Course description
+  assessmentRedesign: string;            // Assessment redesign information
+  expectedEnrollment: number;            // Expected number of students
+  targetIndustryPartnership: string[] | string;  // Target industry fields for partnership
+  preferredPartnerRepresentative: string; // Preferred industry representative
+  
+  // Partnership field
+  partnerId: mongoose.Types.ObjectId;    // stored parntered project Id here
+  
+  // Multimedia files
+  multimedia: IMultimediaFile[];
+  
+  // Localization support
+  localizations: Map<string, ILocalizationContent>;
   
   // Status fields
   isActive: boolean;                     // Whether this course is active
@@ -61,10 +95,30 @@ interface ICourseModel extends Model<ICourseDocument> {
   // Add any static methods here if needed
 }
 
+// Define Multimedia schema
+const MultimediaSchema = new Schema({
+  fileId: String,
+  type: {
+    type: String,
+    enum: ['image', 'file', 'video', 'audio'],
+  },
+  url: String,
+  name: String,
+  size: Number,
+  mimeType: String
+}, { _id: false });
+
+// Define Localization schema
+const LocalizationSchema = new Schema({
+  name: String,
+  description: String,
+  targetIndustryPartnership: String,
+  preferredPartnerRepresentative: String,
+}, { _id: false });
+
 /**
  * Course Schema for MongoDB
- * This schema represents the relationship between users and Strapi courses
- * Modified to handle strapiId automatically
+ * Self-contained model with all course data in MongoDB
  */
 const CourseSchema = new Schema<ICourseDocument>(
   {
@@ -73,24 +127,6 @@ const CourseSchema = new Schema<ICourseDocument>(
       required: true,
       index: true,
       comment: 'Amplify userId of the creator'
-    },
-    strapiId: {
-      type: String,
-      required: false, // Changed from required:true to false
-      default: function() {
-        // Generate a temporary placeholder ID when strapiId isn't provided
-        return `temp-${new mongoose.Types.ObjectId().toString()}`;
-      },
-      index: true,
-      comment: 'ID of the corresponding course in Strapi CMS'
-    },
-    strapiCreatedAt: {
-      type: Date,
-      required: true
-    },
-    strapiUpdatedAt: {
-      type: Date,
-      required: true
     },
     name: {
       type: String,
@@ -129,10 +165,43 @@ const CourseSchema = new Schema<ICourseDocument>(
       index: true,
       default: '',
     },
-    targetIndustryPartnership: {
+    // Enhanced fields
+    description: {
       type: String,
+      default: '',
+    },
+    assessmentRedesign: {
+      type: String,
+      default: '',
+    },
+    expectedEnrollment: {
+      type: Number,
+      default: 0,
+    },
+    targetIndustryPartnership: {
+      type: [String],
+      default: [],
       index: true,
     },
+    preferredPartnerRepresentative: {
+      type: String,
+      default: '',
+    },
+    // Partnership field - separate from multimedia
+    partnerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Partnership',
+      default: null,
+    },
+    // Multimedia files - separate array
+    multimedia: [MultimediaSchema],
+    // Localization support
+    localizations: {
+      type: Map,
+      of: LocalizationSchema,
+      default: () => new Map(),
+    },
+    // Status fields
     isActive: {
       type: Boolean,
       default: true,
@@ -213,12 +282,6 @@ CourseSchema.pre('save', function(this: ICourseDocument, next) {
       return next(error);
     }
 
-    // Ensure strapiId is set even if not provided
-    if (!this.strapiId) {
-      this.strapiId = `temp-${new mongoose.Types.ObjectId().toString()}`;
-      logger.debug(`Generated temporary strapiId: ${this.strapiId} for course ${this.name}`);
-    }
-
     // Calculate academic year and semester
     this.setAcademicYearAndSemester();
     
@@ -238,6 +301,7 @@ CourseSchema.index({ startDate: 1, endDate: 1 });
 CourseSchema.index({ country: 1, level: 1 });
 CourseSchema.index({ status: 1, isActive: 1 });
 CourseSchema.index({ organisation: 1, country: 1 });
+CourseSchema.index({ name: 'text', code: 'text', description: 'text' }); // Text search index
 
 // Create and export the model with proper type information
 export const Course = mongoose.model<ICourseDocument, ICourseModel>('Course', CourseSchema);

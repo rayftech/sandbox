@@ -78,7 +78,7 @@ export interface UserEvent extends BaseEvent {
   userType: 'academic' | 'industry' | 'admin';
   country?: string;
   organisation?: string;
-  fieldOfExpertise?: string;
+  fieldOfExpertise?: string[] | string;
 }
 
 /**

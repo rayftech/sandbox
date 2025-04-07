@@ -191,6 +191,104 @@ router.get('/search', [
 
 /**
  * @swagger
+ * /api/courses/list:
+ *   get:
+ *     summary: Get a list of all courses with pagination
+ *     description: Retrieve a paginated list of all courses with selected fields (id, name, code, startDate, endDate, status, organisation, targetIndustryPartnership, description)
+ *     tags:
+ *       - Courses
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 50
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: List of courses with selected fields
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/list', [
+  query('page').optional().isInt({ min: 1 }).toInt(),
+  query('limit').optional().isInt({ min: 1, max: 50 }).toInt()
+], CourseController.getCoursesList);
+
+/**
+ * @swagger
+ * /api/courses/filter:
+ *   get:
+ *     summary: Get filtered courses by specific field values
+ *     description: Retrieve a paginated list of courses filtered by specific fields with selected response fields (id, name, code, level, startDate, endDate, status, organisation, country, targetIndustryPartnership, description)
+ *     tags:
+ *       - Courses
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 50
+ *         description: Number of items per page
+ *       - in: query
+ *         name: level
+ *         schema:
+ *           type: string
+ *           enum: ['Undergraduate 1st & 2nd year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
+ *         description: Filter by course level
+ *       - in: query
+ *         name: country
+ *         schema:
+ *           type: string
+ *         description: Filter by country
+ *       - in: query
+ *         name: organisation
+ *         schema:
+ *           type: string
+ *         description: Filter by organisation
+ *       - in: query
+ *         name: isActive
+ *         schema:
+ *           type: boolean
+ *         description: Filter by active status (true/false)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: ['upcoming', 'ongoing', 'completed']
+ *         description: Filter by lifecycle status
+ *     responses:
+ *       200:
+ *         description: Filtered list of courses
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/filter', [
+  query('page').optional().isInt({ min: 1 }).toInt(),
+  query('limit').optional().isInt({ min: 1, max: 50 }).toInt(),
+  query('level').optional(),
+  query('country').optional(),
+  query('organisation').optional(),
+  query('isActive').optional(),
+  query('status').optional()
+], CourseController.getFilteredCourses);
+
+/**
+ * @swagger
  * /api/courses/organisation/{organisation}:
  *   get:
  *     summary: Get courses by organisation
@@ -311,6 +409,61 @@ router.get('/country/:country', CourseController.getCoursesByCountry);
  *         description: Internal server error
  */
 router.get('/user/:userId', CourseController.getCoursesByCreator);
+
+/**
+ * @swagger
+ * /api/courses/user-courses/{userId}:
+ *   get:
+ *     summary: Get courses by user ID with pagination and selected fields
+ *     description: Retrieve a paginated list of courses created by a specific user with selected fields (id, name, code, level, startDate, endDate, status, organisation, country, targetIndustryPartnership, description)
+ *     tags:
+ *       - Courses
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The creator user ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 50
+ *         description: Number of items per page
+ *       - in: query
+ *         name: level
+ *         schema:
+ *           type: string
+ *           enum: ['Undergraduate 1st & 2nd year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
+ *         description: Filter by course level
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: ['upcoming', 'ongoing', 'completed']
+ *         description: Filter by lifecycle status
+ *     responses:
+ *       200:
+ *         description: List of user's courses with selected fields
+ *       400:
+ *         description: Bad request - missing user ID
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/user-courses/:userId', [
+  query('page').optional().isInt({ min: 1 }).toInt(),
+  query('limit').optional().isInt({ min: 1, max: 50 }).toInt(),
+  query('level').optional(),
+  query('status').optional()
+], CourseController.getCoursesByUserId);
 
 /**
  * @swagger
@@ -497,10 +650,10 @@ router.patch(
 
 /**
  * @swagger
- * /api/courses/{courseId}/sync:
+ * /api/courses/{courseId}/multimedia:
  *   post:
- *     summary: Synchronize course with Strapi
- *     description: Manually synchronize a course with Strapi CMS
+ *     summary: Add multimedia files to a course
+ *     description: Add one or more multimedia files to a course
  *     tags:
  *       - Courses
  *     security:
@@ -512,22 +665,168 @@ router.patch(
  *         schema:
  *           type: string
  *         description: The course ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - files
+ *             properties:
+ *               files:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - fileId
+ *                     - type
+ *                     - name
+ *                   properties:
+ *                     fileId:
+ *                       type: string
+ *                       description: The file ID in storage system
+ *                     type:
+ *                       type: string
+ *                       enum: ['image', 'file', 'video', 'audio']
+ *                       description: The type of the file
+ *                     url:
+ *                       type: string
+ *                       description: URL if stored externally
+ *                     name:
+ *                       type: string
+ *                       description: Original filename
+ *                     size:
+ *                       type: number
+ *                       description: File size in bytes
+ *                     mimeType:
+ *                       type: string
+ *                       description: MIME type of the file
  *     responses:
  *       200:
- *         description: Course synchronized successfully
+ *         description: Multimedia files added successfully
  *       400:
- *         description: Bad request - missing course ID
+ *         description: Bad request - missing course ID or files
  *       401:
  *         description: Unauthorized - authentication required
+ *       403:
+ *         description: Forbidden - permission denied
  *       404:
  *         description: Course not found
  *       500:
  *         description: Internal server error
  */
 router.post(
-  '/:courseId/sync',
+  '/:courseId/multimedia',
   AuthMiddleware.authenticateUser,
-  CourseController.syncCourseWithStrapi
+  CourseController.addMultimediaFiles
+);
+
+/**
+ * @swagger
+ * /api/courses/{courseId}/multimedia/{fileId}:
+ *   delete:
+ *     summary: Remove a multimedia file from a course
+ *     description: Remove a specific multimedia file from a course
+ *     tags:
+ *       - Courses
+ *     security:
+ *       - UserAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The course ID
+ *       - in: path
+ *         name: fileId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The file ID to remove
+ *     responses:
+ *       200:
+ *         description: Multimedia file removed successfully
+ *       400:
+ *         description: Bad request - missing course ID or file ID
+ *       401:
+ *         description: Unauthorized - authentication required
+ *       403:
+ *         description: Forbidden - permission denied
+ *       404:
+ *         description: Course or file not found
+ *       500:
+ *         description: Internal server error
+ */
+router.delete(
+  '/:courseId/multimedia/:fileId',
+  AuthMiddleware.authenticateUser,
+  CourseController.removeMultimediaFile
+);
+
+/**
+ * @swagger
+ * /api/courses/{courseId}/localizations:
+ *   put:
+ *     summary: Update course localizations
+ *     description: Update or add localizations for a course
+ *     tags:
+ *       - Courses
+ *     security:
+ *       - UserAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: courseId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The course ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - localizations
+ *             properties:
+ *               localizations:
+ *                 type: object
+ *                 description: Map of locale codes to localized content
+ *                 additionalProperties:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       description: Localized name
+ *                     description:
+ *                       type: string
+ *                       description: Localized description
+ *                     targetIndustryPartnership:
+ *                       type: string
+ *                       description: Localized target industry
+ *                     preferredPartnerRepresentative:
+ *                       type: string
+ *                       description: Localized preferred partner representative
+ *     responses:
+ *       200:
+ *         description: Localizations updated successfully
+ *       400:
+ *         description: Bad request - missing course ID or localizations
+ *       401:
+ *         description: Unauthorized - authentication required
+ *       403:
+ *         description: Forbidden - permission denied
+ *       404:
+ *         description: Course not found
+ *       500:
+ *         description: Internal server error
+ */
+router.put(
+  '/:courseId/localizations',
+  AuthMiddleware.authenticateUser,
+  CourseController.updateLocalizations
 );
 
 export default router;

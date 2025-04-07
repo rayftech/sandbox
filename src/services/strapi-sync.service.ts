@@ -216,13 +216,22 @@ export class StrapiSyncService {
         
         logger.info(`Course ${strapiId} marked as inactive due to unpublish`);
       } else if (model === 'challenge') {
-        await Project.findOneAndUpdate(
-          { strapiId },
-          { isActive: false },
-          { new: true }
-        );
-        
-        logger.info(`Project ${strapiId} marked as inactive due to unpublish`);
+        // For projects, we need to find by name since we don't store strapiId
+        const attributes = entry.attributes || {};
+        if (attributes.name && attributes.userId) {
+          await Project.findOneAndUpdate(
+            { 
+              name: attributes.name,
+              userId: attributes.userId
+            },
+            { isActive: false },
+            { new: true }
+          );
+          
+          logger.info(`Project ${attributes.name} marked as inactive due to unpublish`);
+        } else {
+          logger.warn(`Unable to find project to unpublish - insufficient data`);
+        }
       }
     } catch (error) {
       logger.error(`Error handling unpublish event: ${error instanceof Error ? error.message : String(error)}`);
@@ -241,8 +250,17 @@ export class StrapiSyncService {
         await Course.findOneAndDelete({ strapiId });
         logger.info(`Course ${strapiId} deleted from MongoDB`);
       } else if (model === 'challenge') {
-        await Project.findOneAndDelete({ strapiId });
-        logger.info(`Project ${strapiId} deleted from MongoDB`);
+        // For projects, we need to find by name since we don't store strapiId
+        const attributes = entry.attributes || {};
+        if (attributes.name && attributes.userId) {
+          await Project.findOneAndDelete({ 
+            name: attributes.name,
+            userId: attributes.userId
+          });
+          logger.info(`Project ${attributes.name} deleted from MongoDB`);
+        } else {
+          logger.warn(`Unable to find project to delete - insufficient data`);
+        }
       }
     } catch (error) {
       logger.error(`Error handling delete event: ${error instanceof Error ? error.message : String(error)}`);
@@ -285,7 +303,7 @@ export class StrapiSyncService {
           (course as any).targetIndustryPartnership = attributes.targetIndustryPartnership;
         }
         
-        course.strapiUpdatedAt = new Date(attributes.updatedAt);
+        // course.strapiUpdatedAt = new Date(attributes.updatedAt);
         
         // Update status and academic year/semester
         if (typeof course.updateStatus === 'function') {
@@ -372,12 +390,15 @@ private async syncProject(strapiChallenge: IStrapiChallenge): Promise<IProject> 
     const strapiId = strapiChallenge.id.toString();
     const { attributes } = strapiChallenge;
     
-    // Find existing project or create new one
-    let project = await Project.findOne({ strapiId });
+    // Find project with the same name and creator (since strapiId is removed)
+    let project = await Project.findOne({ 
+      name: attributes.name,
+      userId: attributes.userId
+    });
     
     if (project) {
       // Update existing project
-      project.title = attributes.name;
+      project.name = attributes.name;
       // Use as any to avoid type issues with studentLevel
       project.studentLevel = attributes.studentLevel as any;
       project.startDate = new Date(attributes.startDate);
@@ -390,12 +411,10 @@ private async syncProject(strapiChallenge: IStrapiChallenge): Promise<IProject> 
         project.organisation = attributes.organisation;
       }
       
-      // Safe property access with type assertion
+      // Safe property access
       if (attributes.targetAcademicPartnership) {
-        (project as any).targetAcademicPartnership = attributes.targetAcademicPartnership;
+        project.targetAcademicPartnership = attributes.targetAcademicPartnership as any;
       }
-      
-      project.strapiUpdatedAt = new Date(attributes.updatedAt);
       
       // Update status if method exists
       if (typeof project.updateStatus === 'function') {
@@ -407,11 +426,9 @@ private async syncProject(strapiChallenge: IStrapiChallenge): Promise<IProject> 
     } else {
       // Create new project with proper typing
       const projectData: any = {
-        creatorUserId: attributes.userId,
-        strapiId,
-        strapiCreatedAt: new Date(attributes.createdAt),
-        strapiUpdatedAt: new Date(attributes.updatedAt),
-        title: attributes.name,
+        userId: attributes.userId,
+        name: attributes.name,
+        shortDescription: attributes.shortDescription || '',
         studentLevel: attributes.studentLevel as StudentLevel,
         startDate: new Date(attributes.startDate),
         endDate: new Date(attributes.endDate),
@@ -427,10 +444,20 @@ private async syncProject(strapiChallenge: IStrapiChallenge): Promise<IProject> 
       
       project = new Project(projectData);
       
+      // Update status
+      if (typeof project.updateStatus === 'function') {
+        project.updateStatus();
+      }
+      
+      // Set time analytics dimensions
+      if (typeof project.setTimeAnalyticsDimensions === 'function') {
+        project.setTimeAnalyticsDimensions();
+      }
+      
       await project.save();
       logger.info(`Created new MongoDB project ${strapiId} from Strapi (${project.country}, ${project.organisation || 'no organisation'})`);
       
-      // Get the MongoDB document ID as a string - handle with type safety
+      // Get the MongoDB document ID as a string
       const projectId = project._id ? project._id.toString() : '';
       
       if (projectId) {
@@ -439,9 +466,9 @@ private async syncProject(strapiChallenge: IStrapiChallenge): Promise<IProject> 
           EventType.PROJECT_CREATED,
           {
             projectId: projectId,
-            title: project.title,
-            shortDescription: attributes.shortDescription || '',
-            creatorUserId: project.creatorUserId,
+            title: project.name,
+            shortDescription: project.shortDescription || '',
+            creatorUserId: project.userId,
             studentLevel: project.studentLevel as string, // Cast to string to match event type
             startDate: project.startDate,
             endDate: project.endDate,

@@ -2,26 +2,21 @@
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import { asyncHandler } from '../middlewares/error.middleware';
-import { CourseService, ICourseUpdateData } from '../services/course.service';
-// import { Course } from '../models/course.model';
+import { CourseService } from '../services/course.service';
 import { createLogger } from '../config/logger';
 import { EventPublisher } from '../services/event.publisher';
 import { EventType } from '../models/events.model';
 import { ApiError } from '../middlewares/error.middleware';
-import { RequestResponseService } from '../services/request-response.service';
-import { StrapiSyncService } from '../services/strapi-sync.service';
 
 const logger = createLogger('CourseController');
 
 /**
  * Controller for course-related operations
  * Implements the adapter pattern between HTTP requests and service layer
- * Uses RequestResponseService for reliable Strapi operations
+ * Uses MongoDB as the single source of truth for course data
  */
 export class CourseController {
   private static eventPublisher: EventPublisher = EventPublisher.getInstance();
-  private static requestResponseService: RequestResponseService = RequestResponseService.getInstance();
-  private static strapiSyncService: StrapiSyncService = StrapiSyncService.getInstance();
 
   /**
    * Create a new course
@@ -48,37 +43,8 @@ export class CourseController {
       // Add creator ID to course data
       courseData.creatorUserId = userId;
 
-      // First create in MongoDB (our source of truth)
+      // Create course in MongoDB (our source of truth)
       const course = await CourseService.createCourse(courseData);
-
-      // Check if course already has a valid Strapi ID (not a temporary one)
-      if (course.strapiId && !course.strapiId.startsWith('temp-')) {
-        logger.info(`Course ${course._id} already has a valid Strapi ID: ${course.strapiId}`);
-      } 
-      // Only attempt to update the Strapi ID if it's a temporary one
-      else if (course.strapiId && course.strapiId.startsWith('temp-')) {
-        // Use a background task to update the Strapi ID without blocking the response
-        // This prevents duplicate messages by not creating a new course in Strapi
-        setTimeout(async () => {
-          try {
-            // Check if course exists in Strapi by code before creating a new one
-            const existingCourses = await CourseController.strapiSyncService.searchCourses(course.code);
-            const exactMatch = existingCourses.find((strapiCourse: any) => 
-              strapiCourse.attributes && strapiCourse.attributes.code === course.code
-            );
-            
-            if (exactMatch) {
-              // If course already exists in Strapi, update MongoDB with the existing Strapi ID
-              const updateData: ICourseUpdateData = { strapiId: exactMatch.id.toString() };
-              await CourseService.updateCourse(course._id.toString(), updateData, userId);
-              logger.info(`Updated course ${course._id} with existing Strapi ID ${exactMatch.id}`);
-            }
-            // We don't need an else clause here since CourseService already attempted to create in Strapi
-          } catch (error) {
-            logger.error(`Background Strapi ID check failed: ${error instanceof Error ? error.message : String(error)}`);
-          }
-        }, 100);
-      }
 
       // Publish course creation event to RabbitMQ asynchronously
       try {
@@ -99,7 +65,7 @@ export class CourseController {
         logger.error(`Error publishing course creation event: ${eventError instanceof Error ? eventError.message : String(eventError)}`);
       }
 
-      // Return success response immediately
+      // Return success response
       return res.status(201).json({
         status: 'success',
         data: {
@@ -113,7 +79,14 @@ export class CourseController {
             country: course.country,
             organisation: course.organisation,
             isActive: course.isActive,
-            createdAt: course.createdAt
+            createdAt: course.createdAt,
+            description: course.description,
+            assessmentRedesign: course.assessmentRedesign,
+            expectedEnrollment: course.expectedEnrollment,
+            targetIndustryPartnership: course.targetIndustryPartnership,
+            preferredPartnerRepresentative: course.preferredPartnerRepresentative,
+            multimedia: course.multimedia,
+            // Add other fields as needed
           }
         }
       });
@@ -185,7 +158,7 @@ export class CourseController {
     }
 
     try {
-      // First get the current course to check if it has a Strapi ID
+      // Check if course exists
       const existingCourse = await CourseService.getCourseById(courseId);
       
       if (!existingCourse) {
@@ -195,50 +168,8 @@ export class CourseController {
         });
       }
 
-      // Update in MongoDB first (our source of truth)
+      // Update in MongoDB (our source of truth)
       const updatedCourse = await CourseService.updateCourse(courseId, updateData, userId);
-
-      // If course has a Strapi ID, update in Strapi
-      if (updatedCourse.strapiId) {
-        try {
-          // Prepare data for Strapi update - define with an index signature
-          const strapiUpdateData: Record<string, any> = {
-            name: updatedCourse.name,
-            code: updatedCourse.code,
-            courseLevel: updatedCourse.level,
-            startDate: updatedCourse.startDate,
-            endDate: updatedCourse.endDate,
-            isActive: updatedCourse.isActive,
-            country: updatedCourse.country || 'Unknown',
-            organisation: updatedCourse.organisation || ''
-          };
-
-          // Add optional fields if present in the update
-          if ('description' in updateData) {
-            strapiUpdateData.description = updateData.description;
-          }
-          if ('expectedEnrollment' in updateData) {
-            strapiUpdateData.expectedEnrollment = updateData.expectedEnrollment;
-          }
-          if ('targetIndustryPartnership' in updateData) {
-            strapiUpdateData.targetIndustryPartnership = updateData.targetIndustryPartnership;
-          }
-          if ('preferredPartnerRepresentative' in updateData) {
-            strapiUpdateData.preferredPartnerRepresentative = updateData.preferredPartnerRepresentative;
-          }
-
-          // Update in Strapi
-          await CourseController.requestResponseService.updateCourse(
-            updatedCourse.strapiId,
-            strapiUpdateData,
-            userId
-          );
-          
-          logger.info(`Updated course in Strapi with ID ${updatedCourse.strapiId}`);
-        } catch (strapiError) {
-          logger.error(`Failed to update course in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
-        }
-      }
 
       // Publish course update event asynchronously
       try {
@@ -254,6 +185,7 @@ export class CourseController {
             endDate: updatedCourse.endDate
           }
         );
+        logger.info(`Published COURSE_UPDATED event for course ${updatedCourse._id}`);
       } catch (eventError) {
         logger.error(`Error publishing course update event: ${eventError instanceof Error ? eventError.message : String(eventError)}`);
       }
@@ -300,7 +232,7 @@ export class CourseController {
     }
 
     try {
-      // Get course before deletion to check for strapiId
+      // Get course before deletion for event publishing
       const course = await CourseService.getCourseById(courseId);
 
       if (!course) {
@@ -310,7 +242,7 @@ export class CourseController {
         });
       }
 
-      // Delete from MongoDB first
+      // Delete from MongoDB
       const result = await CourseService.deleteCourse(courseId, userId);
 
       if (!result) {
@@ -318,16 +250,6 @@ export class CourseController {
           status: 'error',
           message: 'Failed to delete course'
         });
-      }
-
-      // If course has a Strapi ID, delete from Strapi
-      if (course.strapiId) {
-        try {
-          await CourseController.requestResponseService.deleteCourse(course.strapiId, userId);
-          logger.info(`Deleted course from Strapi with ID ${course.strapiId}`);
-        } catch (strapiError) {
-          logger.error(`Failed to delete course in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
-        }
       }
 
       // Publish course deletion event asynchronously
@@ -344,6 +266,7 @@ export class CourseController {
             endDate: course.endDate
           }
         );
+        logger.info(`Published COURSE_DELETED event for course ${courseId}`);
       } catch (eventError) {
         logger.error(`Error publishing course deletion event: ${eventError instanceof Error ? eventError.message : String(eventError)}`);
       }
@@ -603,7 +526,7 @@ export class CourseController {
     const pageNum = page ? parseInt(page as string, 10) : 1;
     const limitNum = limit ? parseInt(limit as string, 10) : 10;
 
-    // Get paginated courses with filters
+    // Get paginated courses with filters directly from MongoDB
     const result = await CourseService.getPaginatedCourses(pageNum, limitNum, filters);
 
     return res.status(200).json({
@@ -619,7 +542,7 @@ export class CourseController {
       }
     });
   });
-
+  
   /**
    * Update course active status
    * @route PATCH /api/courses/:courseId/status
@@ -644,21 +567,26 @@ export class CourseController {
     }
 
     try {
-      // Update course status
+      // Update course status in MongoDB
       const updatedCourse = await CourseService.setCourseActiveStatus(courseId, isActive, userId);
 
-      // Update in Strapi
-      if (updatedCourse.strapiId) {
-        try {
-          await CourseController.requestResponseService.updateCourse(
-            updatedCourse.strapiId,
-            { isActive },
-            userId
-          );
-          logger.info(`Updated course status in Strapi with ID ${updatedCourse.strapiId}`);
-        } catch (strapiError) {
-          logger.error(`Failed to update course status in Strapi: ${strapiError instanceof Error ? strapiError.message : String(strapiError)}`);
-        }
+      // Publish course update event
+      try {
+        await CourseController.eventPublisher.publishCourseEvent(
+          EventType.COURSE_UPDATED,
+          {
+            courseId: updatedCourse._id.toString(),
+            name: updatedCourse.name,
+            code: updatedCourse.code,
+            level: updatedCourse.level,
+            creatorUserId: updatedCourse.creatorUserId,
+            startDate: updatedCourse.startDate,
+            endDate: updatedCourse.endDate
+          }
+        );
+        logger.info(`Published COURSE_UPDATED event for course ${updatedCourse._id} (status change)`);
+      } catch (eventError) {
+        logger.error(`Error publishing course update event: ${eventError instanceof Error ? eventError.message : String(eventError)}`);
       }
 
       return res.status(200).json({
@@ -674,12 +602,13 @@ export class CourseController {
   });
 
   /**
-   * Synchronize course with Strapi
-   * @route POST /api/courses/:courseId/sync
+   * Add multimedia files to a course
+   * @route POST /api/courses/:courseId/multimedia
    */
-  public static syncCourseWithStrapi = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+  public static addMultimediaFiles = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { courseId } = req.params;
     const { userId } = req.user;
+    const files = req.body.files;
 
     if (!courseId) {
       return res.status(400).json({
@@ -695,70 +624,285 @@ export class CourseController {
       });
     }
 
+    if (!files || !Array.isArray(files) || files.length === 0) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Files array is required'
+      });
+    }
+
     try {
-      // Get the course to sync
-      const course = await CourseService.getCourseById(courseId);
-      
-      if (!course) {
-        return res.status(404).json({
-          status: 'error',
-          message: 'Course not found'
-        });
-      }
-
-      // Prepare Strapi data
-      const strapiData = {
-        name: course.name,
-        code: course.code,
-        userId: course.creatorUserId,
-        courseLevel: course.level,
-        startDate: course.startDate,
-        endDate: course.endDate,
-        isActive: course.isActive,
-        country: course.country || 'Unknown',
-        organisation: course.organisation || ''
-      };
-
-      let strapiId = course.strapiId;
-      let result;
-      
-      if (strapiId) {
-        // Update in Strapi
-        result = await CourseController.requestResponseService.updateCourse(
-          strapiId,
-          strapiData,
-          userId
-        );
-        logger.info(`Synchronized existing course in Strapi with ID ${strapiId}`);
-      } else {
-        // Create in Strapi
-        strapiId = await CourseController.requestResponseService.createCourse(
-          strapiData,
-          userId
-        );
-        
-        // Update MongoDB with Strapi ID
-        if (strapiId) {
-          const updateData: ICourseUpdateData = { strapiId };
-          await CourseService.updateCourse(courseId, updateData, userId);
-          logger.info(`Created and linked new course in Strapi with ID ${strapiId}`);
-          result = true;
-        } else {
-          throw new Error('Failed to create course in Strapi');
-        }
-      }
+      // Add multimedia files to the course
+      const updatedCourse = await CourseService.addMultimediaFiles(courseId, files, userId);
 
       return res.status(200).json({
         status: 'success',
         data: {
-          message: `Course successfully synchronized with Strapi (ID: ${strapiId})`,
-          strapiId,
-          success: !!result
+          message: `Successfully added ${files.length} multimedia files to course`,
+          course: updatedCourse
         }
       });
     } catch (error) {
-      logger.error(`Error synchronizing course with Strapi: ${error instanceof Error ? error.message : String(error)}`);
-      throw new ApiError(500, `Failed to synchronize with Strapi: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(`Error adding multimedia files: ${error instanceof Error ? error.message : String(error)}`);
+      
+      if (error instanceof Error && error.message.includes('Permission denied')) {
+        throw new ApiError(403, error.message);
+      } else if (error instanceof Error && error.message.includes('not found')) {
+        throw new ApiError(404, error.message);
+      }
+      
+      throw new ApiError(500, `Failed to add multimedia files: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  });
+
+  /**
+   * Remove a multimedia file from a course
+   * @route DELETE /api/courses/:courseId/multimedia/:fileId
+   */
+  public static removeMultimediaFile = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { courseId, fileId } = req.params;
+    const { userId } = req.user;
+
+    if (!courseId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Course ID is required'
+      });
+    }
+
+    if (!fileId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'File ID is required'
+      });
+    }
+
+    if (!userId) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Authentication required'
+      });
+    }
+
+    try {
+      // Remove the multimedia file from the course
+      const updatedCourse = await CourseService.removeMultimediaFile(courseId, fileId, userId);
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          message: `Successfully removed multimedia file from course`,
+          course: updatedCourse
+        }
+      });
+    } catch (error) {
+      logger.error(`Error removing multimedia file: ${error instanceof Error ? error.message : String(error)}`);
+      
+      if (error instanceof Error && error.message.includes('Permission denied')) {
+        throw new ApiError(403, error.message);
+      } else if (error instanceof Error && error.message.includes('not found')) {
+        throw new ApiError(404, error.message);
+      }
+      
+      throw new ApiError(500, `Failed to remove multimedia file: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  });
+
+  /**
+   * Update course localizations
+   * @route PUT /api/courses/:courseId/localizations
+   */
+  public static updateLocalizations = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { courseId } = req.params;
+    const { userId } = req.user;
+    const { localizations } = req.body;
+
+    if (!courseId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Course ID is required'
+      });
+    }
+
+    if (!userId) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Authentication required'
+      });
+    }
+
+    if (!localizations || typeof localizations !== 'object' || Object.keys(localizations).length === 0) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Localizations object is required'
+      });
+    }
+
+    try {
+      // Update course localizations
+      const updatedCourse = await CourseService.updateLocalizations(courseId, localizations, userId);
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          message: `Successfully updated course localizations`,
+          course: updatedCourse
+        }
+      });
+    } catch (error) {
+      logger.error(`Error updating localizations: ${error instanceof Error ? error.message : String(error)}`);
+      
+      if (error instanceof Error && error.message.includes('Permission denied')) {
+        throw new ApiError(403, error.message);
+      } else if (error instanceof Error && error.message.includes('not found')) {
+        throw new ApiError(404, error.message);
+      }
+      
+      throw new ApiError(500, `Failed to update localizations: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  });
+  
+  /**
+   * Get a list of all courses with pagination and selected fields
+   * @route GET /api/courses/list
+   */
+  public static getCoursesList = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { page, limit } = req.query;
+    
+    // Parse pagination parameters
+    const pageNum = page ? parseInt(page as string, 10) : 1;
+    const limitNum = limit ? parseInt(limit as string, 10) : 10;
+
+    try {
+      // Get paginated courses with selected fields
+      const result = await CourseService.getPaginatedCoursesList(pageNum, limitNum);
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          courses: result.courses,
+          pagination: {
+            total: result.total,
+            pages: result.pages,
+            page: pageNum,
+            limit: limitNum
+          }
+        }
+      });
+    } catch (error) {
+      logger.error(`Error fetching courses list: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+  
+  /**
+   * Get filtered courses by specific field values with pagination
+   * @route GET /api/courses/filter
+   */
+  public static getFilteredCourses = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { page, limit, level, country, organisation, isActive, status } = req.query;
+    
+    // Parse pagination parameters
+    const pageNum = page ? parseInt(page as string, 10) : 1;
+    const limitNum = limit ? parseInt(limit as string, 10) : 10;
+    
+    // Build filter object based on provided query parameters
+    const filters: any = {};
+    
+    if (level) {
+      filters.level = level;
+    }
+    
+    if (country) {
+      filters.country = country;
+    }
+    
+    if (organisation) {
+      filters.organisation = organisation;
+    }
+    
+    if (isActive !== undefined) {
+      filters.isActive = isActive === 'true';
+    }
+    
+    if (status) {
+      filters.status = status;
+    }
+
+    try {
+      // Get filtered courses with pagination
+      const result = await CourseService.getFilteredCoursesList(pageNum, limitNum, filters);
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          courses: result.courses,
+          filters: Object.keys(filters).length > 0 ? filters : 'No filters applied',
+          pagination: {
+            total: result.total,
+            pages: result.pages,
+            page: pageNum,
+            limit: limitNum
+          }
+        }
+      });
+    } catch (error) {
+      logger.error(`Error fetching filtered courses: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
+  
+  /**
+   * Get courses by user ID with pagination
+   * @route GET /api/courses/user-courses/:userId
+   */
+  public static getCoursesByUserId = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { userId } = req.params;
+    const { page, limit, level, status } = req.query;
+    
+    if (!userId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'User ID is required'
+      });
+    }
+    
+    // Parse pagination parameters
+    const pageNum = page ? parseInt(page as string, 10) : 1;
+    const limitNum = limit ? parseInt(limit as string, 10) : 10;
+    
+    // Build filter object with the required userId
+    const filters: any = { creatorUserId: userId };
+    
+    // Add additional filters if provided
+    if (level) {
+      filters.level = level;
+    }
+    
+    if (status) {
+      filters.status = status;
+    }
+
+    try {
+      // Get courses by the specified user ID
+      const result = await CourseService.getFilteredCoursesList(pageNum, limitNum, filters);
+
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          courses: result.courses,
+          userId,
+          pagination: {
+            total: result.total,
+            pages: result.pages,
+            page: pageNum,
+            limit: limitNum
+          }
+        }
+      });
+    } catch (error) {
+      logger.error(`Error fetching courses by user ID: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
   });
 }

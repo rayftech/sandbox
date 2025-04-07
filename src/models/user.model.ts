@@ -16,7 +16,7 @@ export interface IAmplifyUserData {
   isAdmin: boolean;
   country: string;
   organisation?: string;
-  fieldOfExpertise?: string;
+  fieldOfExpertise?: string[] | string;
 }
 
 /**
@@ -232,8 +232,8 @@ const UserSchema = new Schema<IUserDocument>(
       index: true,
     },
     fieldOfExpertise: {
-      type: String,
-      trim: true,
+      type: [String],
+      default: [],
     }
   },
   

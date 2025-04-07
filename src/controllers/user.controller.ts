@@ -11,6 +11,19 @@ const logger = createLogger('UserController');
 
 export class UserController {
   /**
+   * Format fieldOfExpertise for event publishing
+   * Ensures fieldOfExpertise is consistently handled when publishing events
+   */
+  private static formatFieldOfExpertise(fieldOfExpertise: string[] | string | undefined): string | undefined {
+    if (!fieldOfExpertise) return undefined;
+    
+    if (Array.isArray(fieldOfExpertise)) {
+      return fieldOfExpertise.join(', ');
+    }
+    
+    return fieldOfExpertise;
+  }
+  /**
    * Get user profile by ID
    */
   public static getUserProfile = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
@@ -50,7 +63,7 @@ export class UserController {
         successRate: user.successRate,
         country: user.country,
         organisation: user.organisation,
-        fieldOfExpertise: user.fieldOfExpertise
+        fieldOfExpertise: Array.isArray(user.fieldOfExpertise) ? user.fieldOfExpertise : []
       }
     });
   });
@@ -97,7 +110,7 @@ export class UserController {
           userType: updatedUser.userType,
           country: updatedUser.country,
           organisation: updatedUser.organisation,
-          fieldOfExpertise: updatedUser.fieldOfExpertise
+          fieldOfExpertise: UserController.formatFieldOfExpertise(updatedUser.fieldOfExpertise)
         }
       );
       
@@ -156,7 +169,7 @@ export class UserController {
           userType: updatedUser.userType,
           country: updatedUser.country,
           organisation: updatedUser.organisation,
-          fieldOfExpertise: updatedUser.fieldOfExpertise
+          fieldOfExpertise: UserController.formatFieldOfExpertise(updatedUser.fieldOfExpertise)
         }
       );
       
@@ -215,7 +228,7 @@ export class UserController {
           userType: updatedUser.userType,
           country: updatedUser.country,
           organisation: updatedUser.organisation,
-          fieldOfExpertise: updatedUser.fieldOfExpertise
+          fieldOfExpertise: UserController.formatFieldOfExpertise(updatedUser.fieldOfExpertise)
         }
       );
       
@@ -274,7 +287,7 @@ export class UserController {
           userType: updatedUser.userType,
           country: updatedUser.country,
           organisation: updatedUser.organisation,
-          fieldOfExpertise: updatedUser.fieldOfExpertise
+          fieldOfExpertise: UserController.formatFieldOfExpertise(updatedUser.fieldOfExpertise)
         }
       );
       
@@ -282,7 +295,9 @@ export class UserController {
         status: 'success',
         data: {
           userId: updatedUser.userId,
-          fieldOfExpertise: updatedUser.fieldOfExpertise
+          fieldOfExpertise: Array.isArray(updatedUser.fieldOfExpertise) 
+            ? updatedUser.fieldOfExpertise 
+            : []
         }
       });
     } catch (error) {
@@ -354,7 +369,7 @@ export class UserController {
           userType: user.userType,
           country: user.country,
           organisation: user.organisation,
-          fieldOfExpertise: user.fieldOfExpertise
+          fieldOfExpertise: Array.isArray(user.fieldOfExpertise) ? user.fieldOfExpertise : []
         }))
       }
     });
@@ -385,7 +400,7 @@ export class UserController {
           lastName: user.lastName,
           userType: user.userType,
           organisation: user.organisation,
-          fieldOfExpertise: user.fieldOfExpertise
+          fieldOfExpertise: Array.isArray(user.fieldOfExpertise) ? user.fieldOfExpertise : []
         }))
       }
     });
@@ -416,7 +431,7 @@ export class UserController {
           lastName: user.lastName,
           userType: user.userType,
           country: user.country,
-          fieldOfExpertise: user.fieldOfExpertise
+          fieldOfExpertise: Array.isArray(user.fieldOfExpertise) ? user.fieldOfExpertise : []
         }))
       }
     });
@@ -459,7 +474,7 @@ export class UserController {
           userType: user.userType,
           country: user.country,
           organisation: user.organisation,
-          fieldOfExpertise: user.fieldOfExpertise
+          fieldOfExpertise: Array.isArray(user.fieldOfExpertise) ? user.fieldOfExpertise : []
         })),
         pagination: {
           total: result.total,

@@ -37,17 +37,33 @@ export class UserService {
         }
         
         if (userData.fieldOfExpertise) {
-          user.fieldOfExpertise = userData.fieldOfExpertise;
+          // Handle fieldOfExpertise conversion from string to array
+          if (typeof userData.fieldOfExpertise === 'string') {
+            user.fieldOfExpertise = userData.fieldOfExpertise
+              .split(',')
+              .map(item => item.trim())
+              .filter(item => item.length > 0);
+          } else {
+            user.fieldOfExpertise = userData.fieldOfExpertise;
+          }
         }
         
         logger.info(`User updated: ${userData.userId}`);
         return await user.save();
       } else {
         // Create a new user with all available data
-        user = new User({
-          ...userData,
-          // Additional default fields are set in the schema
-        });
+        // Process fieldOfExpertise before creating user
+        let userData_processed = { ...userData };
+        
+        // Handle fieldOfExpertise conversion from string to array if needed
+        if (userData.fieldOfExpertise && typeof userData.fieldOfExpertise === 'string') {
+          userData_processed.fieldOfExpertise = userData.fieldOfExpertise
+            .split(',')
+            .map(item => item.trim())
+            .filter(item => item.length > 0);
+        }
+        
+        user = new User(userData_processed);
         
         logger.info(`New user created: ${userData.userId}`);
         return await user.save();
@@ -196,14 +212,27 @@ export class UserService {
   /**
    * Update user's field of expertise
    * @param userId The userId of the user
-   * @param fieldOfExpertise The field of expertise to update
+   * @param fieldOfExpertise The field of expertise to update (string or array)
    * @returns The updated user document or null if not found
    */
-  static async updateFieldOfExpertise(userId: string, fieldOfExpertise: string): Promise<IUser | null> {
+  static async updateFieldOfExpertise(userId: string, fieldOfExpertise: string | string[]): Promise<IUser | null> {
     try {
+      // Convert string to array if needed
+      let expertiseArray: string[];
+      
+      if (typeof fieldOfExpertise === 'string') {
+        // Split by comma and trim whitespace
+        expertiseArray = fieldOfExpertise
+          .split(',')
+          .map(item => item.trim())
+          .filter(item => item.length > 0); // Remove empty items
+      } else {
+        expertiseArray = fieldOfExpertise;
+      }
+      
       const user = await User.findOneAndUpdate(
         { userId },
-        { $set: { fieldOfExpertise } },
+        { $set: { fieldOfExpertise: expertiseArray } },
         { 
           new: true,  // Return the updated document
           runValidators: true // Run mongoose validation
@@ -211,7 +240,7 @@ export class UserService {
       );
       
       if (user) {
-        logger.info(`Updated field of expertise for user ${userId}`);
+        logger.info(`Updated field of expertise for user ${userId}: ${expertiseArray.join(', ')}`);
       } else {
         logger.warn(`Attempted to update field of expertise for non-existent user ${userId}`);
       }

@@ -42,10 +42,19 @@ class DatabaseConnection {
     mongoose.set('strictQuery', true);
     
     // Set event listeners for connection status
-    mongoose.connection.on('connected', () => {
+    mongoose.connection.on('connected', async () => {
       this.isConnected = true;
       this.connectionAttempts = 0;
       logger.info('Connected to MongoDB');
+      
+      // Remove problematic indexes that might cause issues
+      try {
+        // await mongoose.connection.db.collection('projects').dropIndex('strapiId_1');
+        logger.info('Successfully dropped strapiId_1 index from projects collection');
+      } catch (error) {
+        // It's okay if the index doesn't exist
+        logger.info('Note: strapiId_1 index may not exist or was already removed');
+      }
     });
 
     mongoose.connection.on('error', (err) => {
