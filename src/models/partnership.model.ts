@@ -1,7 +1,7 @@
 // src/models/partnership.model.ts
 import mongoose, { Document, Schema, Model, CallbackError } from 'mongoose';
 import { createLogger } from '../config/logger';
-// import { ItemLifecycleStatus, determineItemStatus } from './status.enum';
+import { ItemLifecycleStatus, determineItemStatus } from './status.enum';
 
 const logger = createLogger('PartnershipModel');
 
@@ -13,6 +13,8 @@ export enum PartnershipStatus {
   APPROVED = 'approved',
   REJECTED = 'rejected',
   CANCELED = 'canceled',
+  UPCOMING = 'upcoming',
+  ONGOING = 'ongoing',
   COMPLETE = 'complete'
 }
 
@@ -25,22 +27,37 @@ interface IPartnershipDocument extends Document {
   requestedByUserId: string;
   requestedToUserId: string;
   status: PartnershipStatus;
+  lifecycleStatus?: ItemLifecycleStatus;
   requestMessage?: string;
   responseMessage?: string;
+  messages?: Array<{
+    userId: string;
+    message: string;
+    timestamp: Date;
+  }>;
+  startDate?: Date;
+  endDate?: Date;
   approvedAt?: Date;
   rejectedAt?: Date;
+  canceledAt?: Date;
   completedAt?: Date;
   isComplete: boolean;
   requestYear?: number;
   requestQuarter?: number;
   requestMonth?: number;
   approvalTimeInDays?: number;
-  lifecycleDurationInDays?: number;
+  partnershipDurationInDays?: number;
+  successMetrics?: {
+    satisfaction?: number;
+    completionRate?: number;
+    goalAchievement?: number;
+  };
   createdAt: Date;
   updatedAt: Date;
   
-  // Define method in the interface
+  // Define methods in the interface
   setTimeAnalyticsDimensions(): void;
+  updateLifecycleStatus(): void;
 }
 
 /**
@@ -86,6 +103,11 @@ const PartnershipSchema = new Schema<IPartnershipDocument>(
       required: true,
       index: true,
     },
+    lifecycleStatus: {
+      type: String,
+      enum: Object.values(ItemLifecycleStatus),
+      index: true,
+    },
     requestMessage: {
       type: String,
       trim: true,
@@ -94,11 +116,38 @@ const PartnershipSchema = new Schema<IPartnershipDocument>(
       type: String,
       trim: true,
     },
+    messages: [{
+      userId: {
+        type: String,
+        required: true,
+      },
+      message: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      timestamp: {
+        type: Date,
+        default: Date.now
+      }
+    }],
+    startDate: {
+      type: Date,
+      index: true,
+    },
+    endDate: {
+      type: Date,
+      index: true,
+    },
     approvedAt: {
       type: Date,
       index: true,
     },
     rejectedAt: {
+      type: Date,
+      index: true,
+    },
+    canceledAt: {
       type: Date,
       index: true,
     },
@@ -132,9 +181,26 @@ const PartnershipSchema = new Schema<IPartnershipDocument>(
       type: Number,
       index: true,
     },
-    lifecycleDurationInDays: {
+    partnershipDurationInDays: {
       type: Number,
       index: true,
+    },
+    successMetrics: {
+      satisfaction: {
+        type: Number,
+        min: 0,
+        max: 10
+      },
+      completionRate: {
+        type: Number,
+        min: 0,
+        max: 100
+      },
+      goalAchievement: {
+        type: Number,
+        min: 0,
+        max: 100
+      }
     }
   },
   {
@@ -160,6 +226,28 @@ PartnershipSchema.methods.setTimeAnalyticsDimensions = function(this: IPartnersh
   this.requestQuarter = Math.floor((requestDate.getMonth()) / 3) + 1; // Convert to quarter 1-4
 };
 
+// Method to update lifecycle status based on dates
+PartnershipSchema.methods.updateLifecycleStatus = function(this: IPartnershipDocument) {
+  // Only applicable for approved partnerships with start and end dates
+  if (this.status !== PartnershipStatus.APPROVED || !this.startDate || !this.endDate) {
+    return;
+  }
+  
+  // Use the helper function from status.enum.ts
+  this.lifecycleStatus = determineItemStatus(this.startDate, this.endDate, this.isComplete);
+  
+  // Also update the partnership status to match the lifecycle status
+  if (this.lifecycleStatus === ItemLifecycleStatus.UPCOMING) {
+    this.status = PartnershipStatus.UPCOMING;
+  } else if (this.lifecycleStatus === ItemLifecycleStatus.ONGOING) {
+    this.status = PartnershipStatus.ONGOING;
+  } else if (this.lifecycleStatus === ItemLifecycleStatus.COMPLETED && !this.isComplete) {
+    this.status = PartnershipStatus.COMPLETE;
+    this.isComplete = true;
+    this.completedAt = new Date();
+  }
+};
+
 // Middleware to ensure a course/project can only be in one approved partnership
 // and to calculate analytics measures
 PartnershipSchema.pre('save', async function(this: IPartnershipDocument, next) {
@@ -167,6 +255,30 @@ PartnershipSchema.pre('save', async function(this: IPartnershipDocument, next) {
     // Set time analytics dimensions on creation
     if (this.isNew) {
       this.setTimeAnalyticsDimensions();
+    }
+    
+    // Validate status transitions
+    if (this.isModified('status')) {
+      const oldStatus = this.isNew ? null : this.get('status', String);
+      const newStatus = this.status;
+
+      // Handle status transition validations
+      if (oldStatus === PartnershipStatus.REJECTED && newStatus !== PartnershipStatus.REJECTED) {
+        return next(new Error('Cannot change status once a partnership has been rejected') as CallbackError);
+      }
+      
+      if (oldStatus === PartnershipStatus.CANCELED && newStatus !== PartnershipStatus.CANCELED) {
+        return next(new Error('Cannot change status once a partnership has been canceled') as CallbackError);
+      }
+      
+      if (oldStatus === PartnershipStatus.COMPLETE && newStatus !== PartnershipStatus.COMPLETE) {
+        return next(new Error('Cannot change status once a partnership has been completed') as CallbackError);
+      }
+      
+      // Validate status flow
+      if (newStatus === PartnershipStatus.CANCELED && oldStatus !== PartnershipStatus.PENDING) {
+        return next(new Error('Only pending partnerships can be canceled') as CallbackError);
+      }
     }
     
     // If this partnership is being approved
@@ -178,26 +290,26 @@ PartnershipSchema.pre('save', async function(this: IPartnershipDocument, next) {
       const Partnership = mongoose.model<IPartnershipDocument>('Partnership');
       const existingPartnership = await Partnership.findOne({
         courseId: this.courseId,
-        status: PartnershipStatus.APPROVED,
+        status: { $in: [PartnershipStatus.APPROVED, PartnershipStatus.UPCOMING, PartnershipStatus.ONGOING] },
         _id: { $ne: this._id }
       });
       
       if (existingPartnership) {
-        logger.warn(`Partnership validation failed: Course ${this.courseId} is already in an approved partnership`);
-        const error = new Error('This course is already in an approved partnership');
+        logger.warn(`Partnership validation failed: Course ${this.courseId} is already in an active partnership`);
+        const error = new Error('This course is already in an active partnership');
         return next(error as CallbackError);
       }
       
       // Check if project is already in an approved partnership
       const existingProjectPartnership = await Partnership.findOne({
         projectId: this.projectId,
-        status: PartnershipStatus.APPROVED,
+        status: { $in: [PartnershipStatus.APPROVED, PartnershipStatus.UPCOMING, PartnershipStatus.ONGOING] },
         _id: { $ne: this._id }
       });
       
       if (existingProjectPartnership) {
-        logger.warn(`Partnership validation failed: Project ${this.projectId} is already in an approved partnership`);
-        const error = new Error('This project is already in an approved partnership');
+        logger.warn(`Partnership validation failed: Project ${this.projectId} is already in an active partnership`);
+        const error = new Error('This project is already in an active partnership');
         return next(error as CallbackError);
       }
       
@@ -208,6 +320,11 @@ PartnershipSchema.pre('save', async function(this: IPartnershipDocument, next) {
       this.approvalTimeInDays = Math.round(
         (this.approvedAt.getTime() - this.createdAt.getTime()) / (1000 * 60 * 60 * 24)
       );
+      
+      // Update lifecycle status if dates are present
+      if (this.startDate && this.endDate) {
+        this.updateLifecycleStatus();
+      }
       
       logger.info(`Partnership ${this._id} between course ${this.courseId} and project ${this.projectId} approved`);
     }
@@ -221,6 +338,20 @@ PartnershipSchema.pre('save', async function(this: IPartnershipDocument, next) {
       logger.info(`Partnership ${this._id} between course ${this.courseId} and project ${this.projectId} rejected`);
     }
     
+    // Set cancelation timestamp if being canceled
+    if (
+      this.isModified('status') && 
+      this.status === PartnershipStatus.CANCELED
+    ) {
+      this.canceledAt = new Date();
+      logger.info(`Partnership ${this._id} between course ${this.courseId} and project ${this.projectId} canceled by requester`);
+    }
+    
+    // Update lifecycle status any time dates are modified
+    if ((this.isModified('startDate') || this.isModified('endDate')) && this.startDate && this.endDate) {
+      this.updateLifecycleStatus();
+    }
+    
     // Set completed timestamp if being completed
     if (
       this.isModified('status') && 
@@ -229,10 +360,12 @@ PartnershipSchema.pre('save', async function(this: IPartnershipDocument, next) {
       this.completedAt = new Date();
       this.isComplete = true;
       
-      // Calculate lifecycle duration in days
-      this.lifecycleDurationInDays = Math.round(
-        (this.completedAt.getTime() - this.createdAt.getTime()) / (1000 * 60 * 60 * 24)
-      );
+      // Calculate partnership duration in days
+      if (this.approvedAt) {
+        this.partnershipDurationInDays = Math.round(
+          (this.completedAt.getTime() - this.approvedAt.getTime()) / (1000 * 60 * 60 * 24)
+        );
+      }
       
       logger.info(`Partnership ${this._id} between course ${this.courseId} and project ${this.projectId} marked as complete`);
     }
@@ -242,10 +375,12 @@ PartnershipSchema.pre('save', async function(this: IPartnershipDocument, next) {
       this.status = PartnershipStatus.COMPLETE;
       this.completedAt = this.completedAt || new Date();
       
-      // Calculate lifecycle duration in days
-      this.lifecycleDurationInDays = Math.round(
-        (this.completedAt.getTime() - this.createdAt.getTime()) / (1000 * 60 * 60 * 24)
-      );
+      // Calculate partnership duration in days
+      if (this.approvedAt) {
+        this.partnershipDurationInDays = Math.round(
+          (this.completedAt.getTime() - this.approvedAt.getTime()) / (1000 * 60 * 60 * 24)
+        );
+      }
       
       logger.info(`Partnership ${this._id} marked as complete via isComplete flag`);
     }
@@ -261,10 +396,14 @@ PartnershipSchema.pre('save', async function(this: IPartnershipDocument, next) {
 PartnershipSchema.index({ courseId: 1, projectId: 1 }, { unique: true });
 PartnershipSchema.index({ requestedByUserId: 1, status: 1 });
 PartnershipSchema.index({ requestedToUserId: 1, status: 1 });
+PartnershipSchema.index({ status: 1, lifecycleStatus: 1 });
+PartnershipSchema.index({ startDate: 1, endDate: 1 });
 PartnershipSchema.index({ requestYear: 1, requestQuarter: 1 });
 PartnershipSchema.index({ approvalTimeInDays: 1 });
-PartnershipSchema.index({ lifecycleDurationInDays: 1 });
+PartnershipSchema.index({ partnershipDurationInDays: 1 });
 PartnershipSchema.index({ status: 1, requestYear: 1, requestQuarter: 1 });
+PartnershipSchema.index({ 'successMetrics.satisfaction': 1 });
+PartnershipSchema.index({ 'successMetrics.completionRate': 1 });
 
 // Create and export the model with proper type information
 export const Partnership = mongoose.model<IPartnershipDocument, IPartnershipModel>('Partnership', PartnershipSchema);

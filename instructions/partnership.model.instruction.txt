@@ -1,0 +1,54 @@
+Enhanced Partnership Status Flow
+The partnership lifecycle should include these statuses in sequence:
+
+PENDING: Initial state when a partnership request is created
+APPROVED: When the recipient accepts the partnership request
+REJECTED: When the recipient declines the partnership request
+CANCELED: When the requester cancels their request before a response
+UPCOMING: When approved but the start date hasn't been reached
+ONGOING: When approved and currently between start and end dates
+COMPLETE: When the partnership has finished successfully
+
+Partnership Model Implementation Details
+To implement the partnership model based on your existing codebase, I'd create these files:
+1. Create src/models/partnership.model.ts
+This model should include:
+
+Core Identifiers:
+
+MongoDB ObjectId
+Reference to Course ID
+Reference to Project ID
+Requester user ID
+Recipient user ID
+
+
+Status Management:
+
+Partnership status (enum with all states)
+Request timestamp
+Response timestamp
+Completion timestamp
+Lifecycle status (upcoming/ongoing/complete)
+
+
+Communication Fields:
+
+Request message
+Response message
+Messages array for ongoing communication
+
+
+Analytics Fields:
+
+Time dimensions (year, quarter, month)
+Approval time in days
+Partnership duration in days
+Success metrics
+
+
+Methods:
+
+Status transition validation
+Lifecycle status calculation based on dates
+Time analytics calculation
