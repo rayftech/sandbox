@@ -6,6 +6,7 @@ import userRoutes from './user.routes';
 import courseRoutes from './course.routes';
 import userSaveRoutes from './user-save.routes'; 
 import projectRoutes from './project.routes';
+import partnershipRoutes from './partnership.routes';
 
 // Create main router
 const router = Router();
@@ -21,6 +22,7 @@ router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/courses', courseRoutes);
 router.use('/projects', projectRoutes);
+router.use('/partnerships', partnershipRoutes);
 router.use('/', userSaveRoutes); 
 
 /**

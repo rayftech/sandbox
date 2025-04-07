@@ -129,3 +129,75 @@ second, Ensure all critical functions handle concurrency properly:
 
 
 
+Controller Implementation
+third, Create controllers in src/controllers/partnership.controller.ts
+    createPartnershipRequest:
+    1. Extract data from request body and user from auth
+    2. Validate request data (course ID, project ID, message)
+    3. Call partnership service to create partnership
+    4. Return success response with created partnership
+
+    respondToPartnershipRequest:
+    1. Extract partnership ID, response type, and message
+    2. Get user ID from authentication
+    3. Call appropriate service method based on response type:
+    - If approve: updatePartnership with APPROVED status
+    - If reject: updatePartnership with REJECTED status
+    4. Return success response with updated partnership
+
+    sendPartnershipMessage:
+    1. Extract partnership ID and message content
+    2. Get user ID from authentication
+    3. Call addMessage service method
+    4. Return success with updated message thread
+
+    getPartnershipConversation:
+    1. Extract partnership ID
+    2. Verify user authorization
+    3. Retrieve partnership with messages
+    4. Return messages sorted by timestamp
+
+
+Routes Implementation
+Create routes in src/routes/partnership.routes.ts:
+    Main Routes:
+    - POST /partnerships - Create new partnership request
+    - GET /partnerships - Get all partnerships with filters
+    - GET /partnerships/:id - Get partnership details
+    - PATCH /partnerships/:id - Update partnership
+    - DELETE /partnerships/:id - Cancel partnership request
+
+    Status Routes:
+    - PATCH /partnerships/:id/approve - Approve partnership
+    - PATCH /partnerships/:id/reject - Reject partnership
+    - PATCH /partnerships/:id/complete - Complete partnership
+
+    Messaging Routes:
+    - POST /partnerships/:id/messages - Send a message
+    - GET /partnerships/:id/messages - Get conversation history
+
+    Query Routes:
+    - GET /partnerships/pending - Get pending requests
+    - GET /partnerships/active - Get active partnerships
+    - GET /partnerships/analytics - Get partnership statistics
+
+Event Publishing
+    Integrate with your existing event system:
+    Event Types to Publish:
+    - PARTNERSHIP_REQUESTED when new partnership is created
+    - PARTNERSHIP_APPROVED when partnership is approved
+    - PARTNERSHIP_REJECTED when partnership is 
+    rejected
+    - PARTNERSHIP_CANCELED when partnership is canceled
+    - PARTNERSHIP_COMPLETED when partnership is completed
+    - PARTNERSHIP_MESSAGE_SENT when new message is added
+
+
+Notification System
+    Create notification service to handle partnership events:
+    Notification Generator:
+    1. Listen for partnership events
+    2. Generate appropriate notification content
+    3. Determine notification recipients
+    4. Send email notifications for important status changes
+    5. Create in-app notifications for all events
