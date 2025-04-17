@@ -633,6 +633,69 @@ export class PartnershipService {
    * @param userId The userId of the user
    * @param session Optional Mongoose session for transactions
    */
+  /**
+   * Send a message in a partnership conversation
+   * @param partnershipId The MongoDB ID of the partnership
+   * @param userId The userId of the message sender
+   * @param messageText The message text to add
+   * @returns The updated partnership document
+   */
+  static async sendMessage(
+    partnershipId: string,
+    userId: string,
+    messageText: string
+  ): Promise<IPartnership> {
+    try {
+      if (!mongoose.isValidObjectId(partnershipId)) {
+        throw new Error('Invalid partnership ID format');
+      }
+      
+      // Get the partnership
+      const partnership = await Partnership.findById(partnershipId);
+      
+      if (!partnership) {
+        throw new Error(`Partnership with ID ${partnershipId} not found`);
+      }
+      
+      // Check if user is a participant in this partnership
+      const isParticipant = partnership.requestedByUserId === userId || 
+                            partnership.requestedToUserId === userId;
+      
+      if (!isParticipant) {
+        // Check if user is an admin
+        const user = await User.findOne({ userId });
+        if (!user || !user.isAdmin) {
+          throw new Error('Permission denied: Only partnership participants or admins can send messages');
+        }
+      }
+      
+      // Create the message object
+      const newMessage = {
+        userId,
+        message: messageText,
+        timestamp: new Date()
+      };
+      
+      // Initialize messages array if it doesn't exist
+      if (!partnership.messages) {
+        partnership.messages = [];
+      }
+      
+      // Add the new message
+      partnership.messages.push(newMessage);
+      
+      // Save the updated partnership
+      await partnership.save();
+      
+      logger.info(`Message added to partnership ${partnershipId} by user ${userId}`);
+      
+      return partnership;
+    } catch (error) {
+      logger.error(`Error sending partnership message: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
+
   private static async recalculateUserSuccessRate(
     userId: string,
     session?: mongoose.ClientSession

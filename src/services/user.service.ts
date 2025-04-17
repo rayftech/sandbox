@@ -27,6 +27,11 @@ export class UserService {
         user.userType = userData.userType;
         user.isAdmin = userData.isAdmin;
         
+        // Update prefix if provided
+        if (userData.prefix !== undefined) {
+          user.prefix = userData.prefix;
+        }
+        
         // Update additional fields if provided
         if (userData.country) {
           user.country = userData.country;

@@ -38,8 +38,8 @@ const router = Router();
  *                 example: 'CS101'
  *               level:
  *                 type: string
- *                 enum: ['Undergraduate 1st & 2nd year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
- *                 example: 'Undergraduate 1st & 2nd year'
+ *                 enum: ['Undergraduate first & second year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
+ *                 example: 'Undergraduate first & second year'
  *               startDate:
  *                 type: string
  *                 format: date
@@ -66,6 +66,10 @@ const router = Router();
  *               preferredPartnerRepresentative:
  *                 type: string
  *                 example: 'Someone from a software company'
+ *               isPrivate:
+ *                 type: boolean
+ *                 example: false
+ *                 description: 'If true, the course will only be visible to its owner'
  *     responses:
  *       201:
  *         description: Course created successfully
@@ -82,12 +86,13 @@ router.post(
   [
     body('name').notEmpty().withMessage('Course name is required'),
     body('code').notEmpty().withMessage('Course code is required'),
-    body('level').notEmpty().isIn(['Undergraduate 1st & 2nd year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other'])
+    body('level').notEmpty().isIn(['Undergraduate first & second year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other'])
       .withMessage('Valid course level is required'),
     body('startDate').isISO8601().withMessage('Valid start date is required'),
     body('endDate').isISO8601().withMessage('Valid end date is required'),
     body('country').notEmpty().withMessage('Country is required'),
-    body('organisation').optional()
+    body('organisation').optional(),
+    body('isPrivate').optional().isBoolean().withMessage('isPrivate must be a boolean value')
   ],
   CourseController.createCourse
 );
@@ -134,6 +139,11 @@ router.post(
  *           minimum: 1
  *           maximum: 50
  *         description: Number of items per page
+ *       - in: query
+ *         name: groupByUserCountry
+ *         schema:
+ *           type: boolean
+ *         description: Group results by user country (local and overseas)
  *     responses:
  *       200:
  *         description: List of courses
@@ -174,6 +184,11 @@ router.get('/', CourseController.getCourses);
  *           minimum: 1
  *           maximum: 50
  *         description: Maximum number of results
+ *       - in: query
+ *         name: groupByUserCountry
+ *         schema:
+ *           type: boolean
+ *         description: Group results by user country (local and overseas)
  *     responses:
  *       200:
  *         description: Search results
@@ -186,7 +201,8 @@ router.get('/search', [
   query('q').optional(),
   query('country').optional(),
   query('organisation').optional(),
-  query('limit').optional().isInt({ min: 1, max: 50 }).toInt()
+  query('limit').optional().isInt({ min: 1, max: 50 }).toInt(),
+  query('groupByUserCountry').optional().isBoolean()
 ], CourseController.searchCourses);
 
 /**
@@ -211,6 +227,11 @@ router.get('/search', [
  *           minimum: 1
  *           maximum: 50
  *         description: Number of items per page
+ *       - in: query
+ *         name: groupByUserCountry
+ *         schema:
+ *           type: boolean
+ *         description: Group results by user country (local and overseas)
  *     responses:
  *       200:
  *         description: List of courses with selected fields
@@ -219,7 +240,8 @@ router.get('/search', [
  */
 router.get('/list', [
   query('page').optional().isInt({ min: 1 }).toInt(),
-  query('limit').optional().isInt({ min: 1, max: 50 }).toInt()
+  query('limit').optional().isInt({ min: 1, max: 50 }).toInt(),
+  query('groupByUserCountry').optional().isBoolean()
 ], CourseController.getCoursesList);
 
 /**
@@ -248,7 +270,7 @@ router.get('/list', [
  *         name: level
  *         schema:
  *           type: string
- *           enum: ['Undergraduate 1st & 2nd year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
+ *           enum: ['Undergraduate first & second year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
  *         description: Filter by course level
  *       - in: query
  *         name: country
@@ -271,6 +293,11 @@ router.get('/list', [
  *           type: string
  *           enum: ['upcoming', 'ongoing', 'completed']
  *         description: Filter by lifecycle status
+ *       - in: query
+ *         name: groupByUserCountry
+ *         schema:
+ *           type: boolean
+ *         description: Group results by user country (local and overseas)
  *     responses:
  *       200:
  *         description: Filtered list of courses
@@ -284,8 +311,71 @@ router.get('/filter', [
   query('country').optional(),
   query('organisation').optional(),
   query('isActive').optional(),
-  query('status').optional()
+  query('status').optional(),
+  query('groupByUserCountry').optional().isBoolean()
 ], CourseController.getFilteredCourses);
+
+/**
+ * @swagger
+ * /api/courses/by-location:
+ *   get:
+ *     summary: Get courses grouped by user's location
+ *     description: Retrieves courses grouped by the user's country (local) and other countries (overseas)
+ *     tags:
+ *       - Courses
+ *     security:
+ *       - UserAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 50
+ *         description: Number of items per page
+ *       - in: query
+ *         name: level
+ *         schema:
+ *           type: string
+ *           enum: ['Undergraduate first & second year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
+ *         description: Filter by course level
+ *       - in: query
+ *         name: active
+ *         schema:
+ *           type: boolean
+ *         description: Filter by active status
+ *       - in: query
+ *         name: organisation
+ *         schema:
+ *           type: string
+ *         description: Filter by organisation
+ *     responses:
+ *       200:
+ *         description: Courses grouped by local and overseas
+ *       400:
+ *         description: Missing user country information
+ *       401:
+ *         description: Authentication required
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/by-location', 
+  AuthMiddleware.authenticateUser,
+  [
+    query('page').optional().isInt({ min: 1 }).toInt(),
+    query('limit').optional().isInt({ min: 1, max: 50 }).toInt(),
+    query('level').optional(),
+    query('active').optional(),
+    query('organisation').optional()
+  ],
+  CourseController.getCoursesByUserLocation
+);
 
 /**
  * @swagger
@@ -442,7 +532,7 @@ router.get('/user/:userId', CourseController.getCoursesByCreator);
  *         name: level
  *         schema:
  *           type: string
- *           enum: ['Undergraduate 1st & 2nd year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
+ *           enum: ['Undergraduate first & second year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
  *         description: Filter by course level
  *       - in: query
  *         name: status
@@ -522,7 +612,7 @@ router.get('/:courseId', CourseController.getCourseById);
  *                 type: string
  *               level:
  *                 type: string
- *                 enum: ['Undergraduate 1st & 2nd year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
+ *                 enum: ['Undergraduate first & second year', 'Undergraduate penultimate & final year', 'Postgraduate', 'Other']
  *               startDate:
  *                 type: string
  *                 format: date
@@ -535,6 +625,9 @@ router.get('/:courseId', CourseController.getCourseById);
  *                 type: string
  *               isActive:
  *                 type: boolean
+ *               isPrivate:
+ *                 type: boolean
+ *                 description: 'If true, the course will only be visible to its owner'
  *               description:
  *                 type: string
  *               expectedEnrollment:

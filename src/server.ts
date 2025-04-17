@@ -7,6 +7,7 @@ import { UserConsumerService } from './services/user.consumer.service';
 import { EventPublisher } from './services/event.publisher';
 import { StrapiConsumerService } from './services/strapi-consumer.service';
 import { RequestResponseService } from './services/request-response.service';
+import { SchedulerService } from './services/scheduler.service';
 import { ServiceConfig } from './config/service-config';
 
 const logger = createLogger('Server');
@@ -45,6 +46,16 @@ async function initializeMessageServices() {
       }
     } else {
       logger.info('Event Publisher disabled by configuration');
+    }
+    
+    // Initialize scheduler service
+    try {
+      await SchedulerService.getInstance().initialize();
+      logger.info('Scheduler service initialized');
+      servicesInitialized++;
+    } catch (error) {
+      logger.error(`Failed to initialize Scheduler Service: ${error instanceof Error ? error.message : String(error)}`);
+      servicesFailed++;
     }
     
     // Initialize user consumer if RabbitMQ is enabled
@@ -108,6 +119,14 @@ async function gracefulShutdown() {
   logger.info('Received shutdown signal, starting graceful shutdown');
 
   try {
+    // Shutdown scheduler service
+    try {
+      await SchedulerService.getInstance().shutdown();
+      logger.info('Scheduler service shut down');
+    } catch (schedulerError) {
+      logger.error(`Error shutting down scheduler service: ${schedulerError instanceof Error ? schedulerError.message : String(schedulerError)}`);
+    }
+    
     // Close database connection
     await dbConnection.disconnect();
     logger.info('Database connections closed');

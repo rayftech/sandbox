@@ -10,6 +10,7 @@ const logger = createLogger('UserModel');
 export interface IAmplifyUserData {
   userId: string;
   email: string;
+  prefix?: string;
   firstName: string;
   lastName: string;
   userType: 'academic' | 'industry' | 'admin';
@@ -105,6 +106,10 @@ const UserSchema = new Schema<IUserDocument>(
       trim: true,
       lowercase: true,
       index: true,
+    },
+    prefix: {
+      type: String,
+      trim: true,
     },
     firstName: {
       type: String,

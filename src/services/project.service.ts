@@ -5,6 +5,8 @@ import { User, IUser } from '../models/user.model';
 import { createLogger } from '../config/logger';
 import { CourseLevel } from '../models/course.model';
 import { RichTextFormatter } from '../utils/rich-text-formatter';
+import { EventPublisher } from './event.publisher';
+import { EventType } from '../models/events.model';
 
 const logger = createLogger('ProjectService');
 
@@ -80,6 +82,85 @@ export interface IProjectUpdateData {
  */
 export class ProjectService {
   /**
+   * Checks all active projects to determine if they have ended based on end date
+   * Updates status and sends notifications for projects that have passed their end date
+   * @returns Promise with results of the check operation
+   */
+  static async checkProjectsEndDate(): Promise<{ updated: number, errors: number }> {
+    try {
+      logger.info('Starting project end date check');
+      const now = new Date();
+      
+      // Find all active projects where end date has passed
+      const expiredProjects = await Project.find({
+        isActive: true,
+        endDate: { $lt: now }
+      });
+      
+      logger.info(`Found ${expiredProjects.length} expired projects that need status update`);
+      
+      let updated = 0;
+      let errors = 0;
+      
+      // Process each expired project
+      for (const project of expiredProjects) {
+        try {
+          // Update project status
+          project.isActive = false;
+          project.updateStatus();
+          
+          // Save the updated project
+          await project.save();
+          updated++;
+          
+          // Send notification to project creator
+          try {
+            // Get event publisher instance
+            const eventPublisher = EventPublisher.getInstance();
+            
+            // Send project update event
+            await eventPublisher.publishProjectEvent(
+              EventType.PROJECT_UPDATED,
+              {
+                projectId: project._id.toString(),
+                title: project.name,
+                shortDescription: project.shortDescription || '',
+                creatorUserId: project.userId,
+                studentLevel: project.studentLevel,
+                startDate: project.startDate,
+                endDate: project.endDate,
+                country: project.country,
+                organisation: project.organisation || ''
+              }
+            );
+            
+            // Send system notification to project creator
+            await eventPublisher.publishSystemNotification({
+              recipientUserId: project.userId,
+              title: 'Project Ended',
+              message: `Your project "${project.name}" has reached its end date and has been marked as completed.`,
+              priority: 'medium'
+            });
+          } catch (notificationError) {
+            logger.error(`Error sending notifications for expired project ${project._id}: ${notificationError instanceof Error ? notificationError.message : String(notificationError)}`);
+          }
+          
+          logger.info(`Updated status for expired project ${project._id}, "${project.name}"`);
+        } catch (projectError) {
+          errors++;
+          logger.error(`Error updating expired project ${project._id}: ${projectError instanceof Error ? projectError.message : String(projectError)}`);
+        }
+      }
+      
+      logger.info(`Project end date check completed. Updated: ${updated}, Errors: ${errors}`);
+      return { updated, errors };
+    } catch (error) {
+      logger.error(`Error in checkProjectsEndDate: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
+
+  /**
    * Create a new project
    * @param projectData The project data
    * @returns The created project document
@@ -98,6 +179,16 @@ export class ProjectService {
       const user = await User.findOne({ userId: projectData.creator });
       if (!user) {
         throw new Error(`Creator with userId ${projectData.creator} not found`);
+      }
+      
+      // Check for duplicate project (same user and project title)
+      const existingProject = await Project.findOne({
+        userId: projectData.creator,
+        name: { $regex: new RegExp(`^${projectData.title}$`, 'i') } // Case-insensitive match
+      });
+      
+      if (existingProject) {
+        throw new Error(`A project with the title "${projectData.title}" already exists for this user`);
       }
 
       // Use RichTextFormatter to convert text to Lexical format
@@ -186,6 +277,36 @@ export class ProjectService {
     } catch (error) {
       logger.error(`Error getting project: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
+    }
+  }
+  
+  /**
+   * Get creator user details
+   * @param userId The userId of the project creator
+   * @returns The user details or null if not found
+   */
+  static async getCreatorDetails(userId: string): Promise<IUser | null> {
+    try {
+      if (!userId) {
+        logger.warn('No userId provided to getCreatorDetails');
+        return null;
+      }
+      
+      // Get user from MongoDB with required fields
+      const user = await User.findOne(
+        { userId },
+        { prefix: 1, firstName: 1, lastName: 1, email: 1, organisation: 1 }
+      );
+      
+      if (!user) {
+        logger.warn(`User with userId ${userId} not found`);
+        return null;
+      }
+      
+      return user;
+    } catch (error) {
+      logger.error(`Error getting creator details: ${error instanceof Error ? error.message : String(error)}`);
+      return null; // Return null instead of throwing to prevent project fetch from failing
     }
   }
 

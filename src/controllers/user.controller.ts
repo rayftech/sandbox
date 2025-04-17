@@ -50,6 +50,7 @@ export class UserController {
       data: {
         userId: user.userId,
         email: user.email,
+        prefix: user.prefix,
         firstName: user.firstName,
         lastName: user.lastName,
         userType: user.userType,

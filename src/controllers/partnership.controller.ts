@@ -244,7 +244,7 @@ export class PartnershipController {
     try {
       const { partnershipId } = req.params;
       const { message } = req.body;
-      // const userId = req.user.userId;
+      const userId = req.user.userId;
       
       // Validate required fields
       if (!partnershipId || !message) {
@@ -254,11 +254,46 @@ export class PartnershipController {
         });
       }
       
-      // Currently not implemented in service, would need to be added
-      return res.status(501).json({
-        success: false,
-        message: 'Message functionality not yet implemented'
-      });
+      try {
+        // Send the message
+        const updatedPartnership = await PartnershipService.sendMessage(
+          partnershipId,
+          userId,
+          message
+        );
+        
+        // Get just the latest message for the response
+        const latestMessage = updatedPartnership.messages && updatedPartnership.messages.length > 0 
+          ? updatedPartnership.messages[updatedPartnership.messages.length - 1] 
+          : null;
+        
+        return res.status(200).json({
+          success: true,
+          message: 'Message sent successfully',
+          data: {
+            partnershipId: updatedPartnership._id,
+            courseId: updatedPartnership.courseId,
+            projectId: updatedPartnership.projectId,
+            latestMessage
+          }
+        });
+      } catch (accessError) {
+        // Handle specific errors
+        if (accessError instanceof Error) {
+          if (accessError.message.includes('Permission denied')) {
+            return res.status(403).json({
+              success: false,
+              message: accessError.message
+            });
+          } else if (accessError.message.includes('not found')) {
+            return res.status(404).json({
+              success: false,
+              message: accessError.message
+            });
+          }
+        }
+        throw accessError; // Re-throw for generic error handling
+      }
     } catch (error) {
       logger.error(`Error sending partnership message: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
@@ -489,6 +524,61 @@ export class PartnershipController {
       }
       
       logger.error(`Error getting partnership analytics: ${error instanceof Error ? error.message : String(error)}`);
+      next(error);
+      return undefined;
+    }
+  };
+  
+  /**
+   * Get all partnerships for the authenticated user
+   * @param req Express request with optional status filter
+   * @param res Express response
+   * @param next Express next function
+   */
+  async getUserPartnerships(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response | undefined> {
+    try {
+      const userId = req.user.userId;
+      const { status } = req.query;
+      
+      // Validate status if provided
+      if (status && !Object.values(PartnershipStatus).includes(status as PartnershipStatus)) {
+        return res.status(400).json({
+          success: false,
+          message: `Invalid status. Must be one of: ${Object.values(PartnershipStatus).join(', ')}`
+        });
+      }
+      
+      // Get partnerships where user is either requester or recipient
+      const partnershipsByRequestor = await PartnershipService.getPartnershipsByRequestor(
+        userId, 
+        status as PartnershipStatus | undefined
+      );
+      
+      const partnershipsByRecipient = await PartnershipService.getPartnershipsByRecipient(
+        userId, 
+        status as PartnershipStatus | undefined
+      );
+      
+      // Combine results
+      const partnerships = [...partnershipsByRequestor, ...partnershipsByRecipient];
+      
+      // Add a flag to indicate if the user is requester or recipient
+      const enhancedPartnerships = partnerships.map(partnership => {
+        const isRequester = partnership.requestedByUserId === userId;
+        return {
+          ...partnership.toObject(),
+          userRole: isRequester ? 'requester' : 'recipient'
+        };
+      });
+      
+      return res.status(200).json({
+        success: true,
+        count: partnerships.length,
+        data: enhancedPartnerships,
+        filter: status ? { status } : 'No status filter applied'
+      });
+    } catch (error) {
+      logger.error(`Error getting user partnerships: ${error instanceof Error ? error.message : String(error)}`);
       next(error);
       return undefined;
     }

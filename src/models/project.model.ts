@@ -9,7 +9,7 @@ const logger = createLogger('ProjectModel');
  * Enum for student level
  */
 export enum StudentLevel {
-  UNDERGRAD_EARLY = 'Undergraduate 1st & 2nd year',
+  UNDERGRAD_EARLY = 'Undergraduate first & second year',
   UNDERGRAD_LATE = 'Undergraduate penultimate & final year',
   POSTGRAD = 'Postgraduate',
   OTHER = 'Other'

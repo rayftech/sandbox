@@ -131,11 +131,21 @@ export class ProjectController {
           message: `Project with ID ${projectId} not found`
         });
       }
+      
+      // Get the creator's user information
+      const creator = await ProjectService.getCreatorDetails(project.userId);
 
       return res.status(200).json({
         status: 'success',
         data: {
-          project
+          project,
+          creator: creator ? {
+            prefix: creator.prefix,
+            firstName: creator.firstName,
+            lastName: creator.lastName,
+            email: creator.email,
+            organisation: creator.organisation
+          } : null
         }
       });
     } catch (error) {

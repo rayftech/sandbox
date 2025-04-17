@@ -102,6 +102,7 @@ export class CourseController {
    */
   public static getCourseById = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { courseId } = req.params;
+    const userId = req.user?.userId; // Get userId from authenticated user if available
 
     if (!courseId) {
       return res.status(400).json({
@@ -111,7 +112,8 @@ export class CourseController {
     }
 
     try {
-      const course = await CourseService.getCourseById(courseId);
+      // Pass the userId to check if user can access private course
+      const course = await CourseService.getCourseById(courseId, userId);
 
       if (!course) {
         return res.status(404).json({
@@ -120,10 +122,32 @@ export class CourseController {
         });
       }
 
+      // Check if course is private and requester is not the owner or admin
+      if (course.isPrivate && userId && course.creatorUserId !== userId) {
+        // We need to verify if user is admin
+        const user = await CourseService.getCreatorDetails(userId);
+        if (!user?.isAdmin) {
+          return res.status(403).json({
+            status: 'error',
+            message: 'Access denied: This is a private course'
+          });
+        }
+      }
+
+      // Get the creator's user information
+      const creator = await CourseService.getCreatorDetails(course.creatorUserId);
+
       return res.status(200).json({
         status: 'success',
         data: {
-          course
+          course,
+          creator: creator ? {
+            prefix: creator.prefix,
+            firstName: creator.firstName,
+            lastName: creator.lastName,
+            email: creator.email,
+            organisation: creator.organisation
+          } : null
         }
       });
     } catch (error) {
@@ -377,6 +401,7 @@ export class CourseController {
    */
   public static getCoursesByCreator = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { userId } = req.params;
+    const requesterId = req.user?.userId; // Get userId from authenticated user if available
 
     if (!userId) {
       return res.status(400).json({
@@ -386,7 +411,8 @@ export class CourseController {
     }
 
     try {
-      const courses = await CourseService.getCoursesByCreator(userId);
+      // Pass the requesterId to filter private courses
+      const courses = await CourseService.getCoursesByCreator(userId, requesterId);
 
       return res.status(200).json({
         status: 'success',
@@ -449,7 +475,9 @@ export class CourseController {
    * @route GET /api/courses/search
    */
   public static searchCourses = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const { q, country, organisation, limit } = req.query;
+    const { q, country, organisation, limit, groupByUserCountry } = req.query;
+    const userId = req.user?.userId; // Get userId from authenticated user if available
+    const userCountry = req.user?.country; // Get user country for grouping if available
     
     // Ensure at least one search parameter is provided
     if (!q && !country && !organisation) {
@@ -460,6 +488,7 @@ export class CourseController {
     }
 
     const limitNum = limit ? parseInt(limit as string, 10) : 10;
+    const shouldGroupByCountry = groupByUserCountry === 'true' && userCountry;
     
     try {
       // Create filter object based on provided parameters
@@ -476,21 +505,48 @@ export class CourseController {
       // Use text search if q parameter is provided, otherwise use filters
       let courses;
       if (q) {
-        courses = await CourseService.searchCourses(q as string, limitNum, filters);
+        courses = await CourseService.searchCourses(q as string, limitNum, filters, userId);
       } else {
         // Use service method instead of direct model access for better encapsulation
-        courses = await CourseService.getPaginatedCourses(1, limitNum, filters);
+        courses = await CourseService.getPaginatedCourses(1, limitNum, filters, userId);
         courses = courses.courses; // Extract the courses array from the result
       }
 
-      return res.status(200).json({
-        status: 'success',
-        data: {
-          courses,
-          count: courses.length,
-          searchParams: { q, country, organisation }
-        }
-      });
+      // Group by user country if requested and country is available
+      if (shouldGroupByCountry) {
+        // Group courses into local and overseas
+        const local = courses.filter(course => course.country === userCountry);
+        const overseas = courses.filter(course => course.country !== userCountry);
+        
+        logger.info(`Grouped search results by user country ${userCountry}: ${local.length} local, ${overseas.length} overseas`);
+        
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            courses: {
+              local,
+              overseas
+            },
+            count: {
+              total: courses.length,
+              local: local.length,
+              overseas: overseas.length
+            },
+            searchParams: { q, country, organisation },
+            userCountry
+          }
+        });
+      } else {
+        // Return non-grouped results
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            courses,
+            count: courses.length,
+            searchParams: { q, country, organisation }
+          }
+        });
+      }
     } catch (error) {
       logger.error(`Error searching courses: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
@@ -502,7 +558,8 @@ export class CourseController {
    * @route GET /api/courses
    */
   public static getCourses = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const { level, active, country, organisation, page, limit } = req.query;
+    const { level, active, country, organisation, page, limit, } = req.query;
+    const userId = req.user?.userId; // Get userId from authenticated user if available
     const filters: any = {};
 
     // Build filters based on query parameters
@@ -526,8 +583,8 @@ export class CourseController {
     const pageNum = page ? parseInt(page as string, 10) : 1;
     const limitNum = limit ? parseInt(limit as string, 10) : 10;
 
-    // Get paginated courses with filters directly from MongoDB
-    const result = await CourseService.getPaginatedCourses(pageNum, limitNum, filters);
+    // Get paginated courses with filters directly from MongoDB, passing userId to filter private courses
+    const result = await CourseService.getPaginatedCourses(pageNum, limitNum, filters, userId);
 
     return res.status(200).json({
       status: 'success',
@@ -541,6 +598,91 @@ export class CourseController {
         }
       }
     });
+  });
+  
+  /**
+   * Get courses grouped by user's country
+   * @route GET /api/courses/by-location
+   */
+  public static getCoursesByUserLocation = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { level, active, organisation, page, limit } = req.query;
+    const userId = req.user?.userId; // Get userId from authenticated user if available
+    const userCountry = req.user?.country; // Get user's country from authentication context
+    
+    if (!userCountry) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'User country information is required for location-based grouping'
+      });
+    }
+    
+    const filters: any = {};
+
+    // Build filters based on query parameters
+    if (level) {
+      filters.level = level;
+    }
+
+    if (active !== undefined) {
+      filters.isActive = active === 'true';
+    }
+    
+    if (organisation) {
+      filters.organisation = organisation;
+    }
+
+    // Parse pagination parameters
+    const pageNum = page ? parseInt(page as string, 10) : 1;
+    const limitNum = limit ? parseInt(limit as string, 10) : 10;
+
+    try {
+      // Get filtered courses with user country grouping
+      const result = await CourseService.getFilteredCoursesList(
+        pageNum, 
+        limitNum, 
+        filters, 
+        userId,
+        true, // Enable country-based grouping
+        userCountry
+      );
+
+      // If grouping was successful
+      if (result.groupedCourses) {
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            courses: {
+              local: result.groupedCourses.local,
+              overseas: result.groupedCourses.overseas
+            },
+            pagination: {
+              total: result.total,
+              pages: result.pages,
+              page: pageNum,
+              limit: limitNum
+            },
+            userCountry
+          }
+        });
+      } else {
+        // Fallback if grouping wasn't performed
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            courses: result.courses,
+            pagination: {
+              total: result.total,
+              pages: result.pages,
+              page: pageNum,
+              limit: limitNum
+            }
+          }
+        });
+      }
+    } catch (error) {
+      logger.error(`Error getting courses by user location: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
   });
   
   /**
@@ -767,28 +909,63 @@ export class CourseController {
    * @route GET /api/courses/list
    */
   public static getCoursesList = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const { page, limit } = req.query;
+    const { page, limit, groupByUserCountry } = req.query;
+    const userId = req.user?.userId; // Get userId from authenticated user if available
+    const userCountry = req.user?.country; // Get user country for grouping if available
     
     // Parse pagination parameters
     const pageNum = page ? parseInt(page as string, 10) : 1;
     const limitNum = limit ? parseInt(limit as string, 10) : 10;
+    const shouldGroupByCountry = groupByUserCountry === 'true' && userCountry;
 
     try {
-      // Get paginated courses with selected fields
-      const result = await CourseService.getPaginatedCoursesList(pageNum, limitNum);
+      // Get paginated courses with selected fields, passing userId to filter private courses
+      const result = await CourseService.getPaginatedCoursesList(pageNum, limitNum, userId);
 
-      return res.status(200).json({
-        status: 'success',
-        data: {
-          courses: result.courses,
-          pagination: {
-            total: result.total,
-            pages: result.pages,
-            page: pageNum,
-            limit: limitNum
+      // Group by user country if requested and country is available
+      if (shouldGroupByCountry) {
+        // Group courses into local and overseas
+        const local = result.courses.filter(course => course.country === userCountry);
+        const overseas = result.courses.filter(course => course.country !== userCountry);
+        
+        logger.info(`Grouped course list by user country ${userCountry}: ${local.length} local, ${overseas.length} overseas`);
+        
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            courses: {
+              local,
+              overseas
+            },
+            count: {
+              total: result.courses.length,
+              local: local.length,
+              overseas: overseas.length
+            },
+            pagination: {
+              total: result.total,
+              pages: result.pages,
+              page: pageNum,
+              limit: limitNum
+            },
+            userCountry
           }
-        }
-      });
+        });
+      } else {
+        // Return non-grouped results
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            courses: result.courses,
+            pagination: {
+              total: result.total,
+              pages: result.pages,
+              page: pageNum,
+              limit: limitNum
+            }
+          }
+        });
+      }
     } catch (error) {
       logger.error(`Error fetching courses list: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
@@ -800,11 +977,14 @@ export class CourseController {
    * @route GET /api/courses/filter
    */
   public static getFilteredCourses = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
-    const { page, limit, level, country, organisation, isActive, status } = req.query;
+    const { page, limit, level, country, organisation, isActive, status, groupByUserCountry } = req.query;
+    const userId = req.user?.userId; // Get userId from authenticated user if available
+    const userCountry = req.user?.country; // Get user country for grouping if available
     
     // Parse pagination parameters
     const pageNum = page ? parseInt(page as string, 10) : 1;
     const limitNum = limit ? parseInt(limit as string, 10) : 10;
+    const shouldGroupByCountry = groupByUserCountry === 'true' && userCountry;
     
     // Build filter object based on provided query parameters
     const filters: any = {};
@@ -830,22 +1010,51 @@ export class CourseController {
     }
 
     try {
-      // Get filtered courses with pagination
-      const result = await CourseService.getFilteredCoursesList(pageNum, limitNum, filters);
+      // Get filtered courses with pagination, passing userId to filter private courses
+      const result = shouldGroupByCountry
+        ? await CourseService.getFilteredCoursesList(pageNum, limitNum, filters, userId, true, userCountry)
+        : await CourseService.getFilteredCoursesList(pageNum, limitNum, filters, userId);
 
-      return res.status(200).json({
-        status: 'success',
-        data: {
-          courses: result.courses,
-          filters: Object.keys(filters).length > 0 ? filters : 'No filters applied',
-          pagination: {
-            total: result.total,
-            pages: result.pages,
-            page: pageNum,
-            limit: limitNum
+      // If grouped by country and grouping data is available
+      if (shouldGroupByCountry && result.groupedCourses) {
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            courses: {
+              local: result.groupedCourses.local,
+              overseas: result.groupedCourses.overseas
+            },
+            filters: Object.keys(filters).length > 0 ? filters : 'No filters applied',
+            count: {
+              total: result.courses.length,
+              local: result.groupedCourses.local.length,
+              overseas: result.groupedCourses.overseas.length
+            },
+            pagination: {
+              total: result.total,
+              pages: result.pages,
+              page: pageNum,
+              limit: limitNum
+            },
+            userCountry
           }
-        }
-      });
+        });
+      } else {
+        // Return standard non-grouped results
+        return res.status(200).json({
+          status: 'success',
+          data: {
+            courses: result.courses,
+            filters: Object.keys(filters).length > 0 ? filters : 'No filters applied',
+            pagination: {
+              total: result.total,
+              pages: result.pages,
+              page: pageNum,
+              limit: limitNum
+            }
+          }
+        });
+      }
     } catch (error) {
       logger.error(`Error fetching filtered courses: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
@@ -859,6 +1068,7 @@ export class CourseController {
   public static getCoursesByUserId = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
     const { userId } = req.params;
     const { page, limit, level, status } = req.query;
+    const requesterId = req.user?.userId; // Get userId from authenticated user if available
     
     if (!userId) {
       return res.status(400).json({
@@ -884,8 +1094,8 @@ export class CourseController {
     }
 
     try {
-      // Get courses by the specified user ID
-      const result = await CourseService.getFilteredCoursesList(pageNum, limitNum, filters);
+      // Get courses by the specified user ID, passing requesterId to filter private courses
+      const result = await CourseService.getFilteredCoursesList(pageNum, limitNum, filters, requesterId);
 
       return res.status(200).json({
         status: 'success',

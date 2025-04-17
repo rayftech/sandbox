@@ -9,10 +9,24 @@ const logger = createLogger('CourseModel');
  * Enum for course level
  */
 export enum CourseLevel {
-  UNDERGRAD_EARLY = 'Undergraduate 1st & 2nd year',
+  UNDERGRAD_EARLY = 'Undergraduate first & second year',
   UNDERGRAD_LATE = 'Undergraduate penultimate & final year',
   POSTGRAD = 'Postgraduate',
   OTHER = 'Other'
+}
+
+/**
+ * Interface for rich text content blocks
+ */
+export interface IContentBlock {
+  type: string;  // paragraph, heading, list, etc.
+  children: Array<{
+    type?: string;
+    text?: string;
+    bold?: boolean;
+    italic?: boolean;
+    underline?: boolean;
+  }>;
 }
 
 /**
@@ -32,7 +46,7 @@ interface IMultimediaFile {
  */
 interface ILocalizationContent {
   name: string;
-  description: string;
+  description: IContentBlock[];  // Rich text description
   targetIndustryPartnership: string[] | string;
   preferredPartnerRepresentative: string;
 }
@@ -56,9 +70,9 @@ interface ICourseDocument extends Document {
   organisation: string;                  // Academic/educational organisation offering the course
   
   // text input fields
-  description: string;                   // Course description
-  assessmentRedesign: string;            // Assessment redesign information
-  expectedEnrollment: number;            // Expected number of students
+  description: IContentBlock[];         // Course description in rich text format
+  assessmentRedesign: IContentBlock[]; // Assessment redesign information in rich text format
+  expectedEnrollment: number;           // Expected number of students
   targetIndustryPartnership: string[] | string;  // Target industry fields for partnership
   preferredPartnerRepresentative: string; // Preferred industry representative
   
@@ -74,6 +88,7 @@ interface ICourseDocument extends Document {
   // Status fields
   isActive: boolean;                     // Whether this course is active
   status: ItemLifecycleStatus;           // Lifecycle status (upcoming, ongoing, completed)
+  isPrivate: boolean;                    // If true, course is only visible to its owner
   
   // Time-based analytics dimensions (for reporting)
   academicYear?: string;                 // Example: "2023-2024"
@@ -111,7 +126,19 @@ const MultimediaSchema = new Schema({
 // Define Localization schema
 const LocalizationSchema = new Schema({
   name: String,
-  description: String,
+  description: [{
+    type: {
+      type: String,
+      required: true
+    },
+    children: [{
+      type: { type: String },
+      text: String,
+      bold: Boolean,
+      italic: Boolean,
+      underline: Boolean
+    }]
+  }],
   targetIndustryPartnership: String,
   preferredPartnerRepresentative: String,
 }, { _id: false });
@@ -166,14 +193,32 @@ const CourseSchema = new Schema<ICourseDocument>(
       default: '',
     },
     // Enhanced fields
-    description: {
-      type: String,
-      default: '',
-    },
-    assessmentRedesign: {
-      type: String,
-      default: '',
-    },
+    description: [{
+      type: {
+        type: String,
+        required: true
+      },
+      children: [{
+        type: { type: String },
+        text: String,
+        bold: Boolean,
+        italic: Boolean,
+        underline: Boolean
+      }]
+    }],
+    assessmentRedesign: [{
+      type: {
+        type: String,
+        required: true
+      },
+      children: [{
+        type: { type: String },
+        text: String,
+        bold: Boolean,
+        italic: Boolean,
+        underline: Boolean
+      }]
+    }],
     expectedEnrollment: {
       type: Number,
       default: 0,
@@ -211,6 +256,11 @@ const CourseSchema = new Schema<ICourseDocument>(
       type: String,
       enum: Object.values(ItemLifecycleStatus),
       default: ItemLifecycleStatus.UPCOMING,
+      index: true,
+    },
+    isPrivate: {
+      type: Boolean,
+      default: false,
       index: true,
     },
     academicYear: {

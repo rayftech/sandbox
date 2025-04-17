@@ -1,6 +1,6 @@
 // src/services/course.service.ts
 import mongoose from 'mongoose';
-import { Course, ICourse, CourseLevel } from '../models/course.model';
+import { Course, ICourse, CourseLevel, IContentBlock } from '../models/course.model';
 import { User, IUser } from '../models/user.model';
 import { createLogger } from '../config/logger';
 import { ItemLifecycleStatus } from '../models/status.enum';
@@ -22,13 +22,37 @@ export interface IMultimediaFile {
 }
 
 /**
- * Interface for localization content
+ * Interface for localization content in the service layer
+ * Allows both string and IContentBlock[] for backward compatibility
  */
 export interface ILocalizationContent {
   name: string;
-  description: string;
-  targetIndustryPartnership: string;
+  description: string | IContentBlock[];  // Description in plain text or rich text format
+  targetIndustryPartnership: string | string[];
   preferredPartnerRepresentative: string;
+}
+
+/**
+ * Process localization content to ensure it uses IContentBlock[] format
+ */
+function processLocalizationContent(content: ILocalizationContent): any {
+  const processed: any = {
+    name: content.name,
+    targetIndustryPartnership: content.targetIndustryPartnership,
+    preferredPartnerRepresentative: content.preferredPartnerRepresentative
+  };
+  
+  // Convert description to rich text format if it's a string
+  if (typeof content.description === 'string') {
+    processed.description = [{
+      type: 'paragraph',
+      children: [{ text: content.description }]
+    }];
+  } else {
+    processed.description = content.description;
+  }
+  
+  return processed;
 }
 
 /**
@@ -43,14 +67,15 @@ export interface ICourseCreationData {
   endDate: Date;                          // End date
   country: string;                        // Country
   organisation?: string;                  // Academic organisation
-  description?: string;                   // Course description
+  description?: string | IContentBlock[];  // Course description (string for backward compatibility or rich text)
   expectedEnrollment?: number;            // Expected enrollment
-  assessmentRedesign?: string;            // Assessment redesign info
+  assessmentRedesign?: string | IContentBlock[]; // Assessment redesign info (string for backward compatibility or rich text)
   targetIndustryPartnership?: string[] | string;  // Target industry fields
   preferredPartnerRepresentative?: string; // Preferred partner
   multimedia?: IMultimediaFile[];         // Multimedia files
   localizations?: Map<string, ILocalizationContent> | Record<string, ILocalizationContent>; // Localized content
   partnerId?: mongoose.Types.ObjectId;    // Partnership ID
+  isPrivate?: boolean;                    // If true, course is only visible to its owner
 }
 
 /**
@@ -66,9 +91,10 @@ export interface ICourseUpdateData {
   organisation?: string;                   // Academic organisation
   isActive?: boolean;                      // Active status
   status?: ItemLifecycleStatus;            // Lifecycle status
-  description?: string;                    // Course description
+  isPrivate?: boolean;                     // If true, course is only visible to its owner
+  description?: string | IContentBlock[];   // Course description (string or rich text)
   expectedEnrollment?: number;             // Expected enrollment
-  assessmentRedesign?: string;             // Assessment redesign info
+  assessmentRedesign?: string | IContentBlock[]; // Assessment redesign info (string or rich text)
   targetIndustryPartnership?: string[] | string;  // Target industry fields
   preferredPartnerRepresentative?: string; // Preferred partner
   multimedia?: IMultimediaFile[];          // Multimedia files to add
@@ -86,30 +112,74 @@ export class CourseService {
   private static eventPublisher = EventPublisher.getInstance();
 
   /**
-   * Ensure strapiId index is removed from courses collection
-   * This is a temporary fix to handle the legacy Strapi integration
-   * @returns Promise<void>
+   * Checks all active courses to determine if they have ended based on end date
+   * Updates status and sends notifications for courses that have passed their end date
+   * @returns Promise with results of the check operation
    */
-  static async ensureStrapiIdIndexRemoved(): Promise<void> {
+  static async checkCoursesEndDate(): Promise<{ updated: number, errors: number }> {
     try {
-      if (mongoose.connection.db) {
-        // First check if the index exists
-        const indexes = await mongoose.connection.db.collection('courses').indexes();
-        const hasIndex = indexes.some(index => index.name === 'strapiId_1');
-        
-        if (hasIndex) {
-          await mongoose.connection.db.collection('courses').dropIndex('strapiId_1');
-          logger.info('Successfully dropped strapiId_1 index from courses collection');
-        } else {
-          logger.info('No strapiId_1 index found on courses collection');
+      logger.info('Starting course end date check');
+      const now = new Date();
+      
+      // Find all active courses where end date has passed
+      const expiredCourses = await Course.find({
+        isActive: true,
+        endDate: { $lt: now }
+      });
+      
+      logger.info(`Found ${expiredCourses.length} expired courses that need status update`);
+      
+      let updated = 0;
+      let errors = 0;
+      
+      // Process each expired course
+      for (const course of expiredCourses) {
+        try {
+          // Update course status
+          course.isActive = false;
+          course.updateStatus();
+          
+          // Save the updated course
+          await course.save();
+          updated++;
+          
+          // Send notification event
+          await this.eventPublisher.publishCourseEvent(
+            EventType.COURSE_UPDATED,
+            {
+              courseId: course._id.toString(),
+              name: course.name,
+              code: course.code,
+              level: course.level,
+              creatorUserId: course.creatorUserId,
+              startDate: course.startDate,
+              endDate: course.endDate
+            }
+          );
+          
+          // Send system notification to course creator
+          await this.eventPublisher.publishSystemNotification({
+            recipientUserId: course.creatorUserId,
+            title: 'Course Ended',
+            message: `Your course "${course.name}" (${course.code}) has reached its end date and has been marked as completed.`,
+            priority: 'medium'
+          });
+          
+          logger.info(`Updated status for expired course ${course._id}, "${course.name}" (${course.code})`);
+        } catch (courseError) {
+          errors++;
+          logger.error(`Error updating expired course ${course._id}: ${courseError instanceof Error ? courseError.message : String(courseError)}`);
         }
-      } else {
-        logger.warn('Cannot check strapiId_1 index: db connection not fully initialized');
       }
+      
+      logger.info(`Course end date check completed. Updated: ${updated}, Errors: ${errors}`);
+      return { updated, errors };
     } catch (error) {
-      logger.warn(`Error handling strapiId_1 index: ${error instanceof Error ? error.message : String(error)}`);
+      logger.error(`Error in checkCoursesEndDate: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
     }
   }
+
 
   /**
    * Create a new course in MongoDB with all course data stored directly
@@ -118,8 +188,6 @@ export class CourseService {
    * @returns The created course document
    */
   static async createCourse(courseData: ICourseCreationData): Promise<ICourse> {
-    // Ensure the strapiId index is removed before creating a course
-    await CourseService.ensureStrapiIdIndexRemoved();
     
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -141,6 +209,16 @@ export class CourseService {
       if (!user) {
         throw new Error(`Creator with userId ${courseData.creatorUserId} not found`);
       }
+      
+      // Check for duplicate course (same user and course name)
+      const existingCourse = await Course.findOne({
+        creatorUserId: courseData.creatorUserId,
+        name: { $regex: new RegExp(`^${courseData.name}$`, 'i') } // Case-insensitive match
+      });
+      
+      if (existingCourse) {
+        throw new Error(`A course with the name "${courseData.name}" already exists for this user`);
+      }
 
       // Prepare the course data
       const courseModelData: any = {
@@ -153,16 +231,37 @@ export class CourseService {
         country: courseData.country || 'Unknown',
         organisation: courseData.organisation || '',
         isActive: true,
+        isPrivate: courseData.isPrivate || false,
         status: ItemLifecycleStatus.UPCOMING // Will be updated by pre-save middleware
       };
 
       // Add extended fields if provided
       if (courseData.description) {
-        courseModelData.description = courseData.description;
+        // Handle either string or IContentBlock[] type
+        if (typeof courseData.description === 'string') {
+          // Convert plain string to rich text format if needed
+          courseModelData.description = [{
+            type: 'paragraph',
+            children: [{ text: courseData.description }]
+          }];
+        } else {
+          // It's already in rich text format
+          courseModelData.description = courseData.description;
+        }
       }
 
       if (courseData.assessmentRedesign) {
-        courseModelData.assessmentRedesign = courseData.assessmentRedesign;
+        // Handle either string or IContentBlock[] type
+        if (typeof courseData.assessmentRedesign === 'string') {
+          // Convert plain string to rich text format if needed
+          courseModelData.assessmentRedesign = [{
+            type: 'paragraph',
+            children: [{ text: courseData.assessmentRedesign }]
+          }];
+        } else {
+          // It's already in rich text format
+          courseModelData.assessmentRedesign = courseData.assessmentRedesign;
+        }
       }
 
       if (courseData.expectedEnrollment) {
@@ -194,14 +293,22 @@ export class CourseService {
 
       // Add localizations if provided
       if (courseData.localizations) {
-        // Convert from Record to Map if needed
+        // Process localizations and convert to proper format
+        const processedLocalizations = new Map();
+        
         if (!(courseData.localizations instanceof Map)) {
-          courseModelData.localizations = new Map(
-            Object.entries(courseData.localizations)
-          );
+          // If it's a Record/Object
+          for (const [locale, content] of Object.entries(courseData.localizations)) {
+            processedLocalizations.set(locale, processLocalizationContent(content));
+          }
         } else {
-          courseModelData.localizations = courseData.localizations;
+          // If it's already a Map
+          courseData.localizations.forEach((content, locale) => {
+            processedLocalizations.set(locale, processLocalizationContent(content));
+          });
         }
+        
+        courseModelData.localizations = processedLocalizations;
       }
 
       // Create and prepare the course instance
@@ -347,14 +454,35 @@ export class CourseService {
       if (updateData.country !== undefined) courseUpdateData.country = updateData.country;
       if (updateData.organisation !== undefined) courseUpdateData.organisation = updateData.organisation;
       if (updateData.isActive !== undefined) courseUpdateData.isActive = updateData.isActive;
+      if (updateData.isPrivate !== undefined) courseUpdateData.isPrivate = updateData.isPrivate;
 
       // Add enhanced fields if provided
       if (updateData.description !== undefined) {
-        courseUpdateData.description = updateData.description;
+        // Handle either string or IContentBlock[] type
+        if (typeof updateData.description === 'string') {
+          // Convert plain string to rich text format
+          courseUpdateData.description = [{
+            type: 'paragraph',
+            children: [{ text: updateData.description }]
+          }];
+        } else {
+          // It's already in rich text format
+          courseUpdateData.description = updateData.description;
+        }
       }
 
       if (updateData.assessmentRedesign !== undefined) {
-        courseUpdateData.assessmentRedesign = updateData.assessmentRedesign;
+        // Handle either string or IContentBlock[] type
+        if (typeof updateData.assessmentRedesign === 'string') {
+          // Convert plain string to rich text format
+          courseUpdateData.assessmentRedesign = [{
+            type: 'paragraph',
+            children: [{ text: updateData.assessmentRedesign }]
+          }];
+        } else {
+          // It's already in rich text format
+          courseUpdateData.assessmentRedesign = updateData.assessmentRedesign;
+        }
       }
 
       if (updateData.expectedEnrollment !== undefined) {
@@ -418,12 +546,12 @@ export class CourseService {
         // Convert from Record to entries if needed and update the map
         if (!(updateData.localizations instanceof Map)) {
           for (const [locale, content] of Object.entries(updateData.localizations)) {
-            course.localizations.set(locale, content);
+            course.localizations.set(locale, processLocalizationContent(content));
           }
         } else {
           // Merge Map entries
           updateData.localizations.forEach((content, locale) => {
-            course.localizations.set(locale, content);
+            course.localizations.set(locale, processLocalizationContent(content));
           });
         }
       }
@@ -474,9 +602,10 @@ export class CourseService {
   /**
    * Get a course by its ID
    * @param courseId The MongoDB ID of the course
+   * @param requesterId Optional userId of the requester (to check permission for private courses)
    * @returns The course document or null if not found
    */
-  static async getCourseById(courseId: string): Promise<ICourse | null> {
+  static async getCourseById(courseId: string, requesterId?: string): Promise<ICourse | null> {
     try {
       if (!mongoose.isValidObjectId(courseId)) {
         throw new Error('Invalid course ID format');
@@ -490,10 +619,50 @@ export class CourseService {
         return null;
       }
       
+      // Check if course is private and requester is not the owner
+      if (course.isPrivate && requesterId && course.creatorUserId !== requesterId) {
+        // Check if requester is admin
+        const user = await User.findOne({ userId: requesterId });
+        if (!user?.isAdmin) {
+          logger.warn(`Access to private course ${courseId} denied for user ${requesterId}`);
+          return null;
+        }
+      }
+      
       return course;
     } catch (error) {
       logger.error(`Error getting course: ${error instanceof Error ? error.message : String(error)}`);
       throw error;
+    }
+  }
+
+  /**
+   * Get creator user details
+   * @param userId The userId of the course creator
+   * @returns The user details or null if not found
+   */
+  static async getCreatorDetails(userId: string): Promise<IUser | null> {
+    try {
+      if (!userId) {
+        logger.warn('No userId provided to getCreatorDetails');
+        return null;
+      }
+      
+      // Get user from MongoDB with required fields
+      const user = await User.findOne(
+        { userId },
+        { prefix: 1, firstName: 1, lastName: 1, email: 1, organisation: 1 }
+      );
+      
+      if (!user) {
+        logger.warn(`User with userId ${userId} not found`);
+        return null;
+      }
+      
+      return user;
+    } catch (error) {
+      logger.error(`Error getting creator details: ${error instanceof Error ? error.message : String(error)}`);
+      return null; // Return null instead of throwing to prevent course fetch from failing
     }
   }
 
@@ -599,15 +768,65 @@ export class CourseService {
       throw error;
     }
   }
+  
+  /**
+   * Get courses grouped by local country and overseas
+   * @param userCountry The country of the requesting user
+   * @param requesterId Optional userId of the requester (to filter private courses)
+   * @returns Object with local and overseas courses
+   */
+  static async getCoursesByUserCountry(
+    userCountry: string,
+    requesterId?: string
+  ): Promise<{ local: ICourse[], overseas: ICourse[] }> {
+    try {
+      // Define query to handle private courses
+      const query: any = {};
+      
+      // If requesterId is provided, adjust filters to handle private courses
+      if (requesterId) {
+        // Check if the requester is an admin
+        const user = await User.findOne({ userId: requesterId });
+        const isAdmin = user?.isAdmin || false;
+
+        // If not admin, only show non-private courses or private courses owned by the requester
+        if (!isAdmin) {
+          query.$or = [
+            { isPrivate: false },
+            { isPrivate: true, creatorUserId: requesterId }
+          ];
+        }
+      } else {
+        // If no requesterId, only show non-private courses
+        query.isPrivate = false;
+      }
+      
+      // Get all accessible courses sorted by creation date
+      const courses = await Course.find(query)
+        .sort({ createdAt: -1 });
+      
+      // Group courses into local and overseas
+      const local = courses.filter(course => course.country === userCountry);
+      const overseas = courses.filter(course => course.country !== userCountry);
+      
+      logger.info(`Grouped courses by user country ${userCountry}: ${local.length} local, ${overseas.length} overseas`);
+      
+      return { local, overseas };
+    } catch (error) {
+      logger.error(`Error grouping courses by user country: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  }
 
   /**
    * Search courses
    * @param query Search query
    * @param limit Maximum number of results
    * @param filters Additional filters to apply (country, organisation, etc.)
+   * @param requesterId Optional userId of the requester (to filter private courses)
    * @returns Array of matching course documents
    */
-  static async searchCourses(query: string, limit: number = 10, filters: any = {}): Promise<ICourse[]> {
+  static async searchCourses(query: string, limit: number = 10, filters: any = {}, requesterId?: string): Promise<ICourse[]> {
     try {
       // Create text index if it doesn't exist yet
       const collection = Course.collection;
@@ -626,17 +845,38 @@ export class CourseService {
         });
       }
 
+      // Create a copy of the filters to avoid modifying the original
+      const queryFilters = { ...filters };
+
       // Combine text search with additional filters
       const searchQuery: any = {
         $text: { $search: query }
       };
       
       // Add any additional filters
-      Object.keys(filters).forEach(key => {
-        if (filters[key]) {
-          searchQuery[key] = filters[key];
+      Object.keys(queryFilters).forEach(key => {
+        if (queryFilters[key]) {
+          searchQuery[key] = queryFilters[key];
         }
       });
+
+      // Handle private courses based on requester
+      if (requesterId) {
+        // Check if the requester is an admin
+        const user = await User.findOne({ userId: requesterId });
+        const isAdmin = user?.isAdmin || false;
+
+        // If not admin, only show non-private courses or private courses owned by the requester
+        if (!isAdmin) {
+          searchQuery.$or = [
+            { isPrivate: false },
+            { isPrivate: true, creatorUserId: requesterId }
+          ];
+        }
+      } else {
+        // If no requesterId, only show non-private courses
+        searchQuery.isPrivate = false;
+      }
 
       // Perform search with combined query
       const courses = await Course.find(searchQuery, { score: { $meta: 'textScore' } })
@@ -686,12 +926,14 @@ export class CourseService {
    * @param page The page number (1-based)
    * @param limit The number of items per page
    * @param filters Additional filters to apply
+   * @param requesterId Optional userId of the requester (to filter private courses)
    * @returns Object containing paginated results and metadata
    */
   static async getPaginatedCourses(
     page: number = 1,
     limit: number = 10,
-    filters: any = {}
+    filters: any = {},
+    requesterId?: string
   ): Promise<{ courses: ICourse[], total: number, pages: number }> {
     try {
       // Ensure valid pagination parameters
@@ -699,14 +941,35 @@ export class CourseService {
       const validLimit = Math.min(50, Math.max(1, limit)); // Limit between 1 and 50
       const skip = (validPage - 1) * validLimit;
 
+      // Create a copy of the filters to avoid modifying the original
+      const queryFilters = { ...filters };
+
+      // If requesterId is provided, adjust filters to handle private courses
+      if (requesterId) {
+        // Check if the requester is an admin
+        const user = await User.findOne({ userId: requesterId });
+        const isAdmin = user?.isAdmin || false;
+
+        // If not admin, only show non-private courses or private courses owned by the requester
+        if (!isAdmin) {
+          queryFilters.$or = [
+            { isPrivate: false },
+            { isPrivate: true, creatorUserId: requesterId }
+          ];
+        }
+      } else {
+        // If no requesterId, only show non-private courses
+        queryFilters.isPrivate = false;
+      }
+
       // Log the filters being applied
-      logger.debug(`Getting paginated courses with filters: ${JSON.stringify(filters)}`);
+      logger.debug(`Getting paginated courses with filters: ${JSON.stringify(queryFilters)}`);
 
       // Count total matching documents for pagination metadata
-      const total = await Course.countDocuments(filters);
+      const total = await Course.countDocuments(queryFilters);
       
       // Get the paginated results
-      const courses = await Course.find(filters)
+      const courses = await Course.find(queryFilters)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(validLimit);
@@ -729,11 +992,13 @@ export class CourseService {
    * Get courses list with pagination and only the requested fields
    * @param page The page number (1-based)
    * @param limit The number of items per page
+   * @param requesterId Optional userId of the requester (to filter private courses)
    * @returns Object containing paginated course list with selected fields and metadata
    */
   static async getPaginatedCoursesList(
     page: number = 1,
-    limit: number = 10
+    limit: number = 10,
+    requesterId?: string
   ): Promise<{ courses: any[], total: number, pages: number }> {
     try {
       // Ensure valid pagination parameters
@@ -741,20 +1006,43 @@ export class CourseService {
       const validLimit = Math.min(50, Math.max(1, limit)); // Limit between 1 and 50
       const skip = (validPage - 1) * validLimit;
 
+      // Create query filters to handle private courses
+      const queryFilters: any = {};
+
+      // If requesterId is provided, adjust filters to handle private courses
+      if (requesterId) {
+        // Check if the requester is an admin
+        const user = await User.findOne({ userId: requesterId });
+        const isAdmin = user?.isAdmin || false;
+
+        // If not admin, only show non-private courses or private courses owned by the requester
+        if (!isAdmin) {
+          queryFilters.$or = [
+            { isPrivate: false },
+            { isPrivate: true, creatorUserId: requesterId }
+          ];
+        }
+      } else {
+        // If no requesterId, only show non-private courses
+        queryFilters.isPrivate = false;
+      }
+
       // Count total documents for pagination metadata
-      const total = await Course.countDocuments();
+      const total = await Course.countDocuments(queryFilters);
       
       // Get the paginated results with only the specified fields
-      const courses = await Course.find({}, {
+      const courses = await Course.find(queryFilters, {
         _id: 1,           // MongoDB ID
         name: 1,          // Course name
         code: 1,          // Course code
+        level: 1,         // Course level
         startDate: 1,     // Start date
         endDate: 1,       // End date
         status: 1,        // Status
         organisation: 1,  // Organisation
         targetIndustryPartnership: 1, // Target industry partnership
-        description: 1    // Description
+        description: 1,   // Description
+        isPrivate: 1      // Is private flag
       })
         .sort({ createdAt: -1 })
         .skip(skip)
@@ -767,17 +1055,22 @@ export class CourseService {
       const formattedCourses = courses.map(course => {
         const courseObj = course.toObject();
         // Create a new object with the fields we want, using destructuring and renaming
-        const { _id, name, code, startDate, endDate, status, organisation, targetIndustryPartnership, description } = courseObj;
+        const { 
+          _id, name, code, level, startDate, endDate, status, 
+          organisation, targetIndustryPartnership, description, isPrivate 
+        } = courseObj;
         return {
           id: _id,
           name,
           code,
+          level,
           startDate,
           endDate,
           status,
           organisation,
           targetIndustryPartnership,
-          description
+          description,
+          isPrivate
         };
       });
 
@@ -799,27 +1092,59 @@ export class CourseService {
    * @param page The page number (1-based)
    * @param limit The number of items per page
    * @param filters Object containing filter criteria (level, country, organisation, etc.)
+   * @param requesterId Optional userId of the requester (to filter private courses)
+   * @param groupByUserCountry If true, group results by user's country vs overseas
+   * @param userCountry The user's country (required if groupByUserCountry is true)
    * @returns Object containing filtered course list with selected fields and metadata
    */
   static async getFilteredCoursesList(
     page: number = 1,
     limit: number = 10,
-    filters: Record<string, any> = {}
-  ): Promise<{ courses: any[], total: number, pages: number }> {
+    filters: Record<string, any> = {},
+    requesterId?: string,
+    groupByUserCountry: boolean = false,
+    userCountry?: string
+  ): Promise<{ 
+    courses: any[], 
+    total: number, 
+    pages: number,
+    groupedCourses?: { local: any[], overseas: any[] } 
+  }> {
     try {
       // Ensure valid pagination parameters
       const validPage = Math.max(1, page);
       const validLimit = Math.min(50, Math.max(1, limit)); // Limit between 1 and 50
       const skip = (validPage - 1) * validLimit;
 
+      // Create a copy of the filters to avoid modifying the original
+      const queryFilters = { ...filters };
+
+      // If requesterId is provided, adjust filters to handle private courses
+      if (requesterId) {
+        // Check if the requester is an admin
+        const user = await User.findOne({ userId: requesterId });
+        const isAdmin = user?.isAdmin || false;
+
+        // If not admin, only show non-private courses or private courses owned by the requester
+        if (!isAdmin) {
+          queryFilters.$or = [
+            { isPrivate: false },
+            { isPrivate: true, creatorUserId: requesterId }
+          ];
+        }
+      } else {
+        // If no requesterId, only show non-private courses
+        queryFilters.isPrivate = false;
+      }
+
       // Log the filters being applied
-      logger.debug(`Getting filtered courses with filters: ${JSON.stringify(filters)}`);
+      logger.debug(`Getting filtered courses with filters: ${JSON.stringify(queryFilters)}`);
 
       // Count total matching documents for pagination metadata
-      const total = await Course.countDocuments(filters);
+      const total = await Course.countDocuments(queryFilters);
       
       // Get the filtered results with only the specified fields
-      const courses = await Course.find(filters, {
+      const courses = await Course.find(queryFilters, {
         _id: 1,           // MongoDB ID
         name: 1,          // Course name
         code: 1,          // Course code
@@ -830,7 +1155,8 @@ export class CourseService {
         organisation: 1,  // Organisation
         country: 1,       // Country
         targetIndustryPartnership: 1, // Target industry partnership
-        description: 1    // Description
+        description: 1,   // Description
+        isPrivate: 1      // Is private flag
       })
         .sort({ createdAt: -1 })
         .skip(skip)
@@ -854,7 +1180,8 @@ export class CourseService {
           organisation,
           country, 
           targetIndustryPartnership, 
-          description 
+          description,
+          isPrivate
         } = courseObj;
         
         return {
@@ -868,9 +1195,22 @@ export class CourseService {
           organisation,
           country,
           targetIndustryPartnership,
-          description
+          description,
+          isPrivate
         };
       });
+
+      // Group by user country if requested and user country is provided
+      let groupedCourses;
+      if (groupByUserCountry && userCountry) {
+        // Group courses into local and overseas
+        const local = formattedCourses.filter(course => course.country === userCountry);
+        const overseas = formattedCourses.filter(course => course.country !== userCountry);
+        
+        groupedCourses = { local, overseas };
+        
+        logger.info(`Grouped filtered courses by user country ${userCountry}: ${local.length} local, ${overseas.length} overseas`);
+      }
 
       const filterDescription = Object.keys(filters).length > 0 
         ? `with filters: ${JSON.stringify(filters)}` 
@@ -881,7 +1221,8 @@ export class CourseService {
       return {
         courses: formattedCourses,
         total,
-        pages
+        pages,
+        ...(groupedCourses && { groupedCourses })
       };
     } catch (error) {
       logger.error(`Error getting filtered courses list: ${error instanceof Error ? error.message : String(error)}`);
@@ -980,11 +1321,27 @@ export class CourseService {
   /**
    * Get courses by creator
    * @param userId The user ID of the creator
+   * @param requesterId Optional userId of the requester (to check permission for private courses)
    * @returns Array of course documents
    */
-  static async getCoursesByCreator(userId: string): Promise<ICourse[]> {
+  static async getCoursesByCreator(userId: string, requesterId?: string): Promise<ICourse[]> {
     try {
-      return await Course.find({ creatorUserId: userId })
+      // Define query criteria
+      const query: any = { creatorUserId: userId };
+      
+      // If the requester is not the creator and not an admin, only show non-private courses
+      if (requesterId && requesterId !== userId) {
+        // Check if requester is admin
+        const user = await User.findOne({ userId: requesterId });
+        if (!user?.isAdmin) {
+          query.isPrivate = false;
+        }
+      } else if (!requesterId) {
+        // If no requesterId, only show non-private courses
+        query.isPrivate = false;
+      }
+      
+      return await Course.find(query)
         .sort({ createdAt: -1 });
     } catch (error) {
       logger.error(`Error getting courses by creator: ${error instanceof Error ? error.message : String(error)}`);
@@ -1219,7 +1576,7 @@ export class CourseService {
       
       // Update localizations
       for (const [locale, content] of Object.entries(localizations)) {
-        course.localizations.set(locale, content);
+        course.localizations.set(locale, processLocalizationContent(content));
       }
       
       // Save the updated course

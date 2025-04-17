@@ -1,0 +1,30 @@
+/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:859
+    return new TSError(diagnosticText, diagnosticCodes, diagnostics);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+src/services/course.service.ts:576:46 - error TS2345: Argument of type 'import("/Users/ray/Desktop/sandbox/sandbox_backend/src/services/course.service").ILocalizationContent' is not assignable to parameter of type 'ILocalizationContent'.
+  Types of property 'description' are incompatible.
+    Type 'string | IContentBlock[]' is not assignable to type 'IContentBlock[]'.
+      Type 'string' is not assignable to type 'IContentBlock[]'.
+
+576             course.localizations.set(locale, content);
+                                                 ~~~~~~~
+src/services/course.service.ts:581:46 - error TS2345: Argument of type 'import("/Users/ray/Desktop/sandbox/sandbox_backend/src/services/course.service").ILocalizationContent' is not assignable to parameter of type 'ILocalizationContent'.
+  Types of property 'description' are incompatible.
+    Type 'string | IContentBlock[]' is not assignable to type 'IContentBlock[]'.
+      Type 'string' is not assignable to type 'IContentBlock[]'.
+
+581             course.localizations.set(locale, content);
+                                                 ~~~~~~~
+
+    at createTSError (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:859:12)
+    at reportTSError (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:863:19)
+    at getOutput (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:1077:36)
+    at Object.compile (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:1433:41)
+    at Module.m._compile (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:1617:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1295:10)
+    at Object.require.extensions.<computed> [as .ts] (/Users/ray/Desktop/sandbox/sandbox_backend/node_modules/ts-node/src/index.ts:1621:12)
+    at Module.load (node:internal/modules/cjs/loader:1091:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:938:12)
+    at Module.require (node:internal/modules/cjs/loader:1115:19) {
+  diagnosticCodes: [ 2345, 2345 ]
