@@ -384,6 +384,117 @@ router.get('/search', [
 
 /**
  * @swagger
+ * /api/projects/by-location:
+ *   get:
+ *     summary: Get projects grouped by user's location
+ *     description: Retrieve projects grouped by user's country (local vs overseas)
+ *     tags:
+ *       - Projects
+ *     security:
+ *       - UserAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: studentLevel
+ *         schema:
+ *           type: string
+ *         description: Filter by student level
+ *       - in: query
+ *         name: isActive
+ *         schema:
+ *           type: boolean
+ *         description: Filter by active status
+ *       - in: query
+ *         name: organisation
+ *         schema:
+ *           type: string
+ *         description: Filter by organisation
+ *       - in: query
+ *         name: targetAcademicPartnership
+ *         schema:
+ *           type: string
+ *         description: Filter by academic partnership type
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *         description: Filter by project status
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 50
+ *         description: Number of items per page
+ *     responses:
+ *       200:
+ *         description: Projects grouped by location
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     projects:
+ *                       type: object
+ *                       properties:
+ *                         local:
+ *                           type: array
+ *                           description: Projects in the user's country
+ *                           items:
+ *                             type: object
+ *                         overseas:
+ *                           type: array
+ *                           description: Projects outside the user's country
+ *                           items:
+ *                             type: object
+ *                     pagination:
+ *                       type: object
+ *                       properties:
+ *                         total:
+ *                           type: integer
+ *                           description: Total number of matching items
+ *                         pages:
+ *                           type: integer
+ *                           description: Total number of pages
+ *                         page:
+ *                           type: integer
+ *                           description: Current page number
+ *                         limit:
+ *                           type: integer
+ *                           description: Number of items per page
+ *                     userCountry:
+ *                       type: string
+ *                       description: The user's country
+ *       400:
+ *         description: Bad request - missing user country information
+ *       401:
+ *         description: Unauthorized - authentication required
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/by-location', [
+  query('page').optional().isInt({ min: 1 }).toInt(),
+  query('limit').optional().isInt({ min: 1, max: 50 }).toInt(),
+  query('studentLevel').optional(),
+  query('isActive').optional(),
+  query('organisation').optional(),
+  query('targetAcademicPartnership').optional(),
+  query('status').optional()
+], AuthMiddleware.authenticateUser, ProjectController.getProjectsByUserLocation);
+
+/**
+ * @swagger
  * /api/projects/student-level/{studentLevel}:
  *   get:
  *     summary: Get projects by student level

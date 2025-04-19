@@ -808,4 +808,79 @@ export class ProjectController {
       throw error;
     }
   });
+  
+  /**
+   * Get projects grouped by user's country
+   * @route GET /api/projects/by-location
+   */
+  public static getProjectsByUserLocation = asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {
+    const { studentLevel, isActive, organisation, page, limit, targetAcademicPartnership, status } = req.query;
+    const userId = req.user?.userId; // Get userId from authenticated user if available
+    const userCountry = req.user?.country; // Get user's country from authentication context
+    
+    if (!userCountry) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'User country information is required for location-based grouping'
+      });
+    }
+    
+    const filters: any = {};
+
+    // Build filters based on query parameters
+    if (studentLevel) {
+      filters.studentLevel = studentLevel;
+    }
+
+    if (isActive !== undefined) {
+      filters.isActive = isActive === 'true';
+    }
+    
+    if (organisation) {
+      filters.organisation = organisation;
+    }
+
+    if (targetAcademicPartnership) {
+      filters.targetAcademicPartnership = targetAcademicPartnership;
+    }
+
+    if (status) {
+      filters.status = status;
+    }
+
+    // Parse pagination parameters
+    const pageNum = page ? parseInt(page as string, 10) : 1;
+    const limitNum = limit ? parseInt(limit as string, 10) : 10;
+
+    try {
+      // Get filtered projects list
+      const result = await ProjectService.getFilteredProjectsList(pageNum, limitNum, filters);
+      
+      // Group projects by user's country
+      const local = result.projects.filter(project => project.country === userCountry);
+      const overseas = result.projects.filter(project => project.country !== userCountry);
+      
+      logger.info(`Grouped projects by user country ${userCountry}: ${local.length} local, ${overseas.length} overseas`);
+      
+      return res.status(200).json({
+        status: 'success',
+        data: {
+          projects: {
+            local,
+            overseas
+          },
+          pagination: {
+            total: result.total,
+            pages: result.pages,
+            page: pageNum,
+            limit: limitNum
+          },
+          userCountry
+        }
+      });
+    } catch (error) {
+      logger.error(`Error getting projects by user location: ${error instanceof Error ? error.message : String(error)}`);
+      throw error;
+    }
+  });
 }
